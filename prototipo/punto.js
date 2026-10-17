@@ -10,16 +10,21 @@ const lienzo = document.querySelector('.lienzo');
 const ctx = lienzo.getContext('2d');
 const escenas = [...document.querySelectorAll('[data-escena]')];
 
-// Colores provisionales: el sistema visual definitivo es de diseño.
+// Colores: los tokens --c-* de punto.css (una sola fuente). Si falta uno, blanco.
+const estilo = getComputedStyle(document.documentElement);
+const rgb = (v) => {
+  const m = estilo.getPropertyValue(v).trim().match(/^#([0-9a-f]{6})$/i);
+  return m ? [0, 2, 4].map((k) => parseInt(m[1].slice(k, k + 2), 16)) : [255, 255, 255];
+};
 const COLORES = {
-  persona: [255, 255, 255],
-  Miles: [142, 163, 255],
-  Charlie: [47, 208, 158],
-  Maya: [255, 107, 114],
-  Simone: [242, 187, 63],
-  barato: [47, 208, 158],
-  medio: [242, 187, 63],
-  caro: [255, 107, 114],
+  persona: rgb('--c-persona'),
+  Miles: rgb('--c-miles'),
+  Charlie: rgb('--c-charlie'),
+  Maya: rgb('--c-maya'),
+  Simone: rgb('--c-simone'),
+  barato: rgb('--c-dato-bajo'),
+  medio: rgb('--c-dato-medio'),
+  caro: rgb('--c-dato-alto'),
 };
 const AGENTES = ['Miles', 'Charlie', 'Maya', 'Simone'];
 
