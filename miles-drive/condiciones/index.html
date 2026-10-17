@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Condiciones del servicio · miles-drive</title>
-  <meta name="description" content="Condiciones del servicio de miles-drive, herramienta personal de productividad de uso privado.">
+  <meta name="description" content="Condiciones del servicio de miles-drive, herramienta personal de gestión de archivos de uso privado.">
   <link rel="stylesheet" href="/estilos.css">
 </head>
 <body>
@@ -24,7 +24,7 @@
     <p class="nota">Última actualización: 17 de octubre de 2026.</p>
 
     <h2>1. Objeto</h2>
-    <p>Estas condiciones regulan el uso de miles-drive (en adelante, «la aplicación»), una herramienta personal de productividad para organizar documentos y archivos propios.</p>
+    <p>Estas condiciones regulan el uso de miles-drive (en adelante, «la aplicación»), una herramienta personal de gestión de archivos.</p>
 
     <h2>2. Acceso</h2>
     <p>La aplicación es de uso privado. Solo pueden usarla las cuentas autorizadas por su titular. No admite registros y no se ofrece a terceros.</p>
@@ -39,7 +39,7 @@
     <p>El tratamiento de los datos se explica en la <a href="/miles-drive/privacidad/">política de privacidad de miles-drive</a>.</p>
 
     <h2>5. Servicios de terceros</h2>
-    <p>La aplicación se conecta a servicios de Google. Su uso también está sujeto a las <a href="https://policies.google.com/terms?hl=es">Condiciones del servicio de Google</a>.</p>
+    <p>La aplicación se conecta a servicios de almacenamiento en la nube de terceros que el usuario autoriza. Su uso también está sujeto a las condiciones de esos servicios.</p>
 
     <h2>6. Exclusión de garantías</h2>
     <p>La aplicación se ofrece «tal cual», sin coste y sin garantía de disponibilidad, continuidad ni adecuación a un fin concreto.</p>
@@ -48,13 +48,18 @@
     <p>En la medida en que lo permita la ley, el titular no responde de los daños o pérdidas derivados del uso de la aplicación o de la imposibilidad de usarla.</p>
 
     <h2>8. Terminación</h2>
-    <p>El usuario puede dejar de usar la aplicación en cualquier momento retirando el permiso desde <a href="https://myaccount.google.com/permissions">los permisos de su cuenta de Google</a>. El titular puede suspender o retirar la aplicación en cualquier momento.</p>
+    <p>El usuario puede dejar de usar la aplicación en cualquier momento retirando el permiso desde la configuración de seguridad de su cuenta en el proveedor de almacenamiento, en el apartado de aplicaciones con acceso a la cuenta. El titular puede suspender o retirar la aplicación en cualquier momento.</p>
 
     <h2>9. Cambios</h2>
     <p>Si estas condiciones cambian, la nueva versión se publicará en esta página con su fecha de actualización.</p>
 
-    <h2>10. Contacto</h2>
-    <p>Escribe a <a href="mailto:familydr.lab@gmail.com">familydr.lab@gmail.com</a>.</p>
+    <h2 id="contacto">10. Contacto</h2>
+    <p>Para cualquier consulta legal, escribe al correo de contacto del titular.</p>
+    <div class="contacto" data-contacto>
+      <button type="button" class="boton" hidden>Mostrar el correo de contacto</button>
+      <p data-contacto-salida hidden></p>
+      <noscript><p>Para ver el correo de contacto hace falta activar JavaScript en el navegador.</p></noscript>
+    </div>
   </main>
   <footer>
     <ul>
@@ -63,5 +68,6 @@
       <li><a href="/miles-drive/privacidad/">Privacidad</a></li>
     </ul>
   </footer>
+  <script src="/miles-drive/contacto.js" defer></script>
 </body>
 </html>
