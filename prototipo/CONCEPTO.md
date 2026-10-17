@@ -13,11 +13,13 @@ Concepto elegido para la portada de josebadg.github.io. Sustituye a «La Lonja»
 
 La narrativa manda: una persona que se divide en cinco. La identidad tiene que poder contarse con el punto.
 
-1. **«Joseba.»: el punto es la marca (recomendada).** El nombre termina en un punto, y ese punto es el que respira en la apertura. La historia se lee como «punto y seguido»: un punto que no cierra, abre. Apertura: negro y el punto. Final: el nombre aparece delante del punto, «Joseba.», y debajo «y seguido». Ventajas: se lee igual sin JS, con lector de pantalla y en una tarjeta de enlace; el logotipo es tipografía y un círculo, cero peso; el punto ya es el protagonista del 3D.
-2. **«Jo5eba»: el cinco escondido en el nombre.** La «s» es un 5: una persona que lleva a cinco dentro. Apertura: el punto se divide en cinco y uno de ellos encaja en el hueco de la «s». Riesgo: puede sonar a alias de foro de los 2000, y el lector de pantalla diría «jo cinco eba» si no se marca con `aria-label`.
-3. **«Joseba ×5»: el nombre multiplicado.** El «×» son dos hilos que se cruzan, y el contador sube de ×1 a ×5 al desplazar. Es la más explícita y la que mejor encaja con los datos (×45 PR, ×24 horas). Riesgo: se acerca a eslogan de producto.
+Cada candidata junta el nombre (Joseba o JosebaDG) con una marca de laboratorio. No es solo el nombre.
 
-En las tres, la dirección sigue siendo josebadg.github.io y el usuario JosebaDG se queda como firma del código. Simone afina el juego de palabras de la elegida; Maya, el logotipo.
+1. **«PuntoDG»: Laboratorio Punto + JosebaDG (recomendada).** Logotipo «·DG»: el punto es el laboratorio y «DG» es la firma, la misma de la dirección josebadg.github.io. **Encaje:** el punto de «·DG» es el que respira, se divide en cinco y al final vuelve a su sitio, delante de «DG». Ventajas: el punto deja de ser una metáfora y pasa a ser el logotipo; es tipografía y un círculo, sin peso; funciona como favicon, que ya es un punto blanco sobre negro; y se lee «Punto DG» con lector de pantalla y sin JavaScript.
+2. **«Joseba y Cía.»: el nombre + la compañía.** La fórmula clásica de empresa, donde «Cía.» son los cuatro agentes. **Encaje:** el punto se parte en uno, Joseba, y cuatro, la compañía; el punto final de «Cía.» es el mismo punto de la apertura. Ventaja: es la que más juega y suena a nosotros. Riesgo: puede leerse antigua si el diseño no la contrasta con el 3D.
+3. **«LonjaDG»: La Lonja + JosebaDG.** Recupera la lonja, ahora como marca y no como escena. **Encaje:** el punto es la luz que se cuela por la cerradura de la lonja; al abrirse, dentro hay cinco. Ventaja: guarda el origen del laboratorio. Riesgo: devuelve la persiana a la apertura, que Maya sacó para no diluir el punto.
+
+En las tres, la dirección sigue siendo josebadg.github.io. Simone afina el juego de palabras de la elegida; Maya, el logotipo.
 
 ## Dirección three.js
 
