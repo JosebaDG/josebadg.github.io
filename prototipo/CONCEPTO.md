@@ -1,25 +1,37 @@
-# Un punto
+# Singularity · concepto «Un punto»
 
-Concepto elegido para la portada de josebadg.github.io. Sustituye a «La Lonja» del PR #2, que queda de reserva sin fusionar; la persiana puede volver como recurso si encaja (ver al final).
+Concepto elegido para la portada de josebadg.github.io, con la marca **Singularity**. Sustituye a «La Lonja» del PR #2, que queda de reserva sin fusionar; la persiana puede volver como recurso si encaja (ver al final).
 
 ## Decisión de rumbo (17/10/2026)
 
 - **Concepto principal: «Un punto».** «La Lonja» (PR #2) queda de reserva.
-- **Identidad: ni solo el nombre ni solo una marca, sino una fusión de los dos** que juegue con el punto e impacte. Tres candidatas abajo; falta elegir una.
+- **Marca: Singularity** (decidida el 17/10/2026). En inglés; la web sigue en castellano. Descartadas PuntoDG, «Joseba y Cía.» y LonjaDG.
 - **Vía libre al three.js actual** (WebGPU, partículas, el relieve de Nava de Ordunte), siempre como mejora progresiva: móvil primero, WCAG 2.2 AA, `prefers-reduced-motion` y lectura sin JavaScript.
 - **No se fusiona ni se publica** sin el visto bueno final de diseño.
 
-## Identidad: nombre y marca fusionados
+## Marca: Singularity
 
-La narrativa manda: una persona que se divide en cinco. La identidad tiene que poder contarse con el punto.
+**De dónde sale.** De una idea del laboratorio: es una singularidad, conocimiento que genera conocimiento. El punto de la apertura es la singularidad del big bang: explota en cinco, una persona y cuatro agentes, y al final vuelve a ser uno.
 
-Cada candidata junta el nombre (Joseba o JosebaDG) con una marca de laboratorio. No es solo el nombre.
+**Logotipo: «singularity·».** En minúsculas y con un punto final, que es el mismo punto blanco de la apertura. No es un adorno: es el personaje de la web.
 
-1. **«PuntoDG»: Laboratorio Punto + JosebaDG (recomendada).** Logotipo «·DG»: el punto es el laboratorio y «DG» es la firma, la misma de la dirección josebadg.github.io. **Encaje:** el punto de «·DG» es el que respira, se divide en cinco y al final vuelve a su sitio, delante de «DG». Ventajas: el punto deja de ser una metáfora y pasa a ser el logotipo; es tipografía y un círculo, sin peso; funciona como favicon, que ya es un punto blanco sobre negro; y se lee «Punto DG» con lector de pantalla y sin JavaScript.
-2. **«Joseba y Cía.»: el nombre + la compañía.** La fórmula clásica de empresa, donde «Cía.» son los cuatro agentes. **Encaje:** el punto se parte en uno, Joseba, y cuatro, la compañía; el punto final de «Cía.» es el mismo punto de la apertura. Ventaja: es la que más juega y suena a nosotros. Riesgo: puede leerse antigua si el diseño no la contrasta con el 3D.
-3. **«LonjaDG»: La Lonja + JosebaDG.** Recupera la lonja, ahora como marca y no como escena. **Encaje:** el punto es la luz que se cuela por la cerradura de la lonja; al abrirse, dentro hay cinco. Ventaja: guarda el origen del laboratorio. Riesgo: devuelve la persiana a la apertura, que Maya sacó para no diluir el punto.
+- **Apertura:** pantalla negra y el punto quieto en el centro, que solo respira. Nada más.
+- **Al desplazar:** llega el big bang. El punto explota en cinco, con three.js cuando el dispositivo puede.
+- **Cierre:** todo se recoge en el punto, que va a su sitio al final del nombre: «singularity·».
+- **Sin JavaScript y con lector de pantalla:** el logotipo es texto en el HTML y se lee «Singularity». El punto es decorativo.
+- **Favicon:** el punto blanco sobre negro que ya hay.
 
-En las tres, la dirección sigue siendo josebadg.github.io. Simone afina el juego de palabras de la elegida; Maya, el logotipo.
+**Nombre y dirección.** JosebaDG ya está en la dirección josebadg.github.io, así que la marca no lo repite. La marca va en inglés; los textos siguen en castellano.
+
+**Riesgo del nombre.** «Singularity» es una palabra común (física, IA) que ya usan otros: el software de contenedores Singularity (hoy SingularityCE de Sylabs; el proyecto comunitario pasó a llamarse Apptainer en la Linux Foundation), Singularity University y su SingularityU, SingularityNET (IA descentralizada), el juego de Activision de 2010 y el estudio Singularity 6. Para una web personal de laboratorio, sin venta ni servicio, el riesgo es bajo. Lo que nos separa es el logotipo «singularity·», siempre con su punto, y estas normas:
+
+- Nunca junto a otra palabra de esas marcas: ni «Singularity University», ni «SingularityNET», ni «Singularity Hub», ni «Singularity AI».
+- Ni sus logotipos ni nada que sugiera relación con ellas.
+- Si algún día hay negocio, antes se busca la marca en los registros oficiales y se decide con eso delante.
+
+**Quién hace qué.** Maya, el logotipo y el sistema visual. Charlie, la escena del big bang. Simone, una frase por escena y el cierre, ya con Singularity.
+
+**Descartadas:** «PuntoDG», «Joseba y Cía.» y «LonjaDG».
 
 ## Dirección three.js
 
@@ -38,11 +50,11 @@ Cuándo se carga la capa 3:
 Escenas en 3D:
 
 - **El punto:** el mismo punto blanco, ahora hecho de partículas.
-- **Uno se hace cinco:** cinco nubes con los colores de los tokens `--c-*`.
+- **Big bang, uno se hace cinco:** el punto explota en cinco nubes con los colores de los tokens `--c-*`.
 - **Hilos:** uno por PR fusionado, con datos reales de `actividad.json`.
 - **La materia son datos:** las partículas forman las 24 columnas del precio de hoy.
 - **Nava de Ordunte:** las partículas se posan sobre el relieve real del valle, reutilizando los datos que ya publica Nava de Ordunte 3D.
-- **Vuelta al punto:** todo se recoge en el punto final de la identidad elegida.
+- **Vuelta al punto:** todo se recoge en el punto final de «singularity·».
 
 Presupuesto y reservas:
 
@@ -61,7 +73,7 @@ Esta carpeta tiene un prototipo funcional de la apertura: `prototipo/index.html`
 
 ## La idea en una frase
 
-Pantalla negra. Un punto blanco que respira. Al desplazar, el punto se divide en cinco, los cinco tejen hilos y los hilos se convierten en datos reales. Al final todo vuelve a ser un punto.
+Pantalla negra. Un punto blanco que respira. Al desplazar, llega el big bang: el punto explota en cinco, los cinco tejen hilos y los hilos se convierten en datos reales. Al final todo vuelve a ser un punto, el de «singularity·».
 
 ## Por qué funciona
 
@@ -75,11 +87,11 @@ Pantalla negra. Un punto blanco que respira. Al desplazar, el punto se divide en
 | # | Escena | Qué se ve | Dato real |
 |---|--------|-----------|-----------|
 | 0 | Un punto | Negro total. Un punto blanco que respira. A los 2,4 s aparece «Todo empieza con un punto.» | — |
-| 1 | Uno se hace cinco | El punto se divide: uno en el centro, cuatro alrededor, cada uno con su color | — |
+| 1 | Big bang | El punto explota en cinco: uno en el centro, cuatro alrededor, cada uno con su color | — |
 | 2 | Hilos | Arcos de cada agente al centro, uno por PR fusionado | `actividad.json` |
 | 3 | La materia son datos | Las partículas forman 24 columnas: el precio de hoy, por tramos | `datos/2026.csv` (y REData en directo) |
 | 4 | Lo que ya existe | Las partículas se apartan como cielo; entra el contenido: proyectos | estado de cada proyecto |
-| 5 | ¿Cuál es tu punto? | Todo vuelve al punto inicial | — |
+| 5 | Vuelta al punto | Todo vuelve al punto, que se queda al final del logotipo «singularity·». La frase de cierre la escribe Simone | — |
 
 Versión final prevista (no está en el prototipo): escena 3 en WebGL/WebGPU con decenas de miles de partículas, y una escena extra donde las partículas se convierten en el relieve de Nava de Ordunte en 3D.
 
