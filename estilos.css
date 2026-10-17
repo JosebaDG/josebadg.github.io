@@ -1,28 +1,31 @@
 :root {
   color-scheme: light dark;
-  --fondo: #ffffff;
-  --texto: #1b1f24;
-  --suave: #4a535e;
-  --enlace: #0b57d0;
-  --enlace-visitado: #6a3fb5;
-  --borde: #d0d7de;
-  --tarjeta: #f6f8fa;
-  --foco: #0b57d0;
+  --fondo: #f4f1ea;
+  --texto: #17150f;
+  --suave: #57524a;
+  --enlace: #2f4be0;
+  --enlace-visitado: #6b3fc4;
+  --borde: #d9d2c4;
+  --tarjeta: #ffffff;
+  --foco: #2f4be0;
   --ancho: 44rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --fondo: #0f1318;
-    --texto: #e6e9ed;
-    --suave: #b3bcc6;
-    --enlace: #8ab4f8;
-    --enlace-visitado: #c6a7ff;
-    --borde: #3a434e;
-    --tarjeta: #171c22;
-    --foco: #8ab4f8;
+    --fondo: #100f0c;
+    --texto: #efebe2;
+    --suave: #ada597;
+    --enlace: #8ea3ff;
+    --enlace-visitado: #b99bff;
+    --borde: #353128;
+    --tarjeta: #1a1814;
+    --foco: #8ea3ff;
   }
 }
+
+/* Mismo aspecto que la portada (lonja.css) y transición suave entre páginas */
+@view-transition { navigation: auto; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -64,7 +67,8 @@ header {
 }
 
 .marca {
-  font-weight: 700;
+  view-transition-name: marca;
+  font-weight: 800;
   font-size: 1.125rem;
   color: var(--texto);
   text-decoration: none;
