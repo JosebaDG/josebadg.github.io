@@ -43,7 +43,7 @@ Sites of the Year de Awwwards de los últimos años y lo que nos llevamos de cad
 
 - **Lando Norris**, de OFF+BRAND, Site of the Year 2025 — https://landonorris.com. Ritmo de scroll y transiciones de cine: cada desplazamiento es un plano nuevo.
 - **Messenger**, de abeto, entre los Sites of the Year 2025 — https://messenger.abeto.co. Un mundo 3D pequeño que se explora sin instrucciones.
-- **Igloo Inc**, de abeto, Site of the Year 2024 — https://www.igloo.inc. Partículas y materia que se transforman; apertura minimalista sobre fondo oscuro.
+- **Igloo Inc**, de abeto, Site of the Year 2024 — https://www.igloo.inc. Materia 3D que se transforma al desplazar.
 - **Lusion v3**, de Lusion, Site of the Year 2023 — https://lusion.co. WebGL al servicio de la marca, con un rendimiento muy cuidado.
 - **Bruno Simon**, Site of the Year 2019 — https://bruno-simon.com. Un portafolio que es un juego: la web como experiencia, no como folleto.
 - **In Pieces**, de Bryan James, Site of the Year 2015 — http://species-in-pieces.com. Una sola forma que se recompone escena a escena para contar datos. Es el antecedente directo de este concepto.
