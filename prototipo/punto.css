@@ -1,0 +1,95 @@
+/* Un punto: prototipo de portada. Negro, un punto, y la historia al desplazar. */
+
+:root {
+  color-scheme: dark;
+  --negro: #000;
+  --blanco: #fff;
+  --tinta: #f2f2f2;
+  --tinta-2: #a6a6a6; /* 8,6:1 sobre negro */
+  --foco: #fff;
+  --f-texto: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --t-xl: clamp(1.9rem, 1.2rem + 3.4vw, 4rem);
+  --t-m: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { background: var(--negro); }
+
+body {
+  margin: 0;
+  color: var(--tinta);
+  font: 400 var(--t-m)/1.55 var(--f-texto);
+  overflow-x: hidden;
+}
+
+a { color: var(--blanco); text-underline-offset: 0.2em; }
+a:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; border-radius: 2px; }
+
+.saltar {
+  position: fixed; left: 1rem; top: -4rem; z-index: 3;
+  padding: 0.6rem 1rem; background: var(--blanco); color: var(--negro);
+}
+.saltar:focus { top: 1rem; }
+
+.lienzo {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+
+main { position: relative; z-index: 1; }
+
+.escena {
+  min-height: 100svh;
+  display: grid;
+  align-items: end;
+  padding: 2rem 1.25rem max(3rem, env(safe-area-inset-bottom));
+}
+
+.texto { max-width: 34rem; }
+
+h1, h2 {
+  margin: 0 0 0.5rem;
+  font-size: var(--t-xl);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.texto p { margin: 0; color: var(--tinta-2); }
+
+/* Escena 0: solo negro y el punto. El título aparece después, sin prisa. */
+.escena-0 { position: relative; }
+.js .escena-0 h1 { opacity: 0; animation: aparecer 1.6s ease 2.4s forwards; }
+.pista {
+  position: absolute; left: 50%; bottom: max(1.25rem, env(safe-area-inset-bottom));
+  translate: -50% 0; margin: 0;
+  font-size: 0.8125rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--tinta-2);
+  opacity: 0;
+}
+.js .pista { animation: aparecer 1.2s ease 4.2s forwards; }
+.sin-js .pista, html:not(.js) .pista { display: none; }
+
+@keyframes aparecer { to { opacity: 1; } }
+
+.escena-contenido { align-items: center; }
+
+.proyectos {
+  list-style: none; margin: 1.5rem 0 0; padding: 0;
+  display: grid; gap: 1.25rem;
+}
+.proyectos li {
+  padding: 1rem 0 0;
+  border-top: 1px solid #333;
+}
+.proyectos h3 { margin: 0 0 0.25rem; font-size: 1.125rem; font-weight: 600; }
+
+@media (min-width: 48rem) {
+  .escena { padding: 3rem 4vw 4rem; }
+  .proyectos { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 2.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .escena-0 h1, .js .pista { animation: none; opacity: 1; }
+}
