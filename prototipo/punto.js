@@ -220,7 +220,7 @@ async function cargarDatos() {
     if (fus.length) {
       prs = { total: fus.length, porAutor };
       const dias = Math.max(1, Math.round((Date.parse(fus[fus.length - 1].fusionado) - Date.parse(fus[0].fusionado)) / 864e5));
-      document.querySelector('[data-prs]').textContent = `${fus.length} pull requests fusionados en ${dias} días. Cada hilo sale del agente que lo hizo.`;
+      document.querySelector('[data-prs]').textContent = `${fus.length} cambios de Pvpc-bridge fusionados en ${dias} días. Lo que hace uno, lo revisa otro.`;
     }
   }
 
@@ -240,7 +240,7 @@ async function cargarDatos() {
       orden.forEach((h, k) => { h.tramo = k < tercio ? 'barato' : k < tercio * 2 ? 'medio' : 'caro'; });
       luz = hoy;
       const ahora = hoy.find((h) => h.hora === hora) || hoy[hoy.length - 1];
-      document.querySelector('[data-luz]').textContent = `Estas 24 columnas son el precio de la luz de hoy, hora a hora. Ahora mismo: ${euros.format(ahora.precio)} €/kWh. Lo más barato, a las ${String(orden[0].hora).padStart(2, '0')}:00.`;
+      document.querySelector('[data-luz]').textContent = `Estas 24 columnas son el precio de la luz de hoy. Ahora: ${euros.format(ahora.precio)} €/kWh. Lo más barato, a las ${String(orden[0].hora).padStart(2, '0')}:00.`;
     }
   }
   construirFormas();
