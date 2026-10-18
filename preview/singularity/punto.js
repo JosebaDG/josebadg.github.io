@@ -1,6 +1,6 @@
 // Un punto: prototipo de portada. Canvas 2D, sin dependencias.
 // Las partículas pasan de una forma a otra según el desplazamiento:
-// un punto, cinco puntos, hilos (pull requests reales), 24 columnas (precio de la luz de hoy),
+// un punto, cinco puntos, hilos (pull requests reales), columnas (datos públicos reales del día),
 // un cielo de fondo y otra vez un punto.
 
 const DATOS = 'https://josebadg.github.io/Pvpc-bridge/datos/';
@@ -113,7 +113,7 @@ function construirFormas() {
     return [x, y, COLORES[h.p.quien], 0.55];
   });
 
-  // 3 · 24 columnas: el precio de la luz de hoy
+  // 3 · Columnas: datos públicos reales del día (la portada no los nombra: es la entrada al proyecto global)
   const horas = luz || Array.from({ length: 24 }, (_, h) => ({ hora: h, precio: 0.08 + 0.06 * Math.sin(h / 3.8), tramo: 'medio' }));
   const techo = Math.max(...horas.map((h) => h.precio), 0.001);
   const anchoBarras = Math.min(ancho * 0.86, 720), x0 = (ancho - anchoBarras) / 2;
@@ -221,7 +221,6 @@ function hoyEnMadrid() {
 }
 
 async function cargarDatos() {
-  const euros = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
   const [act, csv] = await Promise.allSettled([leer(`${DATOS}actividad.json`, 'json'), leer(`${DATOS}${hoyEnMadrid().fecha.slice(0, 4)}.csv`, 'text')]);
 
   if (act.status === 'fulfilled') {
@@ -231,12 +230,12 @@ async function cargarDatos() {
     if (fus.length) {
       prs = { total: fus.length, porAutor };
       const dias = Math.max(1, Math.round((Date.parse(fus[fus.length - 1].fusionado) - Date.parse(fus[0].fusionado)) / 864e5));
-      document.querySelector('[data-prs]').textContent = `${fus.length} cambios de Pvpc-bridge fusionados en ${dias} días. Lo que hace uno, lo revisa otro.`;
+      document.querySelector('[data-prs]').textContent = `${fus.length} cambios fusionados en ${dias} días. Lo que hace uno, lo revisa otro.`;
     }
   }
 
   if (csv.status === 'fulfilled') {
-    const { fecha, hora } = hoyEnMadrid();
+    const { fecha } = hoyEnMadrid();
     const lineas = csv.value.trim().split(/\r?\n/);
     const cab = lineas.shift().split(',');
     const iL = cab.indexOf('fecha_hora_local'), iP = cab.indexOf('eur_mwh');
@@ -250,8 +249,6 @@ async function cargarDatos() {
       const orden = [...hoy].sort((a, b) => a.precio - b.precio), tercio = Math.ceil(orden.length / 3);
       orden.forEach((h, k) => { h.tramo = k < tercio ? 'barato' : k < tercio * 2 ? 'medio' : 'caro'; });
       luz = hoy;
-      const ahora = hoy.find((h) => h.hora === hora) || hoy[hoy.length - 1];
-      document.querySelector('[data-luz]').textContent = `Estas ${hoy.length} columnas son el precio de la luz de hoy. Ahora: ${euros.format(ahora.precio)} €/kWh. Lo más barato, a las ${String(orden[0].hora).padStart(2, '0')}:00.`;
     }
   }
   construirFormas();
@@ -297,14 +294,43 @@ if (lienzoCurva) {
       });
       curvaActiva = true;
       document.documentElement.classList.add('curva');
+      alinearMarca();
       pedir();
     })
     .catch(sinCurva);
 }
 
+// ---------- Frase de entrada: el punto del logotipo «singularity·» es el punto que late ----------
+// Con la curvatura en marcha, el logotipo se coloca de modo que su punto caiga justo en centro(),
+// donde late el punto de la malla, y la frase queda encima. Si la palabra no cabe a la izquierda
+// del centro (móvil estrecho), se reduce. Sin JS o sin WebGL, frase y logotipo van en el flujo normal.
+function alinearMarca() {
+  const raiz = document.documentElement;
+  const marca = document.querySelector('.marca-entrada');
+  const pto = marca && marca.querySelector('[data-punto-latido]');
+  const titulo = document.querySelector('.escena-0 h1');
+  const sec = marca && marca.closest('.escena-0');
+  if (!pto || !titulo || !curvaActiva || raiz.dataset.frase === 'joseba') return;
+  raiz.classList.add('marca-viva');
+  marca.style.fontSize = '';
+  const c = centro();
+  const margen = parseFloat(getComputedStyle(sec).paddingLeft) || 20;
+  let r = marca.getBoundingClientRect(), p = pto.getBoundingClientRect();
+  const izq = p.left + p.width / 2 - r.left;
+  if (izq > c.x - margen) {
+    marca.style.fontSize = `${(parseFloat(getComputedStyle(marca).fontSize) * (c.x - margen)) / izq}px`;
+    r = marca.getBoundingClientRect(); p = pto.getBoundingClientRect();
+  }
+  const dx = p.left + p.width / 2 - r.left, dy = p.top + p.height / 2 - r.top;
+  const arriba = c.y - dy - sec.offsetTop;
+  marca.style.left = `${c.x - dx}px`;
+  marca.style.top = `${arriba}px`;
+  titulo.style.bottom = `${sec.offsetHeight - arriba + Math.max(16, r.height * 0.35)}px`;
+}
+
 medir();
 pedir();
 addEventListener('scroll', pedir, { passive: true });
-addEventListener('resize', () => { medir(); pedir(); }, { passive: true });
+addEventListener('resize', () => { medir(); alinearMarca(); pedir(); }, { passive: true });
 document.addEventListener('visibilitychange', pedir);
 cargarDatos();
