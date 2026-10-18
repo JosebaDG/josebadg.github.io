@@ -14,6 +14,10 @@
 // Si baja de 30 fps de forma sostenida, primero va con la mitad de partículas y luego se retira
 // y queda el 2D. El movimiento que no viene del scroll (respirar, girar) se para 5 s después
 // del último gesto (WCAG 2.2.2). Este archivo se compila a ../bigbang.min.js: ver README.md.
+//
+// Con la escena 0 curvada (curvatura.js, que pone la clase «curva» en <html>), el punto es suyo:
+// aquí no se pinta ni respira hasta que su malla ha caído, y el big bang espera a que acabe.
+// Sin esa clase, todo sigue como antes.
 
 import {
   WebGPURenderer, Scene, PerspectiveCamera, Sprite, PointsNodeMaterial,
@@ -27,6 +31,9 @@ const AGENTES = ['Miles', 'Charlie', 'Maya', 'Simone'];
 const QUIEN = ['persona', ...AGENTES]; // mismo orden que posicionesCinco() de punto.js
 const QUIETO_TRAS = 5000; // ms sin gesto hasta que se para el movimiento propio
 const FPS_MIN = 30;
+// Relevo con curvatura.js (t de la escena 0): su malla se ha ido en 0,42 y su luz se apaga de 0,30 a 0,58
+const RELEVO_DESDE = 0.30;  // el punto 3D empieza a encenderse debajo de su luz
+const RELEVO_BANG = 0.42;   // y explota cuando la malla ya no se ve
 const MIN_PARTICULAS = 4000;
 
 const suave = (t) => t * t * (3 - 2 * t);
@@ -105,6 +112,7 @@ export async function iniciar(api) {
   const uRadioNube = uniform(40);
   const uOnda = uniform(200);
   const uBrillo = uniform(0.3);
+  const uAparece = uniform(1);     // 0 mientras la curvatura pinta el punto, 1 en el resto
 
   // ---------- Material: todo el movimiento en TSL ----------
   const sem = instancedBufferAttribute(new InstancedBufferAttribute(semilla, 4));
@@ -142,7 +150,7 @@ export async function iniciar(api) {
   material.positionNode = mix(posBang, posVuelta, uFase);
   material.sizeNode = float(movil ? 1.7 : 1.5).mul(ext.w.mul(0.8).add(0.6));
   const disco = smoothstep(0.5, 0.15, length(uv().sub(0.5)));
-  const alfa = disco.mul(uBrillo).mul(giro.mul(0.6).add(0.4)).mul(mix(float(1), brilloVuelta, uFase));
+  const alfa = disco.mul(uBrillo).mul(uAparece).mul(giro.mul(0.6).add(0.4)).mul(mix(float(1), brilloVuelta, uFase));
   material.colorNode = vec4(mix(colBang, colVuelta, uFase), alfa);
 
   const puntos = new Sprite(material);
@@ -198,10 +206,16 @@ export async function iniciar(api) {
   let ultimoGesto = performance.now();
   let tiempo = 0, previo = 0, entrada = 0, pendiente = false, retirado = false, tapando = null;
   let ventana = { t0: 0, frames: 0 }, lentas = 0;
+  const conCurva = () => document.documentElement.classList.contains('curva');
 
   // Qué hace el 3D en cada tramo del desplazamiento, y cuánto se ve (0..1)
   function estado() {
     const { i, t } = progreso();
+    if (i === 0 && conCurva()) {
+      const aparece = suave(limitar((t - RELEVO_DESDE) / (RELEVO_BANG - RELEVO_DESDE), 0, 1));
+      const bang = limitar((t - RELEVO_BANG) / (1 - RELEVO_BANG), 0, 1);
+      return { fase: 0, bang, vuelta: 0, op: 1, vivo: true, aparece };
+    }
     if (i === 0) return { fase: 0, bang: t, vuelta: 0, op: 1, vivo: true };
     if (i === 1) return { fase: 0, bang: 1, vuelta: 0, op: 1 - suave(limitar(t / 0.35, 0, 1)), vivo: true };
     if (i === 2 || i === 3) return { fase: 0, bang: 1, vuelta: 0, op: 0, vivo: false };
@@ -228,10 +242,13 @@ export async function iniciar(api) {
 
     // Movimiento propio (respirar y girar) solo hasta 5 s después del último gesto
     const quieto = ahora - ultimoGesto > QUIETO_TRAS;
-    const amp = quieto ? 0 : 1;
+    // Mientras el punto es de la curvatura, aquí no respira: un solo latido en pantalla
+    // (con curvatura, la respiración entra poco a poco al empezar la explosión, sin salto)
+    const amp = quieto ? 0 : st.aparece === undefined ? 1 : suave(limitar(st.bang * 5, 0, 1));
     if (!quieto) tiempo += dt / 1000;
     uTiempo.value = tiempo;
     uRespira.value = 1 + 0.18 * amp * Math.sin(tiempo / 0.9);
+    uAparece.value = st.aparece ?? 1;
 
     uExplosion.value = st.bang;
     uRecogida.value = st.vuelta;
