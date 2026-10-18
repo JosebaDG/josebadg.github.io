@@ -288,7 +288,7 @@ function pintarLineas(i, t, dyLuz) {
     });
     // Tres horas de referencia bajo el eje
     ctx.fillStyle = `rgba(166,166,166,${(0.9 * wLuz).toFixed(3)})`;
-    ctx.font = '11px system-ui, sans-serif';
+    ctx.font = '500 11px Archivo, system-ui, sans-serif';
     ctx.textAlign = 'center';
     for (const k of [0, 12, horas.length - 1]) if (horas[k]) ctx.fillText(`${String(horas[k].hora).padStart(2, '0')} h`, x0 + paso * (k + 0.5), y0 + 21);
     ctx.textAlign = 'start';
@@ -396,38 +396,9 @@ if (lienzoCurva) {
       });
       curvaActiva = true;
       document.documentElement.classList.add('curva');
-      alinearMarca();
       pedir();
     })
     .catch(sinCurva);
-}
-
-// ---------- Frase de entrada: el punto del logotipo «singularity·» es el punto que late ----------
-// Con la curvatura en marcha, el logotipo se coloca de modo que su punto caiga justo en centro(),
-// donde late el punto de la malla, y la frase queda encima. Si la palabra no cabe a la izquierda
-// del centro (móvil estrecho), se reduce. Sin JS o sin WebGL, frase y logotipo van en el flujo normal.
-function alinearMarca() {
-  const raiz = document.documentElement;
-  const marca = document.querySelector('.marca-entrada');
-  const pto = marca && marca.querySelector('[data-punto-latido]');
-  const titulo = document.querySelector('.escena-0 h1');
-  const sec = marca && marca.closest('.escena-0');
-  if (!pto || !titulo || !curvaActiva || raiz.dataset.frase === 'joseba') return;
-  raiz.classList.add('marca-viva');
-  marca.style.fontSize = '';
-  const c = centro();
-  const margen = parseFloat(getComputedStyle(sec).paddingLeft) || 20;
-  let r = marca.getBoundingClientRect(), p = pto.getBoundingClientRect();
-  const izq = p.left + p.width / 2 - r.left;
-  if (izq > c.x - margen) {
-    marca.style.fontSize = `${(parseFloat(getComputedStyle(marca).fontSize) * (c.x - margen)) / izq}px`;
-    r = marca.getBoundingClientRect(); p = pto.getBoundingClientRect();
-  }
-  const dx = p.left + p.width / 2 - r.left, dy = p.top + p.height / 2 - r.top;
-  const arriba = c.y - dy - sec.offsetTop;
-  marca.style.left = `${c.x - dx}px`;
-  marca.style.top = `${arriba}px`;
-  titulo.style.bottom = `${sec.offsetHeight - arriba + Math.max(16, r.height * 0.35)}px`;
 }
 
 // «DESLIZA» se va en cuanto se empieza a desplazar: ya ha hecho su trabajo y no se monta sobre el big bang.
@@ -449,6 +420,6 @@ pedir();
 alDesplazar();
 addEventListener('scroll', pedir, { passive: true });
 addEventListener('scroll', alDesplazar, { passive: true });
-addEventListener('resize', () => { medir(); alinearMarca(); pedir(); }, { passive: true });
+addEventListener('resize', () => { medir(); pedir(); }, { passive: true });
 document.addEventListener('visibilitychange', pedir);
 cargarDatos();
