@@ -27,6 +27,7 @@
   --t-texto: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
   --t-h3: 1.125rem;
   --t-pista: 0.8125rem;
+  --t-marca: clamp(2.5rem, 1.4rem + 5.6vw, 4.5rem); /* 40 px a 320, 72 px en escritorio */
   --peso-display: 600;
   --interletra-display: -0.045em;
 
@@ -118,6 +119,32 @@ html:not(.js) .pista { display: none; }
 }
 .proyectos li { padding: var(--e-3) 0 0; border-top: 1px solid var(--linea); }
 .proyectos h3 { margin: 0 0 var(--e-1); font-size: var(--t-h3); font-weight: 600; }
+
+/* Logotipo «singularity·»: texto en minúsculas; el punto final es el mismo blanco del punto */
+.cierre { margin-top: var(--e-5); }
+.marca {
+  display: block;
+  margin-top: var(--e-2);
+  font-size: var(--t-marca);
+  font-weight: var(--peso-display);
+  line-height: 1;
+  letter-spacing: var(--interletra-display);
+  color: var(--tinta);
+  white-space: nowrap;
+}
+.marca-punto {
+  display: inline-block;
+  width: 0.2em; height: 0.2em;
+  margin-left: 0.06em;
+  border-radius: 50%;
+  background: var(--c-persona);
+  color: transparent;
+  overflow: hidden;
+  vertical-align: baseline;
+}
+@media (forced-colors: active) {
+  .marca-punto { forced-color-adjust: none; background: CanvasText; }
+}
 
 @media (min-width: 48rem) {
   :root { --margen: 4vw; }

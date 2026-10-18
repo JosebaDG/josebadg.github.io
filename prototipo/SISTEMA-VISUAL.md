@@ -40,6 +40,14 @@ Las 24 columnas del precio van en grises: `--c-dato-bajo` `#4d4d4d`, `--c-dato-m
 - Una sombra negra difusa detrás del texto lo deja leer sobre las partículas sin añadir cajas ni alto.
 - Rejilla de 4 px (`--e-1` a `--e-6`) y una sola curva de movimiento (`--curva`).
 
+## Logotipo «singularity·»
+
+- **Texto, no imagen.** En el HTML es `singularity` con el punto en un `span` con `aria-hidden`, así que el lector dice «Singularity» y no pesa nada. Va en minúsculas, con la letra del sistema, peso 600 e interletra −0,045 em, como los titulares.
+- **El punto final es el punto.** El `·` se pinta como un círculo de `--c-persona` (`#fff`), el único blanco puro, el mismo que respira en la apertura. La palabra va en `--tinta`, un poco más apagada, para que lo que más brille sea el punto. Lleva `data-punto-final`: la escena 3D termina justo ahí.
+- **Tamaño:** `--t-marca`, de 40 px a 320 hasta 72 px en escritorio, en su propia línea y sin partir (`nowrap`). A 320 px ocupa menos que el ancho útil.
+- **Alto contraste:** con colores forzados, el punto toma el color del texto y no desaparece.
+- **Descartado:** dejar el `·` como carácter. Cada letra lo dibuja a un tamaño y altura distintos, y no sería «el» punto. Tampoco un SVG: añade peso y otra forma de la marca que mantener.
+
 ## La persiana: fuera
 
 La apertura tiene que ser negro y un punto, nada más. Una persiana añade una segunda forma antes del punto, cuenta una metáfora literal en vez de dejar que el punto la sugiera y cuesta peso y animación. La idea de la lonja se queda en lo que ya hace el punto: una luz que se cuela en lo oscuro.
