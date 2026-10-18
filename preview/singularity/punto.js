@@ -251,7 +251,7 @@ async function cargarDatos() {
       orden.forEach((h, k) => { h.tramo = k < tercio ? 'barato' : k < tercio * 2 ? 'medio' : 'caro'; });
       luz = hoy;
       const ahora = hoy.find((h) => h.hora === hora) || hoy[hoy.length - 1];
-      document.querySelector('[data-luz]').textContent = `Estas 24 columnas son el precio de la luz de hoy. Ahora: ${euros.format(ahora.precio)} €/kWh. Lo más barato, a las ${String(orden[0].hora).padStart(2, '0')}:00.`;
+      document.querySelector('[data-luz]').textContent = `Estas ${hoy.length} columnas son el precio de la luz de hoy. Ahora: ${euros.format(ahora.precio)} €/kWh. Lo más barato, a las ${String(orden[0].hora).padStart(2, '0')}:00.`;
     }
   }
   construirFormas();
