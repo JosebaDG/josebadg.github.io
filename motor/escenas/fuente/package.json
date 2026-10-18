@@ -1,0 +1,13 @@
+{
+  "name": "singularity-bigbang",
+  "private": true,
+  "description": "Escena 3D del big bang de «Un punto». Se compila a ../bigbang.min.js.",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild bigbang.js --bundle --format=esm --minify --target=es2022 --legal-comments=eof --outfile=../bigbang.min.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "three": "0.186.1"
+  }
+}
