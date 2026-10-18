@@ -25,7 +25,21 @@ Versiones fijadas en `package.json` y `package-lock.json`: three 0.186.1 y esbui
 | Escenas 2 y 3: hilos y columnas del precio | 2D |
 | Escena 4 → 5: cielo → punto final | 3D, que entra en el primer tercio |
 
-Las nubes salen en los mismos sitios que los cinco puntos del 2D (`posicionesCinco()`), así que el fundido no salta. Si el logotipo marca su punto con `data-punto-final`, la vuelta acaba ahí; si no, en el centro.
+Las nubes salen en los mismos sitios que los cinco puntos del 2D (`posicionesCinco()`), así que el fundido no salta.
+
+## Relevo con la escena 0 curvada (`curvatura.js`)
+
+Si la página tiene la curvatura en marcha (clase `curva` en `<html>`, que pone `punto.js` de la vista previa), el punto de la escena 0 es suyo y esta capa espera:
+
+| t de la escena 0 | Curvatura | 3D |
+|---|---|---|
+| 0 → 0,30 | malla, disco y punto que late | no pinta ni respira |
+| 0,30 → 0,42 | la malla cae y se va; su luz empieza a apagarse | el punto 3D se enciende debajo de su luz |
+| 0,42 → 1 | la luz acaba de apagarse en 0,58 | big bang |
+
+Así hay un solo punto y un solo latido en pantalla, y el big bang sale del punto cuando la malla ya ha caído. Sin la clase `curva` todo sigue como antes. No hace falta tocar `punto.js`: basta con copiar este `bigbang.min.js`.
+
+Medido en la vista previa (Chromium sin pantalla, WebGL 2, curvatura oculta para ver solo el 3D), a 390×844: antes el 3D ya pintaba su propio punto en t = 0 y en t = 0,2 las partículas llegaban a 69 px del centro con la malla a la vista; ahora no pinta nada hasta 0,35 (un punto de 13 px, bajo la luz de la curvatura) y explota después. Igual a 320×640 y 1280×800, sin desbordes. Si el logotipo marca su punto con `data-punto-final`, la vuelta acaba ahí; si no, en el centro.
 
 ## Decisiones y porqués
 
