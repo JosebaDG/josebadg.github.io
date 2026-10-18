@@ -234,3 +234,14 @@ html:has(.latido-pausa[aria-pressed="true"]) .firma :is(.iso-punto, .iso-onda) {
 .escena[data-escena="vuelta"] { min-height: auto; padding-top: var(--e-6); }
 /* Aire entre el logotipo y el botón del correo */
 .contacto { margin-top: var(--e-5); }
+/* Botón del correo: la portada no carga estilos.css, así que sin esto WebKit lo pinta gris claro con letra
+   blanca (contraste 1,8:1, falla AA). Va en el tono de la página: borde dorado, letra blanco cálido sobre negro. */
+.boton {
+  font: inherit; font-size: 1rem;
+  color: var(--tinta); background: var(--negro);
+  border: 1px solid var(--oro); border-radius: 999px;
+  padding: 0.5rem 1.125rem; min-height: 2.75rem;
+  cursor: pointer;
+}
+.boton:hover { background: #1a1612; }
+.boton:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
