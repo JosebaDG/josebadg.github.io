@@ -7,8 +7,8 @@
 // WebGL sin dependencias, unos 12 KB: se carga con import() nada más abrir y no espera a three.js.
 // Todo lo que se ve es función de dos números: t (el desplazamiento, 0 a 1 en la escena 0) y el
 // reloj del latido, que solo avanza mientras late. Sin Math.random ni Date.now.
-// Accesibilidad: el lienzo va con aria-hidden; con «reducir movimiento» se pinta un solo fotograma
-// fijo; el latido se puede pausar (WCAG 2.2.2) y nunca pasa de un destello por segundo (2.3.1).
+// Accesibilidad: el lienzo va con aria-hidden; con «reducir movimiento» se pinta un fotograma fijo
+// que al desplazar solo se funde; el latido se puede pausar (WCAG 2.2.2) y nunca pasa de un destello por segundo (2.3.1).
 // Si no hay WebGL, se pierde el contexto o baja de 30 fps sin remedio, queda el cartel estático.
 
 const L = 24;            // media anchura de la malla (unidades de mundo; una celda = 1)
@@ -204,7 +204,8 @@ export function init(api) {
   function pintar(t) {
     const b = menosMovimiento ? 0.6 : latido(reloj);
     const fase = menosMovimiento ? 0.55 : reloj % PERIODO;
-    const caida = suave(t / 0.45);
+    // Con «reducir movimiento» la escena aparece ya formada: ni cae ni gira al desplazar, solo se funde
+    const caida = menosMovimiento ? 0 : suave(t / 0.45);
     const alfaMalla = 1 - suave((t - 0.08) / 0.34);
     const alfaLuz = 1 - suave((t - 0.3) / 0.28);
     const encoge = 1 - 0.9 * caida;
