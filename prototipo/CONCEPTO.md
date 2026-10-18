@@ -38,7 +38,7 @@ Concepto elegido para la portada de josebadg.github.io, con la marca **Singulari
 Capas, de la que siempre está a la que solo llega si el dispositivo puede:
 
 1. **HTML y CSS:** todo el texto, legible sin JavaScript.
-2. **Canvas 2D (este prototipo):** la apertura, sin librerías y por debajo de 20 KB.
+2. **Canvas 2D y WebGL sin librerías (este prototipo):** la apertura, por debajo de 20 KB comprimidos.
 3. **three.js con `WebGPURenderer`**, que cae solo a WebGL 2 si no hay WebGPU. Partículas calculadas en la GPU con TSL.
 
 Cuándo se carga la capa 3:
@@ -101,7 +101,7 @@ Versión final prevista (no está en el prototipo): escena 3 en WebGL/WebGPU con
 - **WCAG 2.2 AA.** Todo el texto está en el HTML, no en el canvas. El canvas es decorativo (`aria-hidden`). Enlace para saltar a los proyectos. Foco visible.
 - **`prefers-reduced-motion`.** Sin respiración ni transiciones: cada escena aparece ya formada.
 - **Sin JavaScript se lee todo.** El título no se oculta si no hay JS.
-- **Rendimiento.** La apertura pesa menos de 20 KB y no carga librerías. three.js o WebGPU se cargan después, solo cuando hacen falta, y con versión de reserva en canvas 2D. El bucle solo se anima de forma continua mientras el punto respira.
+- **Rendimiento.** La apertura pesa menos de 20 KB comprimidos (gzip, que es lo que viaja por la red) y no carga librerías. Con la escena 0 curvada son unos 15 KB comprimidos y 39 KB sin comprimir: HTML, CSS, `punto.js` y `curvatura.js`. three.js o WebGPU se cargan después, solo cuando hacen falta, y con versión de reserva en canvas 2D. El bucle solo se anima de forma continua mientras el punto respira.
 - **Datos con reserva.** Si Red Eléctrica o los archivos no responden, la escena se forma con valores neutros y el texto no promete el dato.
 
 ## Referencias del estado del arte
