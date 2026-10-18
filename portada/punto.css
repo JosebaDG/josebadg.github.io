@@ -1,12 +1,26 @@
 /* Un punto. Tokens en :root; punto.js lee de aquí los --c-*. Porqués: SISTEMA-VISUAL.md */
 
+/* Archivo (Omnibus-Type, licencia OFL, fuentes/OFL.txt): una sola variable recortada a latín y castellano,
+   con dos ejes: peso 300-700 y anchura 100-125 %. La anchura da el carácter: los títulos y el logotipo van
+   expandidos; el texto largo, a anchura normal. 47 KB en woff2. */
+@font-face {
+  font-family: "Archivo";
+  src: url("fuentes/archivo.woff2") format("woff2-variations"), url("fuentes/archivo.woff2") format("woff2");
+  font-weight: 300 700;
+  font-stretch: 100% 125%;
+  font-display: swap;
+}
+
 :root {
   color-scheme: dark;
 
   --negro: #000;
   --blanco: #fff;
-  --tinta: #ededed;
-  --tinta-2: #a6a6a6;  /* 8,6:1 */
+  /* Títulos y logotipo: dorado suave, el tono del disco de luz de la malla (14,2:1 sobre negro).
+     Texto largo: blanco cálido (17,9:1) y gris cálido para el secundario (10,3:1). */
+  --oro: #f3cf96;
+  --tinta: #f3ece2;
+  --tinta-2: #bdb4a7;
   --linea: #333;
   --foco: #fff;
 
@@ -22,14 +36,19 @@
   --c-dato-medio: #a6a6a6;
   --c-dato-alto: #ffffff;
 
-  --f-texto: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --t-display: clamp(2.75rem, 1.6rem + 5.6vw, 5rem); /* 47 px a 390 */
+  --f-texto: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Escala tipográfica: display ligero y expandido, texto normal; mayúsculas pequeñas muy abiertas */
+  --t-display: clamp(2.5rem, 1.45rem + 5.2vw, 4.75rem); /* 43 px a 390 */
+  --t-cierre: clamp(1.375rem, 1.1rem + 1.3vw, 1.875rem);
+  --t-mayus: 0.75rem;
+  --ancho-display: 112%;
+  --ancho-mayus: 125%;
+  --interletra-mayus: 0.26em;
   --t-texto: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
   --t-h3: 1.125rem;
-  --t-pista: 0.8125rem;
-  --t-marca: clamp(2.5rem, 1.4rem + 5.6vw, 4.5rem); /* 40 px a 320, 72 px en escritorio */
-  --peso-display: 600;
-  --interletra-display: -0.045em;
+  --peso-display: 330;
+  --peso-texto: 380;
+  --interletra-display: -0.032em;
 
   --e-1: 0.25rem; --e-2: 0.5rem; --e-3: 1rem; --e-4: 1.5rem; --e-5: 2rem; --e-6: 3rem;
   --margen: 1.25rem;
@@ -44,11 +63,16 @@ html { background: var(--negro); }
 body {
   margin: 0;
   color: var(--tinta);
-  font: 400 var(--t-texto)/1.55 var(--f-texto);
+  font: var(--peso-texto) var(--t-texto)/1.6 var(--f-texto);
+  font-kerning: normal;
+  font-variant-numeric: lining-nums;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
   overflow-x: hidden;
 }
 
-a { color: var(--blanco); text-underline-offset: 0.2em; }
+a { color: var(--tinta); text-underline-offset: 0.2em; }
 a:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; border-radius: 2px; }
 
 .saltar {
@@ -112,12 +136,14 @@ h1, h2 {
   margin: 0 0 var(--e-3);
   font-size: var(--t-display);
   font-weight: var(--peso-display);
-  line-height: 1;
+  font-stretch: var(--ancho-display);
+  line-height: 1.04;
   letter-spacing: var(--interletra-display);
   text-wrap: balance;
+  color: var(--oro);
 }
 
-.texto p { margin: 0; color: var(--tinta-2); max-width: 30rem; }
+.texto p { margin: 0; color: var(--tinta-2); max-width: 30rem; text-wrap: pretty; hanging-punctuation: first; }
 
 /* Escena 0: negro y el punto; el título llega después */
 .escena-0 { position: relative; }
@@ -125,11 +151,18 @@ h1, h2 {
 .pista {
   position: absolute; left: 50%; bottom: max(var(--e-4), env(safe-area-inset-bottom));
   translate: -50% 0; margin: 0;
-  font-size: var(--t-pista); letter-spacing: 0.2em; text-transform: uppercase;
+  font-size: var(--t-mayus); font-weight: 500; font-stretch: var(--ancho-mayus);
+  letter-spacing: var(--interletra-mayus); text-transform: uppercase;
   color: var(--tinta-2);
   opacity: 0;
 }
 .escena-0 .texto { padding-bottom: var(--e-5); }
+
+/* Logotipo de entrada: «THE SINGULARITY» en trazos, debajo de la frase. En la entrada el símbolo es la malla. */
+.texto .marca-entrada { margin: var(--e-4) 0 0; max-width: none; }
+.palabra-svg, .firma-svg { display: block; height: auto; overflow: visible; }
+.palabra-svg { width: min(100%, 17.5rem); }
+.js .escena-0 .marca-entrada { opacity: 0; animation: aparecer var(--t-aparecer) var(--curva) 3.4s forwards; }
 .js .pista { animation: aparecer 1.2s var(--curva) 4.2s forwards; }
 html:not(.js) .pista { display: none; }
 
@@ -152,35 +185,35 @@ html:not(.js) .pista { display: none; }
   display: grid; gap: var(--e-4);
 }
 .proyectos li { padding: var(--e-3) 0 0; border-top: 1px solid var(--linea); }
-.proyectos h3 { margin: 0 0 var(--e-1); font-size: var(--t-h3); font-weight: 600; }
+.proyectos h3 { margin: 0 0 var(--e-1); font-size: 1.1875rem; font-weight: 500; font-stretch: 110%; letter-spacing: -0.008em; }
 
-/* Logotipo «singularity·»: texto en minúsculas; el punto final es el mismo blanco del punto */
-.cierre { margin-top: var(--e-5); }
-.marca {
-  display: block;
-  margin-top: var(--e-2);
-  font-size: var(--t-marca);
-  font-weight: var(--peso-display);
-  line-height: 1;
-  letter-spacing: var(--interletra-display);
+/* Cierre: la frase y la firma (isotipo + palabra). El punto del isotipo late al ritmo de la malla (1,5 s)
+   y en él termina el big bang. Símbolo A «Pozo», elegido por Joseba el 18/10 (las variantes B y C viven en la vista previa). */
+.texto .cierre {
+  margin-top: var(--e-6);
+  font-size: var(--t-cierre); font-weight: 340; font-stretch: var(--ancho-display);
+  line-height: 1.25; letter-spacing: -0.012em; text-wrap: balance;
   color: var(--tinta);
-  white-space: nowrap;
 }
-.marca-punto {
-  display: inline-block;
-  width: 0.2em; height: 0.2em;
-  margin-left: 0.06em;
-  border-radius: 50%;
-  background: var(--c-persona);
-  color: transparent;
-  overflow: hidden;
-  vertical-align: baseline;
+.texto .firma { margin: var(--e-4) 0 0; max-width: none; }
+.firma-svg { width: min(100%, 24rem); }
+.iso-punto, .iso-onda { transform-box: fill-box; transform-origin: center; }
+.iso-onda { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .firma .iso-punto { animation: iso-latir 1.5s var(--curva) infinite; }
+  .js .firma .iso-onda { animation: iso-onda 1.5s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
 }
+/* El botón de pausa del latido para también el del logotipo */
+html:has(.latido-pausa[aria-pressed="true"]) .firma :is(.iso-punto, .iso-onda) { animation-play-state: paused; }
+@keyframes iso-latir { 0%, 45%, 100% { transform: scale(1); } 12% { transform: scale(1.3); } }
+@keyframes iso-onda { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(4); opacity: 0; } }
 @media (forced-colors: active) {
-  .marca-punto { forced-color-adjust: none; background: CanvasText; }
+  .palabra-svg, .firma-svg { forced-color-adjust: none; }
+  .palabra-svg path, .firma-svg path[fill]:not([fill="none"]), .firma-svg .iso-punto, .firma-svg circle[fill]:not([fill="none"]) { fill: CanvasText; }
+  .firma-svg [stroke] { stroke: CanvasText; }
 }
 
-.legal { margin-top: var(--e-5) !important; font-size: 0.9375rem; }
+.legal { margin-top: var(--e-5) !important; font-size: 0.875rem; letter-spacing: 0.01em; }
 .legal a { color: var(--tinta-2); }
 
 @media (min-width: 48rem) {
@@ -190,6 +223,14 @@ html:not(.js) .pista { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .escena-0 h1, .js .pista { animation: none; opacity: 1; }
+  .js .escena-0 h1, .js .pista, .js .escena-0 .marca-entrada { animation: none; opacity: 1; }
   .js .escena .texto { animation: none !important; }
 }
+
+/* ---------- Arreglos vistos en el iPhone (18/10) ---------- */
+/* «DESLIZA» se va al empezar a desplazar: así no se monta sobre la nube del big bang */
+.js.desplazado .pista { opacity: 0 !important; animation: none; transition: opacity 0.3s var(--curva); }
+/* Final: el texto no deja media pantalla en negro encima; la página acaba donde acaba el texto */
+.escena[data-escena="vuelta"] { min-height: auto; padding-top: var(--e-6); }
+/* Aire entre el logotipo y el botón del correo */
+.contacto { margin-top: var(--e-5); }
