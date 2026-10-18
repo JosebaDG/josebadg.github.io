@@ -121,6 +121,26 @@ a:focus-visible {
   margin: 0 0 1rem;
 }
 .tarjeta h2, .tarjeta h3 { margin-top: 0; }
+
+[hidden] { display: none !important; }
+
+.boton {
+  font: inherit;
+  color: var(--enlace);
+  background: var(--fondo);
+  border: 2px solid var(--enlace);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+.boton:hover { background: var(--tarjeta); }
+.boton:focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+}
+.contacto { margin: 0 0 1rem; }
+.contacto p { overflow-wrap: anywhere; }
 .tarjeta p:last-child { margin-bottom: 0; }
 
 code {

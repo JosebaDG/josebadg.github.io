@@ -29,11 +29,15 @@
     </div>
     <div class="tarjeta">
       <h3><a href="/miles-drive/">miles-drive</a></h3>
-      <p>Herramienta interna con la que el asistente del laboratorio organiza el Google Drive del propio laboratorio. Uso privado.</p>
+      <p>Herramienta personal de gestión de archivos. Uso privado.</p>
     </div>
 
-    <h2>Contacto</h2>
-    <p>Escribe a <a href="mailto:familydr.lab@gmail.com">familydr.lab@gmail.com</a>.</p>
+    <h2 id="contacto">Contacto</h2>
+    <div class="contacto" data-contacto>
+      <button type="button" class="boton" hidden>Mostrar el correo de contacto</button>
+      <p data-contacto-salida hidden></p>
+      <noscript><p>Para ver el correo de contacto hace falta activar JavaScript en el navegador.</p></noscript>
+    </div>
   </main>
   <footer>
     <ul>
@@ -41,5 +45,6 @@
       <li><a href="/miles-drive/condiciones/">Condiciones de miles-drive</a></li>
     </ul>
   </footer>
+  <script src="/miles-drive/contacto.js" defer></script>
 </body>
 </html>
