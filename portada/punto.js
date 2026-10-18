@@ -1,6 +1,6 @@
 // Un punto: prototipo de portada. Canvas 2D, sin dependencias.
 // Las partículas pasan de una forma a otra según el desplazamiento:
-// un punto, cinco puntos, hilos (pull requests reales), 24 columnas (precio de la luz de hoy),
+// un punto, cinco puntos, hilos (pull requests reales), columnas (datos públicos reales del día),
 // un cielo de fondo y otra vez un punto.
 
 const DATOS = 'https://josebadg.github.io/Pvpc-bridge/datos/';
@@ -34,6 +34,17 @@ let P = [];            // partículas: { x, y, c:[r,g,b], a }
 let formas = [];       // por escena: Float32Array de destinos [x, y, r, g, b, a] por partícula
 let prs = null;        // { total, porAutor: Map }
 let luz = null;        // [{ hora, precio, tramo }]
+let hilos = [];        // un hilo por pull request: { c, ang0, r0, r1, giro }
+let geoHilos = null;   // { c5 }
+let barras = null;     // geometría de las 24 columnas, con la sección centrada
+
+// Punto s (0 a 1) de un hilo: sale del agente y se abre a su órbita alrededor de la persona
+function puntoHilo(h, s) {
+  const c5 = geoHilos.c5;
+  const ang = h.ang0 + h.giro * s;
+  const rr = h.r0 + (h.r1 - h.r0) * suave(Math.min(1, s * 1.5));
+  return [c5.x + Math.cos(ang) * rr, c5.y + Math.sin(ang) * rr];
+}
 
 const azar = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
 const suave = (t) => t * t * (3 - 2 * t);
@@ -54,8 +65,11 @@ function medir() {
 const centro = () => ({ x: ancho / 2, y: alto * 0.42 });
 const radio = () => Math.min(ancho, alto) * 0.26;
 
+// Los cinco van un poco más arriba que el punto, para que el brillo de los dos de abajo no toque el título
+const centroCinco = () => ({ x: ancho / 2, y: alto * (ancho < 600 ? 0.34 : 0.38) });
+
 function posicionesCinco() {
-  const c = centro(), r = radio();
+  const c = centroCinco(), r = radio();
   return [
     { quien: 'persona', x: c.x, y: c.y },
     ...AGENTES.map((a, i) => {
@@ -91,34 +105,52 @@ function construirFormas() {
     return [p.x + Math.cos(ang) * d, p.y + Math.sin(ang) * d, COLORES[p.quien], 1];
   });
 
-  // 2 · Hilos: un arco por pull request fusionado, del agente que lo hizo al centro
-  const hilos = [];
+  // 2 · Hilos: un hilo por pull request fusionado. Sale del agente que lo hizo y gira en órbita
+  // alrededor de la persona. Ninguno pasa por el centro: antes iban del agente al centro y formaban una X.
+  // Las partículas se posan sobre los hilos y, encima, cada hilo se dibuja como una línea (pintarHilos).
+  const c5 = centroCinco();
   const cuenta = prs ? prs.porAutor : new Map(AGENTES.map((a) => [a, 6]));
-  for (const p of cinco.slice(1)) {
-    const n = cuenta.get(p.quien) || 0;
-    for (let k = 0; k < n; k++) hilos.push({ p, curva: (k / Math.max(1, n - 1) - 0.5) * 1.6 });
+  const porAgente = cinco.slice(1).map((p, ai) => ({ p, ai, n: cuenta.get(p.quien) || 0 }));
+  hilos = [];
+  // Orden de aparición: uno de cada agente por turnos, como se van fusionando
+  for (let k = 0; porAgente.some((g) => k < g.n); k++) {
+    for (const g of porAgente) {
+      if (k >= g.n) continue;
+      const h1 = azar(), h2 = azar();
+      hilos.push({
+        c: COLORES[g.p.quien],
+        ang0: Math.atan2(g.p.y - c5.y, g.p.x - c5.x),
+        r0: r,
+        r1: r * (0.62 + 0.72 * h1),                 // órbita entre 0,62 y 1,34 veces el radio
+        giro: (0.9 + 1.7 * h2) * (k % 2 ? -1 : 1),  // de 50° a 150°, en los dos sentidos
+      });
+    }
   }
+  geoHilos = { c5 };
   const hilosF = forma((i) => {
     if (!hilos.length || i % 5 === 0) {
       const ang = azar() * Math.PI * 2, d = Math.pow(azar(), 2) * 3;
       const p = cinco[i % 5];
       return [p.x + Math.cos(ang) * d, p.y + Math.sin(ang) * d, COLORES[p.quien], 1];
     }
-    const h = hilos[i % hilos.length], t = azar();
-    const mx = (h.p.x + c.x) / 2, my = (h.p.y + c.y) / 2;
-    const nx = -(c.y - h.p.y), ny = c.x - h.p.x;
-    const qx = mx + nx * h.curva * 0.35, qy = my + ny * h.curva * 0.35;
-    const x = (1 - t) * (1 - t) * h.p.x + 2 * (1 - t) * t * qx + t * t * c.x;
-    const y = (1 - t) * (1 - t) * h.p.y + 2 * (1 - t) * t * qy + t * t * c.y;
-    return [x, y, COLORES[h.p.quien], 0.55];
+    const h = hilos[i % hilos.length];
+    const [x, y] = puntoHilo(h, azar());
+    return [x, y, h.c, 0.45];
   });
 
-  // 3 · 24 columnas: el precio de la luz de hoy
+  // 3 · Columnas: datos públicos reales del día (la portada no los nombra: es la entrada al proyecto global)
   const horas = luz || Array.from({ length: 24 }, (_, h) => ({ hora: h, precio: 0.08 + 0.06 * Math.sin(h / 3.8), tramo: 'medio' }));
   const techo = Math.max(...horas.map((h) => h.precio), 0.001);
   const anchoBarras = Math.min(ancho * 0.86, 720), x0 = (ancho - anchoBarras) / 2;
-  const base = alto * 0.62, maxAlto = alto * 0.42;
+  // Las columnas van ancladas a su texto: se apoyan justo encima de la frase que las explica y suben
+  // con ella al desplazar. Aquí se miden con la sección centrada en pantalla; pintar() suma el desfase.
+  const secLuz = escenas[3], txtLuz = secLuz && secLuz.querySelector('.texto');
+  const topCentrada = secLuz ? alto / 2 - secLuz.offsetHeight / 2 : 0;
+  const sobreTexto = txtLuz ? topCentrada + (txtLuz.getBoundingClientRect().top - secLuz.getBoundingClientRect().top) - 38 : alto * 0.62;
+  const base = Math.min(alto * 0.66, sobreTexto);
+  const maxAlto = Math.max(alto * 0.18, Math.min(alto * 0.42, base - alto * 0.1));
   const paso = anchoBarras / horas.length;
+  barras = { horas, techo, x0, paso, base, maxAlto, topCentrada };
   const luzF = forma((i) => {
     const h = horas[i % horas.length];
     const altoB = Math.max(4, (Math.max(h.precio, 0) / techo) * maxAlto);
@@ -135,9 +167,11 @@ function construirFormas() {
 // Escena actual y avance hacia la siguiente, según el desplazamiento
 function progreso() {
   const y = scrollY + alto * 0.5;
+  // El final de la página cuenta como el centro de la última escena, aunque no llegue a centrarse
+  const yMax = document.documentElement.scrollHeight - alto * 0.5;
   for (let i = 0; i < escenas.length - 1; i++) {
     const a = escenas[i].offsetTop + escenas[i].offsetHeight * 0.5;
-    const b = escenas[i + 1].offsetTop + escenas[i + 1].offsetHeight * 0.5;
+    const b = Math.min(escenas[i + 1].offsetTop + escenas[i + 1].offsetHeight * 0.5, Math.max(a + 1, yMax));
     if (y < b) return { i, t: Math.min(1, Math.max(0, (y - a) / (b - a))) };
   }
   return { i: escenas.length - 1, t: 0 };
@@ -164,11 +198,14 @@ function pintar(ahora) {
   ctx.fillRect(0, 0, ancho, alto);
   ctx.globalCompositeOperation = 'lighter';
   const tam = ancho < 600 ? 1.8 : 1.8;
+  // Desfase de las columnas: siguen a su texto (0 cuando su sección está centrada)
+  const dyLuz = barras && escenas[3] ? escenas[3].getBoundingClientRect().top - barras.topCentrada : 0;
+  const dA = i === 3 ? dyLuz : 0, dB = i + 1 === 3 ? dyLuz : 0;
   for (let k = 0; k < N; k++) {
     const o = k * 6;
     let x = A[o] + (B[o] - A[o]) * t;
-    let y = A[o + 1] + (B[o + 1] - A[o + 1]) * t;
-    
+    let y = A[o + 1] + dA + (B[o + 1] + dB - A[o + 1] - dA) * t;
+
     const r = A[o + 2] + (B[o + 2] - A[o + 2]) * t;
     const g = A[o + 3] + (B[o + 3] - A[o + 3]) * t;
     const b = A[o + 4] + (B[o + 4] - A[o + 4]) * t;
@@ -177,6 +214,7 @@ function pintar(ahora) {
     ctx.fillRect(x - tam / 2, y - tam / 2, tam, tam);
   }
   ctx.globalCompositeOperation = 'source-over';
+  pintarLineas(i, tBruto, dyLuz);
   if (enPunto) {
     // El punto: un núcleo blanco nítido con un halo suave
     const c = centro();
@@ -190,6 +228,70 @@ function pintar(ahora) {
     ctx.fillStyle = '#fff';
     ctx.beginPath(); ctx.arc(c.x, c.y, 2.6, 0, Math.PI * 2); ctx.fill();
     ctx.globalAlpha = 1;
+  }
+}
+
+// Lo que las partículas solas no dejan leer: los hilos como líneas, los cinco como esferas y las
+// columnas como barras macizas. Todo depende solo de la posición de desplazamiento.
+const tramo = (t, a, b) => suave(Math.min(1, Math.max(0, (t - a) / (b - a))));
+function pintarLineas(i, t, dyLuz) {
+  if (menosMovimiento) t = Math.round(t);
+  const wNodos = i === 0 ? tramo(t, 0.5, 1) : i === 1 ? 1 : i === 2 ? 1 - tramo(t, 0.2, 0.7) : 0;
+  const wHilos = i === 1 ? tramo(t, 0.3, 0.95) : i === 2 ? 1 - tramo(t, 0.25, 0.7) : 0;
+  const wLuz = i === 2 ? tramo(t, 0.3, 0.85) : i === 3 ? 1 - tramo(t, 0.6, 0.95) : 0;
+
+  if (wHilos > 0 && hilos.length && geoHilos) {
+    ctx.lineWidth = 1.2;
+    ctx.lineCap = 'round';
+    const tramos = 28;
+    hilos.forEach((h, k) => {
+      // Cada hilo aparece en su turno y se va trazando al desplazar
+      const f = Math.min(1, Math.max(0, (wHilos - (k / hilos.length) * 0.5) / 0.5));
+      if (f <= 0) return;
+      let [px, py] = puntoHilo(h, 0);
+      const fin = Math.max(1, Math.ceil(tramos * f));
+      for (let j = 1; j <= fin; j++) {
+        const s = Math.min(f, j / tramos);
+        const [qx, qy] = puntoHilo(h, s);
+        ctx.strokeStyle = `rgba(${h.c[0]},${h.c[1]},${h.c[2]},${(0.7 * wHilos * (1 - 0.75 * s)).toFixed(3)})`;
+        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(qx, qy); ctx.stroke();
+        px = qx; py = qy;
+      }
+    });
+  }
+
+  if (wNodos > 0) {
+    for (const p of posicionesCinco()) {
+      const col = COLORES[p.quien], rad = p.quien === 'persona' ? 9 : 7;
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rad * 2.2);
+      g.addColorStop(0, `rgba(${col},${0.95 * wNodos})`);
+      g.addColorStop(0.3, `rgba(${col},${0.35 * wNodos})`);
+      g.addColorStop(1, `rgba(${col},0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(p.x, p.y, rad * 2.2, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  if (wLuz > 0 && barras) {
+    const { horas, techo, x0, paso, base, maxAlto } = barras;
+    const y0 = base + dyLuz;
+    const ahora = luz ? hoyEnMadrid().hora : -1;
+    horas.forEach((h, k) => {
+      const altoB = Math.max(3, (Math.max(h.precio, 0) / techo) * maxAlto) * wLuz;
+      const col = COLORES[h.tramo] || COLORES.medio;
+      ctx.fillStyle = `rgba(${col},${(0.88 * wLuz).toFixed(3)})`;
+      ctx.fillRect(x0 + paso * k + paso * 0.16, y0 - altoB, paso * 0.68, altoB);
+      if (h.hora === ahora) {
+        ctx.fillStyle = `rgba(255,255,255,${wLuz})`;
+        ctx.beginPath(); ctx.arc(x0 + paso * (k + 0.5), y0 + 7, 2.2, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+    // Tres horas de referencia bajo el eje
+    ctx.fillStyle = `rgba(166,166,166,${(0.9 * wLuz).toFixed(3)})`;
+    ctx.font = '500 11px Archivo, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    for (const k of [0, 12, horas.length - 1]) if (horas[k]) ctx.fillText(`${String(horas[k].hora).padStart(2, '0')} h`, x0 + paso * (k + 0.5), y0 + 21);
+    ctx.textAlign = 'start';
   }
 }
 
@@ -221,7 +323,6 @@ function hoyEnMadrid() {
 }
 
 async function cargarDatos() {
-  const euros = new Intl.NumberFormat('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
   const [act, csv] = await Promise.allSettled([leer(`${DATOS}actividad.json`, 'json'), leer(`${DATOS}${hoyEnMadrid().fecha.slice(0, 4)}.csv`, 'text')]);
 
   if (act.status === 'fulfilled') {
@@ -231,12 +332,12 @@ async function cargarDatos() {
     if (fus.length) {
       prs = { total: fus.length, porAutor };
       const dias = Math.max(1, Math.round((Date.parse(fus[fus.length - 1].fusionado) - Date.parse(fus[0].fusionado)) / 864e5));
-      document.querySelector('[data-prs]').textContent = `${fus.length} cambios de Pvpc-bridge fusionados en ${dias} días. Lo que hace uno, lo revisa otro.`;
+      document.querySelector('[data-prs]').textContent = `${fus.length} cambios fusionados en ${dias} días. Lo que hace uno, lo revisa otro.`;
     }
   }
 
   if (csv.status === 'fulfilled') {
-    const { fecha, hora } = hoyEnMadrid();
+    const { fecha } = hoyEnMadrid();
     const lineas = csv.value.trim().split(/\r?\n/);
     const cab = lineas.shift().split(',');
     const iL = cab.indexOf('fecha_hora_local'), iP = cab.indexOf('eur_mwh');
@@ -250,8 +351,6 @@ async function cargarDatos() {
       const orden = [...hoy].sort((a, b) => a.precio - b.precio), tercio = Math.ceil(orden.length / 3);
       orden.forEach((h, k) => { h.tramo = k < tercio ? 'barato' : k < tercio * 2 ? 'medio' : 'caro'; });
       luz = hoy;
-      const ahora = hoy.find((h) => h.hora === hora) || hoy[hoy.length - 1];
-      document.querySelector('[data-luz]').textContent = `Estas ${hoy.length} columnas son el precio de la luz de hoy. Ahora: ${euros.format(ahora.precio)} €/kWh. Lo más barato, a las ${String(orden[0].hora).padStart(2, '0')}:00.`;
     }
   }
   construirFormas();
@@ -302,9 +401,25 @@ if (lienzoCurva) {
     .catch(sinCurva);
 }
 
+// «DESLIZA» se va en cuanto se empieza a desplazar: ya ha hecho su trabajo y no se monta sobre el big bang.
+// Al final, la nube 3D que se recoge en el punto del logotipo se apaga y deja el punto nítido (CSS).
+function alDesplazar() {
+  document.documentElement.classList.toggle('desplazado', scrollY > 24);
+  const capa = document.querySelector('.lienzo-3d');
+  if (capa) {
+    const { i, t } = progreso();
+    const f = i === escenas.length - 2 ? 1 - tramo(t, 0.72, 1) : i === escenas.length - 1 ? 0 : 1;
+    capa.style.filter = f < 1 ? `opacity(${f.toFixed(3)})` : '';
+    // La capa 3D es opaca: al apagarla, que no asome debajo un fotograma viejo del 2D
+    if (f < 1 && ctx) ctx.clearRect(0, 0, ancho, alto);
+  }
+}
+
 medir();
 pedir();
+alDesplazar();
 addEventListener('scroll', pedir, { passive: true });
+addEventListener('scroll', alDesplazar, { passive: true });
 addEventListener('resize', () => { medir(); pedir(); }, { passive: true });
 document.addEventListener('visibilitychange', pedir);
 cargarDatos();
