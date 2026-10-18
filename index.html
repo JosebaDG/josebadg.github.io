@@ -2,49 +2,105 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Laboratorio</title>
-  <meta name="description" content="Portada del laboratorio: proyectos abiertos y herramientas propias.">
-  <link rel="stylesheet" href="/estilos.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>singularity· · Todo empieza con un punto</title>
+  <meta name="description" content="Todo empieza con un punto. Una persona y cuatro agentes de IA construyen herramientas reales, a la vista.">
+  <link rel="canonical" href="https://josebadg.github.io/">
+  <meta property="og:title" content="singularity·">
+  <meta property="og:description" content="Todo empieza con un punto. Una persona y cuatro agentes de IA construyen herramientas reales, a la vista.">
+  <meta property="og:image" content="https://josebadg.github.io/portada/curvatura-cartel.jpg">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/portada/punto.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="module" src="/portada/punto.js"></script>
+  <script src="/miles-drive/contacto.js" defer></script>
 </head>
 <body>
-  <a class="saltar" href="#contenido">Saltar al contenido</a>
-  <header>
-    <a class="marca" href="/">Laboratorio</a>
-    <nav aria-label="Principal">
-      <ul>
-        <li><a href="/" aria-current="page">Inicio</a></li>
-        <li><a href="/miles-drive/">miles-drive</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main id="contenido">
-    <h1>Laboratorio</h1>
-    <p class="entradilla">Un laboratorio pequeño donde un equipo de asistentes de IA y una persona construyen herramientas útiles, las prueban y documentan lo que aprenden.</p>
+  <a class="saltar" href="#proyectos">Saltar a los proyectos</a>
+  <canvas class="lienzo" aria-hidden="true"></canvas>
+  <!-- Escena 0: el espacio-tiempo curvado hacia el punto (curvatura.js). Encima del 2D y del 3D, transparente. -->
+  <canvas class="lienzo lienzo-curva" aria-hidden="true"></canvas>
 
-    <h2>Proyectos</h2>
-    <div class="tarjeta">
-      <h3><a href="https://josebadg.github.io/Pvpc-bridge/">Pvpc-bridge</a></h3>
-      <p>El precio de la luz en España hora a hora (tarifa PVPC), con las horas más baratas del día y un histórico desde 2022. Código abierto.</p>
-    </div>
-    <div class="tarjeta">
-      <h3><a href="/miles-drive/">miles-drive</a></h3>
-      <p>Herramienta personal de gestión de archivos. Uso privado.</p>
-    </div>
+  <main>
+    <!-- Escena 0: el espacio se curva hacia un punto blanco que late. Sin JS o sin WebGL, el cartel. -->
+    <section class="escena escena-0" id="punto" data-escena="punto" aria-labelledby="titulo">
+      <button type="button" class="latido-pausa" aria-pressed="false" aria-label="Pausar el latido" hidden></button>
+      <div class="texto">
+        <h1 id="titulo">Todo empieza con un punto.</h1>
+      </div>
+      <p class="pista" aria-hidden="true">Desliza</p>
+    </section>
 
-    <h2 id="contacto">Contacto</h2>
-    <div class="contacto" data-contacto>
-      <button type="button" class="boton" hidden>Mostrar el correo de contacto</button>
-      <p data-contacto-salida hidden></p>
-      <noscript><p>Para ver el correo de contacto hace falta activar JavaScript en el navegador.</p></noscript>
-    </div>
+    <!-- Escena 1: el punto se divide en cinco -->
+    <section class="escena" data-escena="cinco" aria-labelledby="e1">
+      <div class="texto">
+        <h2 id="e1">Uno se hace cinco.</h2>
+        <p>Una persona y cuatro agentes de IA: Miles, Charlie, Maya y Simone.</p>
+      </div>
+    </section>
+
+    <!-- Escena 2: hilos entre los puntos, uno por pull request fusionado (dato real) -->
+    <section class="escena" data-escena="hilos" aria-labelledby="e2">
+      <div class="texto">
+        <h2 id="e2">Cada hilo es un cambio real.</h2>
+        <p data-prs>Lo que hace uno, lo revisa otro.</p>
+      </div>
+    </section>
+
+    <!-- Escena 3: la materia son datos: el precio de la luz de hoy, hora a hora -->
+    <section class="escena" data-escena="luz" aria-labelledby="e3">
+      <div class="texto">
+        <h2 id="e3">La materia son datos.</h2>
+        <p data-luz>Cada día, el precio de la luz se vuelve 24 columnas.</p>
+      </div>
+    </section>
+
+    <!-- Escena 4: lo que ya existe. Contenido normal, legible sin JavaScript. -->
+    <section class="escena escena-contenido" id="proyectos" data-escena="cielo" aria-labelledby="e4">
+      <div class="texto">
+        <h2 id="e4">Lo que ya existe.</h2>
+        <ul class="proyectos" role="list">
+          <li>
+            <h3><a href="https://josebadg.github.io/Pvpc-bridge/">Pvpc-bridge</a></h3>
+            <p>El precio de la luz, hora a hora. Cada noche se actualiza sola con el de mañana.</p>
+          </li>
+          <li>
+            <h3><a href="https://github.com/JosebaDG/Pvpc-bridge/tree/main/mcp">Servidor MCP</a></h3>
+            <p>Para que cualquier agente pregunte cuál es la hora más barata. Escrito y probado; falta desplegarlo.</p>
+          </li>
+          <li>
+            <h3><a href="https://josebadg.github.io/nava-ordunte-3d/">Nava de Ordunte 3D</a></h3>
+            <p>Un valle en 3D en el navegador: relieve, ortofoto oficial y tus rutas GPX, sin subirlas a ningún sitio. Prototipo abierto y comunitario.</p>
+          </li>
+          <li>
+            <h3><a href="/miles-drive/">miles-drive</a></h3>
+            <p>Herramienta personal de gestión de archivos. Uso privado.</p>
+          </li>
+          <li>
+            <h3><a href="https://github.com/JosebaDG/Pvpc-bridge/tree/main/docs/simbiosis">El método</a></h3>
+            <p>Cómo trabajan una persona y cuatro agentes en GitHub. Con lo que salió mal.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Escena 5: todo vuelve a un punto -->
+    <section class="escena" data-escena="vuelta" aria-labelledby="e5">
+      <div class="texto">
+        <h2 id="e5">¿Cuál es tu punto?</h2>
+        <p>Todo esto empezó con uno. El código está abierto: <a href="https://github.com/JosebaDG">github.com/JosebaDG</a>.</p>
+        <!-- Cierre: la frase acaba en el logotipo; la escena 3D termina en el punto marcado con data-punto-final. -->
+        <p class="cierre">Conocimiento que genera conocimiento: <span class="marca" lang="en">singularity<span class="marca-punto" data-punto-final aria-hidden="true">·</span></span></p>
+        <div class="contacto" data-contacto>
+          <button type="button" class="boton" hidden>Mostrar el correo de contacto</button>
+          <p data-contacto-salida hidden></p>
+          <noscript><p>Para ver el correo de contacto hace falta activar JavaScript en el navegador.</p></noscript>
+        </div>
+        <p class="legal"><a href="/miles-drive/privacidad/">Privacidad de miles-drive</a> · <a href="/miles-drive/condiciones/">Condiciones de miles-drive</a></p>
+      </div>
+    </section>
   </main>
-  <footer>
-    <ul>
-      <li><a href="/miles-drive/privacidad/">Privacidad de miles-drive</a></li>
-      <li><a href="/miles-drive/condiciones/">Condiciones de miles-drive</a></li>
-    </ul>
-  </footer>
-  <script src="/miles-drive/contacto.js" defer></script>
 </body>
 </html>
