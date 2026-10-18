@@ -138,7 +138,11 @@ function progreso() {
   return { i: escenas.length - 1, t: 0 };
 }
 
+// La capa 3D (bigbang.min.js) avisa cuando tapa del todo este lienzo: entonces no se pinta
+let tapado = false;
+
 function pintar(ahora) {
+  if (tapado) return;
   const { i, t: tBruto } = progreso();
   const t = menosMovimiento ? Math.round(tBruto) : suave(tBruto);
   const A = formas[i], B = formas[Math.min(i + 1, formas.length - 1)];
@@ -245,6 +249,31 @@ async function cargarDatos() {
   }
   construirFormas();
   pedir();
+}
+
+// ---------- Capa 3D (Charlie): el big bang con three.js, solo si el dispositivo puede ----------
+// Se pide después de la apertura (al primer desplazamiento o con el navegador libre) y nunca la
+// bloquea. Sin WebGPU ni WebGL 2, con menos movimiento o con ahorro de datos, no se descarga.
+function puede3D() {
+  if (menosMovimiento || (navigator.connection && navigator.connection.saveData)) return false;
+  if ('gpu' in navigator) return true;
+  try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; }
+}
+if (puede3D()) {
+  let pedida = false;
+  const cargar3D = () => {
+    if (pedida) return;
+    pedida = true;
+    import('./bigbang.min.js')
+      .then((m) => m.iniciar({
+        lienzo2D: lienzo, progreso, centro, radio, posicionesCinco, COLORES,
+        tapar: (si) => { tapado = si; if (!si) pedir(); },
+      }))
+      .then((capa) => { document.documentElement.dataset.capa3d = capa.backend; })
+      .catch(() => { tapado = false; pedir(); });
+  };
+  addEventListener('scroll', cargar3D, { once: true, passive: true });
+  addEventListener('load', () => (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(cargar3D, { timeout: 2500 }));
 }
 
 medir();
