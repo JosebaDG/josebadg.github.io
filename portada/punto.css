@@ -5,8 +5,11 @@
 
   --negro: #000;
   --blanco: #fff;
-  --tinta: #ededed;
-  --tinta-2: #a6a6a6;  /* 8,6:1 */
+  /* Títulos y logotipo: dorado suave, el tono del disco de luz de la malla (14,2:1 sobre negro).
+     Texto largo: blanco cálido (17,9:1) y gris cálido para el secundario (10,3:1). */
+  --oro: #f3cf96;
+  --tinta: #f3ece2;
+  --tinta-2: #bdb4a7;
   --linea: #333;
   --foco: #fff;
 
@@ -48,7 +51,7 @@ body {
   overflow-x: hidden;
 }
 
-a { color: var(--blanco); text-underline-offset: 0.2em; }
+a { color: var(--tinta); text-underline-offset: 0.2em; }
 a:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; border-radius: 2px; }
 
 .saltar {
@@ -115,6 +118,7 @@ h1, h2 {
   line-height: 1;
   letter-spacing: var(--interletra-display);
   text-wrap: balance;
+  color: var(--oro);
 }
 
 .texto p { margin: 0; color: var(--tinta-2); max-width: 30rem; }
@@ -130,6 +134,26 @@ h1, h2 {
   opacity: 0;
 }
 .escena-0 .texto { padding-bottom: var(--e-5); }
+
+/* Frase de entrada. Sin JS o sin WebGL: frase y logotipo en el flujo, con el punto blanco dibujado. */
+.texto .marca-entrada { margin-top: 0; color: var(--oro); }
+.marca-joseba {
+  margin: 0 !important;
+  font-size: clamp(1.25rem, 1rem + 1.6vw, 2rem);
+  font-weight: var(--peso-display);
+  letter-spacing: 0.16em;
+  color: var(--oro) !important;
+  display: none;
+}
+[data-frase="joseba"] .marca-joseba { display: block; }
+[data-frase="joseba"] .marca-entrada { display: none; }
+.js .escena-0 .marca-entrada, .js .escena-0 .marca-joseba { opacity: 0; animation: aparecer var(--t-aparecer) var(--curva) 3.4s forwards; }
+
+/* Con la curvatura: el punto del logotipo es el de la malla (punto.js lo coloca en centro()) */
+.marca-viva .escena-0 .texto-entrada { position: absolute; inset: 0; max-width: none; padding: 0; pointer-events: none; }
+.marca-viva .escena-0 h1 { position: absolute; left: var(--margen); right: var(--margen); margin: 0; text-align: center; }
+.marca-viva .escena-0 .marca-entrada { position: absolute; margin: 0; }
+.marca-viva .escena-0 .marca-entrada .marca-punto { background: transparent; }
 .js .pista { animation: aparecer 1.2s var(--curva) 4.2s forwards; }
 html:not(.js) .pista { display: none; }
 
@@ -163,7 +187,7 @@ html:not(.js) .pista { display: none; }
   font-weight: var(--peso-display);
   line-height: 1;
   letter-spacing: var(--interletra-display);
-  color: var(--tinta);
+  color: var(--oro);
   white-space: nowrap;
 }
 .marca-punto {
@@ -190,6 +214,6 @@ html:not(.js) .pista { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .escena-0 h1, .js .pista { animation: none; opacity: 1; }
+  .js .escena-0 h1, .js .pista, .js .escena-0 .marca-entrada, .js .escena-0 .marca-joseba { animation: none; opacity: 1; }
   .js .escena .texto { animation: none !important; }
 }

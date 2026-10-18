@@ -13,7 +13,7 @@
   <meta name="theme-color" content="#000000">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23fff'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/portada/punto.css">
-  <script>document.documentElement.classList.add('js')</script>
+  <script>document.documentElement.classList.add('js');if(new URLSearchParams(location.search).get('frase')==='joseba')document.documentElement.dataset.frase='joseba'</script>
   <script type="module" src="/portada/punto.js"></script>
   <script src="/miles-drive/contacto.js" defer></script>
 </head>
@@ -27,8 +27,12 @@
     <!-- Escena 0: el espacio se curva hacia un punto blanco que late. Sin JS o sin WebGL, el cartel. -->
     <section class="escena escena-0" id="punto" data-escena="punto" aria-labelledby="titulo">
       <button type="button" class="latido-pausa" aria-pressed="false" aria-label="Pausar el latido" hidden></button>
-      <div class="texto">
+      <!-- Frase de entrada (recomendada): la frase y el logotipo; el punto del logotipo es el punto que late.
+           Con ?frase=joseba se ve la alternativa «THE SINGULARITY» para comparar. -->
+      <div class="texto texto-entrada">
         <h1 id="titulo">Todo empieza con un punto.</h1>
+        <p class="marca marca-entrada" data-frase="miles"><span lang="en">singularity</span><span class="marca-punto" data-punto-latido aria-hidden="true">·</span></p>
+        <p class="marca-joseba" data-frase="joseba" lang="en">THE SINGULARITY</p>
       </div>
       <p class="pista" aria-hidden="true">Desliza</p>
     </section>
@@ -49,11 +53,11 @@
       </div>
     </section>
 
-    <!-- Escena 3: la materia son datos: el precio de la luz de hoy, hora a hora -->
+    <!-- Escena 3: la materia son datos: las columnas se dibujan con datos públicos reales del día -->
     <section class="escena" data-escena="luz" aria-labelledby="e3">
       <div class="texto">
         <h2 id="e3">La materia son datos.</h2>
-        <p data-luz>Cada día, el precio de la luz se vuelve 24 columnas.</p>
+        <p data-luz>Datos públicos y reales que, cada día, se convierten en herramientas abiertas.</p>
       </div>
     </section>
 
@@ -63,12 +67,8 @@
         <h2 id="e4">Lo que ya existe.</h2>
         <ul class="proyectos" role="list">
           <li>
-            <h3><a href="https://josebadg.github.io/Pvpc-bridge/">Pvpc-bridge</a></h3>
-            <p>El precio de la luz, hora a hora. Cada noche se actualiza sola con el de mañana.</p>
-          </li>
-          <li>
-            <h3><a href="https://github.com/JosebaDG/Pvpc-bridge/tree/main/mcp">Servidor MCP</a></h3>
-            <p>Para que cualquier agente pregunte cuál es la hora más barata. Escrito y probado; falta desplegarlo.</p>
+            <h3><a href="https://josebadg.github.io/Pvpc-bridge/">La luz, hora a hora</a></h3>
+            <p>Datos públicos de cada día convertidos en una web que se actualiza sola cada noche.</p>
           </li>
           <li>
             <h3><a href="https://josebadg.github.io/nava-ordunte-3d/">Nava de Ordunte 3D</a></h3>
