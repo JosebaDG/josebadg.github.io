@@ -12,7 +12,7 @@
 // Si no hay WebGL, se pierde el contexto o baja de 30 fps sin remedio, queda el cartel estático.
 
 const L = 24;            // media anchura de la malla (unidades de mundo; una celda = 1)
-const SEG = 200;         // segmentos por lado: 201² vértices, índices de 16 bits
+const MUESTRAS = 320;    // muestras por línea de la rejilla: 2·49·320·2 vértices, índices de 16 bits
 const GARGANTA = 1.0;    // anchura del pozo
 const PROF = 6.0;        // profundidad del pozo en reposo
 const DISCO = 1.6;       // radio del disco de luz
@@ -28,56 +28,66 @@ export function latido(reloj) {
   return Math.exp(-(((f - 0.03) / 0.05) ** 2)) + 0.55 * Math.exp(-(((f - 0.2) / 0.06) ** 2));
 }
 
+// La malla son líneas de verdad, no un patrón pintado sobre triángulos: cada línea de la rejilla es una
+// tira de 320 muestras (más juntas cerca del pozo) que el vertex shader hunde y engorda en pantalla.
+// Así baja curvada y sin cortes hasta el punto, también en WebKit (antes, la línea salía de fwidth()
+// sobre la superficie y se rompía en la pared empinada del embudo).
 const VS_MALLA = `
 attribute vec2 aP;
+attribute vec2 aInfo;   // x: familia (0 = x fija, 1 = y fija), y: lado de la tira (-1 o 1)
 uniform mat4 uVP;
-uniform float uProf, uEncoge, uGiro, uFase, uOnda;
-varying vec2 vG;
-varying float vR, vOnda;
+uniform vec2 uRes;      // píxeles del lienzo
+uniform float uProf, uEncoge, uGiro, uFase, uOnda, uMedio;
+varying float vR, vOnda, vLado;
 float pozo(float r) { return -uProf / sqrt(1.0 + r * r / ${(GARGANTA * GARGANTA).toFixed(3)}); }
-void main() {
-  float r0 = length(aP);
-  float a = uGiro / (1.0 + r0 * 0.55);
-  float c = cos(a), s = sin(a);
-  vec2 q = vec2(c * aP.x - s * aP.y, s * aP.x + c * aP.y) * uEncoge;
-  float r = length(q);
-  float onda = 0.0;
+float ondaEn(float r0) {
+  float o = 0.0;
   for (int k = 0; k < 3; k++) {
     float edad = uFase + float(k) * ${PERIODO.toFixed(2)};
     float frente = 1.1 + edad * 4.2;
-    onda += exp(-pow((r0 - frente) / 0.65, 2.0)) * exp(-edad * 0.75);
+    o += exp(-pow((r0 - frente) / 0.65, 2.0)) * exp(-edad * 0.75);
   }
-  onda *= uOnda / (1.0 + 0.06 * r0);
-  vG = aP;
+  return o * uOnda / (1.0 + 0.06 * r0);
+}
+vec4 mundo(vec2 p) {
+  float r0 = length(p);
+  float a = uGiro / (1.0 + r0 * 0.55);
+  float c = cos(a), s = sin(a);
+  vec2 q = vec2(c * p.x - s * p.y, s * p.x + c * p.y) * uEncoge;
+  return uVP * vec4(q, pozo(length(q)) + ondaEn(r0) * 0.45, 1.0);
+}
+void main() {
+  vec2 tg = aInfo.x < 0.5 ? vec2(0.0, 1.0) : vec2(1.0, 0.0);
+  vec4 c0 = mundo(aP);
+  vec4 c1 = mundo(aP + tg * 0.02);
+  vec2 s0 = c0.xy / c0.w * uRes, s1 = c1.xy / c1.w * uRes;
+  vec2 d = s1 - s0;
+  d = length(d) > 1e-6 ? normalize(d) : vec2(1.0, 0.0);
+  vec2 n = vec2(-d.y, d.x);
+  c0.xy += n * aInfo.y * uMedio / uRes * c0.w;
+  float r0 = length(aP);
   vR = r0;
-  vOnda = onda;
-  gl_Position = uVP * vec4(q, pozo(r) + onda * 0.45, 1.0);
+  vOnda = ondaEn(r0);
+  vLado = aInfo.y;
+  gl_Position = c0;
 }`;
 
 const FS_MALLA = `
-#extension GL_OES_standard_derivatives : enable
 precision highp float;
-varying vec2 vG;
-varying float vR, vOnda;
-uniform float uDpr, uAlfa, uLatido, uAltoPx;
+varying float vR, vOnda, vLado;
+uniform float uAlfa, uLatido, uAltoPx, uMedio;
 void main() {
-  vec2 fw = max(fwidth(vG), vec2(1e-4));
-  vec2 d = abs(fract(vG - 0.5) - 0.5) / fw;
-  float medio = 0.65 * uDpr;
-  float linea = clamp(medio + 0.5 - min(d.x, d.y), 0.0, 1.0);
-  float densidad = max(fw.x, fw.y);
-  float nitidez = clamp(1.25 - densidad * 2.2, 0.0, 1.0);
-  float velo = clamp(densidad * 0.6, 0.0, 0.16);
-  float l = linea * nitidez + velo * (1.0 - nitidez);
-  float cerca = exp(-vR / 1.6);
-  float luz = 0.62 + 1.1 * cerca * (0.75 + 0.4 * uLatido) + vOnda * 0.8;
+  // Borde suave de un píxel: la línea mide lo mismo en cualquier pantalla
+  float l = clamp((1.0 - abs(vLado)) * uMedio, 0.0, 1.0);
+  float cerca = exp(-vR / 1.4);
+  float luz = 0.55 + 0.75 * cerca * (0.75 + 0.4 * uLatido) + vOnda * 0.8;
   luz *= smoothstep(${(L * 0.98).toFixed(2)}, ${(L * 0.42).toFixed(2)}, vR);
   float y = gl_FragCoord.y / uAltoPx;
   luz *= mix(0.32, 1.0, smoothstep(0.06, 0.42, y));
   vec3 frio = vec3(0.70, 0.73, 0.80);
   vec3 calido = vec3(1.0, 0.86, 0.66);
-  vec3 col = mix(frio, calido, clamp(cerca * 1.6 + vOnda * 0.5, 0.0, 1.0));
-  float a = clamp(l * luz * uAlfa, 0.0, 1.0);
+  vec3 col = mix(frio, calido, clamp(cerca * 1.3 + vOnda * 0.5, 0.0, 1.0));
+  float a = clamp(0.62 * l * luz * uAlfa, 0.0, 1.0);
   gl_FragColor = vec4(col * a, a);
 }`;
 
@@ -100,11 +110,15 @@ void main() {
   float ang = atan(e2.y, e2.x);
   float anillo = 0.35 * exp(-pow((e - 0.55) / 0.25, 2.0)) + exp(-pow((e - 0.86) / 0.1, 2.0));
   anillo *= 1.0 - smoothstep(1.05, 1.45, e);
-  float lado = 0.55 + 0.45 * cos(ang + 0.5);
+  // Simétrico arriba y abajo: el punto queda en el centro del anillo (antes brillaba más por debajo)
+  float lado = 0.8 + 0.2 * cos(ang - 3.14159);
   float estrias = 0.82 + 0.18 * sin(ang * 7.0 + e * 9.0 - uReloj * 0.9);
   float disco = anillo * lado * estrias * (0.42 + 0.18 * uLatido);
+  // Anillo de fotones: un círculo fino y redondo alrededor del punto, que marca su centro
+  float foton = 0.5 * exp(-pow((length(p) - uEje.x * 0.48) / (1.4 * uDpr), 2.0)) * (0.8 + 0.3 * uLatido);
   vec3 ambar = vec3(0.95, 0.70, 0.38);
-  vec3 col = vec3(1.0) * (nucleo + halo * 0.9) + mix(vec3(1.0, 0.93, 0.82), ambar, smoothstep(0.5, 1.1, e)) * disco;
+  vec3 col = vec3(1.0) * (nucleo + halo * 0.9) + mix(vec3(1.0, 0.93, 0.82), ambar, smoothstep(0.5, 1.1, e)) * disco
+           + vec3(1.0, 0.9, 0.75) * foton;
   col *= uIntens * uAlfa;
   float a = clamp(max(col.r, max(col.g, col.b)), 0.0, 1.0);
   gl_FragColor = vec4(min(col, vec3(a)), a);
@@ -122,6 +136,7 @@ function programa(gl, vs, fs) {
   gl.attachShader(p, sh(gl.VERTEX_SHADER, vs));
   gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs));
   gl.bindAttribLocation(p, 0, 'aP');
+  gl.bindAttribLocation(p, 1, 'aInfo');
   gl.linkProgram(p);
   if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
   const u = {};
@@ -161,22 +176,25 @@ function proyectar(m, x, y, z, ancho, alto) {
 export function init(api) {
   const { lienzo, progreso, centro, menosMovimiento, boton, alFallar } = api;
   const gl = lienzo.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false, depth: false, powerPreference: 'high-performance' });
-  if (!gl || !gl.getExtension('OES_standard_derivatives')) throw new Error('sin WebGL');
+  if (!gl) throw new Error('sin WebGL');
 
   const malla = programa(gl, VS_MALLA, FS_MALLA);
   const luz = programa(gl, VS_LUZ, FS_LUZ);
 
-  const lado = SEG + 1;
-  const v = new Float32Array(lado * lado * 2);
+  // Tiras de la malla: por cada línea de la rejilla (x = n o y = n), MUESTRAS puntos con dos vértices
   const pos = (u) => L * Math.sign(u) * Math.abs(u) ** 1.6;
-  for (let j = 0; j < lado; j++) for (let i = 0; i < lado; i++) {
-    v[(j * lado + i) * 2] = pos(-1 + (2 * i) / SEG);
-    v[(j * lado + i) * 2 + 1] = pos(-1 + (2 * j) / SEG);
+  const lineas = 2 * L + 1;
+  const v = new Float32Array(2 * lineas * MUESTRAS * 2 * 4);
+  let o = 0;
+  for (let fam = 0; fam < 2; fam++) for (let n = -L; n <= L; n++) for (let j = 0; j < MUESTRAS; j++) {
+    const m = pos(-1 + (2 * j) / (MUESTRAS - 1));
+    const x = fam === 0 ? n : m, y = fam === 0 ? m : n;
+    for (const lado of [-1, 1]) { v.set([x, y, fam, lado], o); o += 4; }
   }
-  const idx = new Uint16Array(SEG * SEG * 6);
+  const idx = new Uint16Array(2 * lineas * (MUESTRAS - 1) * 6);
   let k = 0;
-  for (let j = 0; j < SEG; j++) for (let i = 0; i < SEG; i++) {
-    const a = j * lado + i, b = a + 1, c = a + lado, d = c + 1;
+  for (let ln = 0; ln < 2 * lineas; ln++) for (let j = 0; j < MUESTRAS - 1; j++) {
+    const a = (ln * MUESTRAS + j) * 2, b = a + 1, c = a + 2, d = a + 3;
     idx.set([a, b, c, b, d, c], k); k += 6;
   }
   const bufMalla = gl.createBuffer();
@@ -240,15 +258,19 @@ export function init(api) {
       gl.uniform1f(u.uGiro, 0.35 + 3.2 * caida);
       gl.uniform1f(u.uFase, fase);
       gl.uniform1f(u.uOnda, menosMovimiento ? 0.6 : 1);
-      gl.uniform1f(u.uDpr, dpr);
+      gl.uniform2f(u.uRes, lienzo.width / 2, lienzo.height / 2);
+      gl.uniform1f(u.uMedio, 0.65 * dpr + 0.75);
       gl.uniform1f(u.uAlfa, alfaMalla);
       gl.uniform1f(u.uLatido, b);
       gl.uniform1f(u.uAltoPx, lienzo.height);
       gl.bindBuffer(gl.ARRAY_BUFFER, bufMalla);
       gl.enableVertexAttribArray(0);
-      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 16, 0);
+      gl.enableVertexAttribArray(1);
+      gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 16, 8);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, bufIdx);
       gl.drawElements(gl.TRIANGLES, idx.length, gl.UNSIGNED_SHORT, 0);
+      gl.disableVertexAttribArray(1);
     }
 
     if (alfaLuz > 0) {

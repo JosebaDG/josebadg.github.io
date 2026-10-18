@@ -217,3 +217,13 @@ html:not(.js) .pista { display: none; }
   .js .escena-0 h1, .js .pista, .js .escena-0 .marca-entrada, .js .escena-0 .marca-joseba { animation: none; opacity: 1; }
   .js .escena .texto { animation: none !important; }
 }
+
+/* ---------- Arreglos vistos en el iPhone (18/10) ---------- */
+/* «DESLIZA» se va al empezar a desplazar: así no se monta sobre la nube del big bang */
+.js.desplazado .pista { opacity: 0 !important; animation: none; transition: opacity 0.3s var(--curva); }
+/* Final: el texto no deja media pantalla en negro encima; la página acaba donde acaba el texto */
+.escena[data-escena="vuelta"] { min-height: auto; padding-top: var(--e-6); }
+/* El punto del logotipo, separado de la «y» */
+.marca-punto { margin-left: 0.1em; }
+/* Aire entre el logotipo y el botón del correo */
+.contacto { margin-top: var(--e-5); }
