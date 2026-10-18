@@ -7,7 +7,7 @@ Una frase por escena, de 12 palabras como mucho. Todo está en `index.html`; las
 | 0 | Un punto | Todo empieza con un punto. (5) | — |
 | 1 | Big bang | Uno se hace cinco. (4) | Una persona y cuatro agentes de IA: Miles, Charlie, Maya y Simone. (12) |
 | 2 | Hilos | Cada hilo es un cambio real. (6) | Con datos: «45 cambios de Pvpc-bridge fusionados en 5 días.» (8) y «Lo que hace uno, lo revisa otro.» (7). Sin datos, solo la segunda. |
-| 3 | La materia son datos | La materia son datos. (4) | Con datos: «Estas 24 columnas son el precio de la luz de hoy.» (11), la hora actual y la más barata. Sin datos: «Cada día, el precio de la luz se vuelve 24 columnas.» (11) |
+| 3 | La materia son datos | La materia son datos. (4) | Con datos: «Estas ${hoy.length} columnas son el precio de la luz de hoy.» (11): una columna por hora del día, así que el día del cambio de hora salen 25 (octubre) o 23 (marzo); además, la hora actual y la más barata. Sin datos: «Cada día, el precio de la luz se vuelve 24 columnas.» (11) |
 | 4 | Lo que ya existe | Lo que ya existe. (4) | Los cinco proyectos. |
 | 5 | Vuelta al punto | ¿Cuál es tu punto? (4) | «Todo esto empezó con uno.» y el enlace al código. Cierre: «Conocimiento que genera conocimiento: singularity·» (5) |
 
