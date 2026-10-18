@@ -145,6 +145,8 @@ function progreso() {
 
 // La capa 3D (bigbang.min.js) avisa cuando tapa del todo este lienzo: entonces no se pinta
 let tapado = false;
+// Con la curvatura en marcha (curvatura.js), el punto de la escena 0 lo pinta ella, no este lienzo
+let curvaActiva = false;
 
 function pintar(ahora) {
   if (tapado) return;
@@ -155,7 +157,7 @@ function pintar(ahora) {
   const respira = menosMovimiento ? 1 : 1 + 0.18 * Math.sin(ahora / 900);
   // Cuánto se ve "el punto" (núcleo y halo): entero al principio y al final, y se funde en las transiciones
   const ultima = formas.length - 1;
-  const fp = i === 0 ? 1 - Math.min(1, t * 4) : i === ultima - 1 ? Math.max(0, t * 4 - 3) : i === ultima ? 1 : 0;
+  const fp = i === 0 ? (curvaActiva ? 0 : 1 - Math.min(1, t * 4)) : i === ultima - 1 ? Math.max(0, t * 4 - 3) : i === ultima ? 1 : 0;
   const enPunto = fp > 0;
 
   ctx.fillStyle = '#000';
@@ -279,6 +281,25 @@ if (puede3D()) {
   };
   addEventListener('scroll', cargar3D, { once: true, passive: true });
   addEventListener('load', () => (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(cargar3D, { timeout: 2500 }));
+}
+
+// ---------- Escena 0 (Miles): el espacio-tiempo curvado hacia el punto ----------
+// Se pide nada más abrir: pesa unos 12 KB y no lleva three.js. Con menos movimiento pinta un
+// fotograma fijo. Sin WebGL, o si falla, queda el cartel estático (clase sin-curva).
+const lienzoCurva = document.querySelector('.lienzo-curva');
+if (lienzoCurva) {
+  const sinCurva = () => { curvaActiva = false; document.documentElement.classList.add('sin-curva'); pedir(); };
+  import('./curvatura.js')
+    .then((m) => {
+      m.init({
+        lienzo: lienzoCurva, progreso, centro, menosMovimiento,
+        boton: document.querySelector('.latido-pausa'), alFallar: sinCurva,
+      });
+      curvaActiva = true;
+      document.documentElement.classList.add('curva');
+      pedir();
+    })
+    .catch(sinCurva);
 }
 
 medir();

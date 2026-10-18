@@ -62,7 +62,41 @@ a:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; border-ra
   z-index: 0; pointer-events: none;
 }
 
+/* Escena 0: la curvatura va encima del 2D y del 3D (que es opaco); es transparente y no recibe toques */
+.lienzo-curva { z-index: 0; }
+html:not(.js) .lienzo-curva, .sin-curva .lienzo-curva { display: none; }
+
 main { position: relative; z-index: 1; }
+
+/* Cartel fijo de la escena 0: sin JS o sin WebGL se ve el mismo fotograma que pinta curvatura.js */
+html:not(.js) .escena-0, .sin-curva .escena-0 {
+  background: var(--negro) url(curvatura-cartel.jpg) center 42% / cover no-repeat;
+}
+
+/* Pausar el latido (WCAG 2.2.2). 44 px de diana, foco visible, sin brillo */
+.latido-pausa {
+  position: absolute; top: max(var(--e-3), env(safe-area-inset-top)); right: var(--margen);
+  width: 2.75rem; height: 2.75rem; padding: 0;
+  border: 1px solid #5c5c5c; border-radius: 50%;
+  background: rgb(0 0 0 / 0.55); color: var(--tinta);
+  cursor: pointer;
+}
+.latido-pausa::before {
+  content: ""; display: block; margin: auto;
+  width: 0.75rem; height: 0.875rem;
+  background: linear-gradient(90deg, currentColor 0 35%, transparent 35% 65%, currentColor 65%);
+}
+.latido-pausa[aria-pressed="true"]::before {
+  width: 0; height: 0; margin-left: calc(50% - 0.3rem);
+  background: none;
+  border-style: solid; border-width: 0.45rem 0 0.45rem 0.75rem;
+  border-color: transparent transparent transparent currentColor;
+}
+.latido-pausa:hover { border-color: var(--tinta-2); }
+.latido-pausa:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
+@media (forced-colors: active) {
+  .latido-pausa::before { forced-color-adjust: none; background: linear-gradient(90deg, ButtonText 0 35%, transparent 35% 65%, ButtonText 65%); }
+}
 
 .escena {
   min-height: 100svh;
@@ -145,6 +179,9 @@ html:not(.js) .pista { display: none; }
 @media (forced-colors: active) {
   .marca-punto { forced-color-adjust: none; background: CanvasText; }
 }
+
+.legal { margin-top: var(--e-5) !important; font-size: 0.9375rem; }
+.legal a { color: var(--tinta-2); }
 
 @media (min-width: 48rem) {
   :root { --margen: 4vw; }

@@ -17,10 +17,13 @@
 <body>
   <a class="saltar" href="#proyectos">Saltar a los proyectos</a>
   <canvas class="lienzo" aria-hidden="true"></canvas>
+  <!-- Escena 0: el espacio-tiempo curvado hacia el punto (curvatura.js). Encima del 2D y del 3D, transparente. -->
+  <canvas class="lienzo lienzo-curva" aria-hidden="true"></canvas>
 
   <main>
-    <!-- Escena 0: negro y un punto blanco. Nada más. -->
-    <section class="escena escena-0" data-escena="punto" aria-labelledby="titulo">
+    <!-- Escena 0: el espacio se curva hacia un punto blanco que late. Sin JS o sin WebGL, el cartel. -->
+    <section class="escena escena-0" id="punto" data-escena="punto" aria-labelledby="titulo">
+      <button type="button" class="latido-pausa" aria-pressed="false" aria-label="Pausar el latido" hidden></button>
       <div class="texto">
         <h1 id="titulo">Todo empieza con un punto.</h1>
       </div>
@@ -92,6 +95,7 @@
           <p data-contacto-salida hidden></p>
           <noscript><p>Para ver el correo de contacto hace falta activar JavaScript en el navegador.</p></noscript>
         </div>
+        <p class="legal"><a href="/miles-drive/privacidad/">Privacidad de miles-drive</a> · <a href="/miles-drive/condiciones/">Condiciones de miles-drive</a></p>
       </div>
     </section>
   </main>
