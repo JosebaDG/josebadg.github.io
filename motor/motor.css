@@ -1,0 +1,85 @@
+/* Motor de escenas: banco de pruebas (Charlie). Sin fuentes, imágenes de fuera ni recursos ajenos. */
+/* Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT */
+
+:root {
+  /* Los mismos tokens que preview/singularity/punto.css: el big bang los lee para sus nubes */
+  --c-persona: #ffffff;
+  --c-miles: #a2bcff;
+  --c-charlie: #47d6cf;
+  --c-maya: #f89dc9;
+  --c-simone: #e6b55d;
+  --fondo: #000;
+  --texto: #e9e9ef;
+  --tenue: #9a9aa8;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--fondo); color: var(--texto); }
+body {
+  margin: 0;
+  font: 400 1.05rem/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Capas del motor: fijas, debajo del texto, sin recibir toques */
+.motor-capas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.motor-lienzo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+main { position: relative; z-index: 1; }
+.escena {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 clamp(1.25rem, 5vw, 4rem) 14vh;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+.escena-cinco { justify-content: center; padding-top: 52vh; }
+h1, h2 { font-weight: 600; line-height: 1.15; margin: 0 0 0.6rem; overflow-wrap: anywhere; }
+h1 { font-size: clamp(1.9rem, 7vw, 3.4rem); }
+h2 { font-size: clamp(1.5rem, 5.5vw, 2.6rem); }
+p { margin: 0 0 0.8rem; color: var(--tenue); max-width: 36rem; }
+.pista { font-size: 0.95rem; }
+.credito { font-size: 0.85rem; }
+a { color: var(--c-charlie); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--c-charlie); outline-offset: 3px; }
+
+/* Carteles fijos: solo se ven si su escena no ha podido (html.sin-<nombre>) */
+.cartel { display: none; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.sin-curvatura .cartel-curvatura {
+  display: block;
+  background: url("carteles/curvatura.jpg") center 42% / cover no-repeat;
+  opacity: 0.85;
+}
+.sin-bigbang .cartel-cinco { display: block; }
+.cartel-cinco i {
+  position: absolute; width: 0.9rem; height: 0.9rem; border-radius: 50%;
+  left: 50%; top: 34%; transform: translate(-50%, -50%);
+  background: var(--c-persona); box-shadow: 0 0 1.4rem 0.3rem currentColor; color: var(--c-persona);
+}
+.cartel-cinco i:nth-child(2) { left: calc(50% + 18vmin); top: calc(34% - 18vmin); background: var(--c-miles); color: var(--c-miles); }
+.cartel-cinco i:nth-child(3) { left: calc(50% + 18vmin); top: calc(34% + 18vmin); background: var(--c-charlie); color: var(--c-charlie); }
+.cartel-cinco i:nth-child(4) { left: calc(50% - 18vmin); top: calc(34% + 18vmin); background: var(--c-maya); color: var(--c-maya); }
+.cartel-cinco i:nth-child(5) { left: calc(50% - 18vmin); top: calc(34% - 18vmin); background: var(--c-simone); color: var(--c-simone); }
+
+/* Pausa del movimiento: un solo botón para todas las escenas, 44 × 44 px como mínimo */
+.motor-pausa {
+  position: fixed; z-index: 2;
+  right: max(1rem, env(safe-area-inset-right)); bottom: max(1rem, env(safe-area-inset-bottom));
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(0, 0, 0, 0.55); color: var(--texto);
+  display: grid; place-items: center; cursor: pointer;
+}
+.motor-pausa[hidden] { display: none; }
+.motor-pausa span { width: 12px; height: 14px; border-left: 4px solid currentColor; border-right: 4px solid currentColor; }
+.motor-pausa[aria-pressed="true"] span {
+  width: 0; height: 0; border-right: 0; border-left: 13px solid currentColor;
+  border-top: 8px solid transparent; border-bottom: 8px solid transparent; margin-left: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

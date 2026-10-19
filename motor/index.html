@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <title>Motor de escenas · prueba con tres escenas</title>
+  <link rel="stylesheet" href="motor.css">
+  <link rel="modulepreload" href="escenas/curvatura.js">
+  <link rel="modulepreload" href="escenas/intro.js">
+</head>
+<body>
+  <!-- Banco de pruebas del motor: tres escenas y sus relevos. Nada de aquí es todavía la portada. -->
+  <div class="motor-capas" id="capas" aria-hidden="true"></div>
+
+  <main>
+    <section class="escena escena-punto" data-escena>
+      <div class="cartel cartel-curvatura" aria-hidden="true"></div>
+      <h1>Todo empieza con un punto.</h1>
+      <p class="pista">Baja despacio: el desplazamiento es el reloj.</p>
+    </section>
+
+    <section class="escena escena-cinco" data-escena>
+      <div class="cartel cartel-cinco" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <h2>Y de un punto salen cinco.</h2>
+      <p>Una persona y cuatro agentes, cada uno con su color.</p>
+    </section>
+
+    <section class="escena escena-fin" data-escena>
+      <h2>Cada escena es una función del tiempo.</h2>
+      <p>Un solo bucle, un solo vigilante de fps y un solo control de menos movimiento para todas. Si una escena no puede, su sección enseña un cartel fijo y el texto sigue ahí.</p>
+      <p class="credito">Método basado en <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>, de Giacomo Magnanini (MIT).</p>
+    </section>
+  </main>
+
+  <button class="motor-pausa" id="pausa" type="button" aria-pressed="false" aria-label="Pausar el movimiento" hidden>
+    <span aria-hidden="true"></span>
+  </button>
+
+  <script type="module">
+    import { crearMotor } from './motor.js';
+    // De abajo arriba: el big bang se enciende debajo de la luz de la curvatura, y la intro va encima de todo
+    window.motor = crearMotor({
+      capas: document.getElementById('capas'),
+      boton: document.getElementById('pausa'),
+      escenas: [
+        { nombre: 'bigbang', modulo: './escenas/bigbang.min.js', pesada: true },
+        { nombre: 'curvatura', modulo: './escenas/curvatura.js' },
+        { nombre: 'intro', modulo: './escenas/intro.js' },
+      ],
+    });
+  </script>
+</body>
+</html>
