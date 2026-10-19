@@ -5,18 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex">
   <meta name="color-scheme" content="dark">
-  <title>Motor de escenas · prueba con dos escenas</title>
+  <title>Motor de escenas · prueba con tres escenas</title>
   <link rel="stylesheet" href="motor.css">
   <link rel="modulepreload" href="escenas/curvatura.js">
+  <link rel="modulepreload" href="escenas/intro.js">
 </head>
 <body>
-  <!-- Banco de pruebas del motor: dos escenas y su relevo. Nada de aquí es todavía la portada. -->
+  <!-- Banco de pruebas del motor: tres escenas y sus relevos. Nada de aquí es todavía la portada. -->
   <div class="motor-capas" id="capas" aria-hidden="true"></div>
 
   <main>
     <section class="escena escena-punto" data-escena>
       <div class="cartel cartel-curvatura" aria-hidden="true"></div>
-      <h1>Todo empieza en un punto.</h1>
+      <h1>Todo empieza con un punto.</h1>
       <p class="pista">Baja despacio: el desplazamiento es el reloj.</p>
     </section>
 
@@ -39,13 +40,14 @@
 
   <script type="module">
     import { crearMotor } from './motor.js';
-    // De abajo arriba: el big bang se enciende debajo de la luz de la curvatura
+    // De abajo arriba: el big bang se enciende debajo de la luz de la curvatura, y la intro va encima de todo
     window.motor = crearMotor({
       capas: document.getElementById('capas'),
       boton: document.getElementById('pausa'),
       escenas: [
         { nombre: 'bigbang', modulo: './escenas/bigbang.min.js', pesada: true },
         { nombre: 'curvatura', modulo: './escenas/curvatura.js' },
+        { nombre: 'intro', modulo: './escenas/intro.js' },
       ],
     });
   </script>

@@ -1,4 +1,4 @@
-// singularity· · escena del motor: el espacio-tiempo curvado hacia el punto (Miles; adaptada al motor por Charlie).
+// The Singularity · escena del motor: el espacio-tiempo curvado hacia el punto (Miles; adaptada al motor por Charlie).
 // Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT
 //
 // Es curvatura.js de la vista previa con el contrato del motor: aquí solo se dibuja. El bucle, el

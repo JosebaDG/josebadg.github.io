@@ -1,4 +1,4 @@
-// singularity· · escena del motor: el big bang en 3D (Charlie).
+// The Singularity · escena del motor: el big bang en 3D (Charlie).
 // Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT
 //
 // three.js con WebGPURenderer, que cae solo a WebGL 2 si no hay WebGPU. Cada partícula lleva su
@@ -11,7 +11,8 @@
 // ../../relevos.js: el punto 3D se enciende en PUNTO.aparece, debajo de la luz de la curvatura,
 // y explota en PUNTO.entrega, cuando su malla ya no se ve. Un solo punto y un solo latido.
 //
-// Se compila a ../bigbang.min.js con esbuild: ver ../../README.md.
+// Se compila a ../bigbang.min.js con esbuild (build.mjs): relevos.js queda fuera del paquete y se
+// lee en tiempo de ejecución. Ver ../../README.md.
 
 import {
   WebGPURenderer, Scene, PerspectiveCamera, Sprite, PointsNodeMaterial,

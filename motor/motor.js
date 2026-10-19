@@ -85,6 +85,7 @@ export function crearMotor({ escenas, capas, boton = null, secciones = '[data-es
       lienzo: v.lienzo,
       centro, radio, T,
       get menosMovimiento() { return menosMovimiento; },
+      get pausado() { return pausado; },
       get movil() { return movil(); },
       pedir,
       fallo: () => caer(v, 'fallo'),
@@ -222,7 +223,10 @@ export function crearMotor({ escenas, capas, boton = null, secciones = '[data-es
   }
   if (vivas.some((v) => v.def.pesada && v.estado === 'esperando')) {
     addEventListener('scroll', cargarPesadas, { once: true, passive: true });
-    const libre = () => (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(cargarPesadas, { timeout: 2500 });
+    // Una escena que pide primer plano (la intro) no se interrumpe: la pesada se pide al acabar ella
+    const ocupada = () => vivas.some((v) => v.estado === 'viva' && v.inst.ocupada && v.inst.ocupada());
+    const cuandoLibre = () => (ocupada() ? setTimeout(cuandoLibre, 300) : cargarPesadas());
+    const libre = () => (window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(cuandoLibre, { timeout: 2500 });
     if (document.readyState === 'complete') libre(); else addEventListener('load', libre, { once: true });
   }
   html.classList.add('motor');
@@ -233,6 +237,7 @@ export function crearMotor({ escenas, capas, boton = null, secciones = '[data-es
     T,
     reloj: () => reloj,
     escenas: () => vivas.map((v) => ({ nombre: v.def.nombre, estado: v.estado, activa: v.activa, tramo: v.tramo })),
+    detalle: (nombre) => { const v = vivas.find((x) => x.def.nombre === nombre); return v && v.inst && v.inst.estado ? v.inst.estado() : null; },
     bajadas: () => bajadas,
     pausado: () => pausado,
     get menosMovimiento() { return menosMovimiento; },
