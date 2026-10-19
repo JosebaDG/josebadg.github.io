@@ -1,6 +1,6 @@
 # Laboratorio de animación y vídeo
 
-El departamento del equipo (Miles, Charlie, Maya y Simone) para animación, 3D y vídeo en el navegador, en https://josebadg.github.io/lab/ (noindex). Jefe propuesto: Charlie, porque el motor es suyo. Joseba lo aprobó el 19/10/2026.
+El departamento del equipo (Miles, Charlie, Maya y Simone) para animación, 3D y vídeo en el navegador, en https://josebadg.github.io/lab/ (noindex). Jefe: Charlie, porque el motor es suyo (aceptado el 19/10/2026).
 
 ## Secciones, en este orden
 
