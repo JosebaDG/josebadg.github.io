@@ -1,0 +1,24 @@
+/* Vista previa del PR #13 (https://github.com/JosebaDG/josebadg.github.io/pull/13), sin fusionar.
+   Copia exacta de las reglas que el PR añade a portada/punto.css. Al fusionar o descartar el PR, esta carpeta se borra. */
+
+/* Botón del correo: la portada no carga estilos.css, así que sin esto WebKit lo pinta gris claro con letra
+   blanca (contraste 1,8:1, falla AA). Va en el tono de la página: borde dorado, letra blanco cálido sobre negro. */
+.boton {
+  font: inherit; font-size: 1rem;
+  color: var(--tinta); background: var(--negro);
+  border: 1px solid var(--oro); border-radius: 999px;
+  padding: 0.5rem 1.125rem; min-height: 2.75rem;
+  cursor: pointer;
+}
+.boton:hover { background: #1a1612; }
+.boton:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
+
+/* Solo de la vista previa: etiqueta fija para saber dónde estás y volver al escaparate. */
+.vista-previa {
+  position: fixed; left: max(0.75rem, env(safe-area-inset-left)); bottom: max(0.75rem, env(safe-area-inset-bottom));
+  z-index: 50; max-width: calc(100vw - 1.5rem);
+  padding: 0.5rem 0.875rem; border-radius: 999px;
+  background: #000; color: var(--tinta); border: 1px solid var(--oro);
+  font: 500 0.8125rem/1.3 var(--f-texto); text-decoration: none;
+}
+.vista-previa:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
