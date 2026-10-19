@@ -86,7 +86,21 @@
     ul.lista strong { display: block; }
     ul.lista span { color: var(--tinta-2); font-size: 0.9375rem; }
 
-    /* 4. Biblioteca: huecos por tema, vacíos de momento. */
+    /* 4. Biblioteca: fichas cortas por recurso y estantes por tema. */
+    .ruta { border: 1px solid var(--linea); border-radius: 14px; padding: 0.875rem 1rem; margin: 0 0 1.25rem; }
+    .ruta ol { margin: 0.25rem 0 0; padding-left: 1.25rem; }
+    .ruta li { margin: 0 0 0.375rem; }
+    .ruta li strong { color: var(--oro); font-weight: 600; }
+    .ficha { border: 1px solid var(--linea); border-radius: 18px; padding: 1.125rem; margin: 0 0 1rem; }
+    .ficha h4 { font-size: 1.125rem; line-height: 1.25; margin: 0 0 0.5rem; }
+    .etiquetas { display: flex; flex-wrap: wrap; gap: 0.375rem; margin: 0 0 0.625rem; padding: 0; list-style: none; }
+    .etiquetas li { font-size: 0.8125rem; padding: 0.125rem 0.625rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta-2); }
+    .ficha dl { margin: 0 0 0.75rem; }
+    .ficha dt { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--oro); margin: 0.625rem 0 0.125rem; }
+    .ficha dd { margin: 0; color: var(--tinta-2); }
+    .ficha dd ul { margin: 0.125rem 0 0; padding-left: 1.125rem; }
+    .ficha dd li { margin: 0 0 0.25rem; }
+    .estantes-titulo { font-size: 1.0625rem; margin: 1.5rem 0 0.625rem; }
     .estantes { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.625rem; }
     .estante { border: 1px dashed var(--linea); border-radius: 14px; padding: 0.875rem 1rem; }
     .estante h3 { font-size: 1.0625rem; margin: 0 0 0.25rem; }
@@ -101,7 +115,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 19 de octubre de 2026. Revisados josebadg.github.io, Pvpc-bridge y equipo-agentes.</p>
+    <p class="fecha">Al día: 19 de octubre de 2026. Revisados josebadg.github.io, Pvpc-bridge y equipo-agentes. Biblioteca con sus tres primeras fichas.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -183,6 +197,7 @@
           <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.2&amp;r=1.4"><strong>Visor de escenas del motor</strong><span>Cada escena quieta en un fotograma, con deslizadores. Cada fotograma se comparte con un enlace.</span></a></li>
           <li><a href="/preview/singularity/"><strong>Big bang en 3D y espacio curvado</strong><span>En la vista previa de The Singularity, donde se prueba la portada antes de publicarla.</span></a></li>
         </ul>
+        <p class="nota">Ruta propuesta, sacada de pdoom-video y de la carpeta «Slopcore» (ver Biblioteca), de una en una: 1) hoja de contacto en el visor, 2) vídeos cortos exportados fotograma a fotograma, 3) lente gravitacional, que sirve también para medir WebGPU.</p>
       </div>
 
       <div class="miembro miles">
@@ -207,14 +222,86 @@
 
     <section aria-labelledby="biblioteca">
       <h2 id="biblioteca">Biblioteca</h2>
-      <p class="intro">Tu material archivado, ordenado por tema. Que algo esté aquí no obliga a usarlo.</p>
-      <div class="estantes">
-        <div class="estante"><h3>three.js</h3><p>Vacío por ahora.</p></div>
-        <div class="estante"><h3>WebGPU</h3><p>Vacío por ahora.</p></div>
-        <div class="estante"><h3>Shaders</h3><p>Vacío por ahora.</p></div>
-        <div class="estante"><h3>Recursos</h3><p>Vacío por ahora.</p></div>
+      <p class="intro">Tu material, una ficha corta por recurso. Que algo esté aquí no obliga a usarlo: capturar no es comprometerse.</p>
+
+      <div class="ruta">
+        <h3>Cómo se digiere lo que entra</h3>
+        <ol>
+          <li><strong>Ficha.</strong> Cada recurso que pases tiene aquí su ficha en la siguiente ronda del equipo: qué es, nivel, qué podemos sacar y qué ojo tener.</li>
+          <li><strong>Experimento.</strong> Solo si la ficha resuelve algo que ya nos frena o nos hace falta. Charlie lleva uno abierto como mucho, en Experimentos.</li>
+          <li><strong>Aprendizaje.</strong> Al cerrar el experimento, una línea en su ficha con lo aprendido. Si cambia cómo trabajamos, va a la lista del método.</li>
+          <li><strong>Comunidad.</strong> Lo que funciona y entendemos se publica como nota de taller, citando el original y su licencia. Lo que sale a los buscadores lo decides tú.</li>
+        </ol>
       </div>
-      <p class="nota">Cuando pases el material, cada tema tendrá aquí sus enlaces con una línea de para qué sirve.</p>
+
+      <h3 class="estantes-titulo">Referencias de cabecera</h3>
+
+      <article class="ficha" aria-labelledby="f-pdoom">
+        <h4 id="f-pdoom">pdoom-video, el repo que lo empezó todo</h4>
+        <ul class="etiquetas"><li>Código</li><li>Nivel avanzado</li><li>En estudio</li><li>Licencia MIT</li></ul>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>El videoclip de «I'm Upping My P(doom)», de 3 min 42 s, hecho entero con código por Giacomo Magnanini (mexicat) con Claude: three.js, shaders GLSL y Canvas2D. Cada fotograma depende solo del tiempo, y el vídeo se exporta fotograma a fotograma. Tiene 40 escenas y un motor de 14 piezas.</dd>
+          <dt>Lo que ya usamos</dt>
+          <dd>El tiempo como única fuente (en la web, el scroll), las escenas como piezas sueltas, nada de azar sin semilla y el respeto a «reducir movimiento». Es el método pdoom.</dd>
+          <dt>Lo que aún no usamos y merece la pena</dt>
+          <dd><ul>
+            <li><strong>Lente gravitacional</strong> (<code>spacetime-lens.ts</code>): un shader que dobla la luz alrededor de una masa, con anillo de Einstein y anillo de fotones. Es lo más cercano a tu imagen del agujero negro.</li>
+            <li><strong>Hojas de contacto y fotogramas sueltos</strong>: una imagen con muchos momentos de una escena, para revisar sin ver el vídeo entero.</li>
+            <li><strong>Exportar a vídeo de verdad</strong>: fotograma a fotograma, con desenfoque de movimiento, no grabando la pantalla.</li>
+            <li><strong>Biblia de estilo</strong> (<code>TREATMENT.md</code>): la idea, la paleta y las reglas por escrito antes de pulir. Nosotros no la tenemos.</li>
+            <li>Para más adelante: texto hecho de partículas, letras de un solo trazo que se escriben solas y la música moviendo la imagen.</li>
+          </ul></dd>
+          <dt>Ojo</dt>
+          <dd>Está pensado para vídeo a 1920 × 1080, no para un móvil con scroll. Se toman ideas y se adaptan: no se copia el motor.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/mexicat/pdoom-video">Abrir el repo</a>
+        </div>
+      </article>
+
+      <article class="ficha" aria-labelledby="f-post">
+        <h4 id="f-post">El post de @anabology en X</h4>
+        <ul class="etiquetas"><li>Post</li><li>Nivel de entrada</li><li>Leído</li></ul>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>El 28 de septiembre de 2026 anabology compartió una carpeta pública con el «cómo se hizo», los prompts, las imágenes, el audio y el vídeo final. Cita su post del 25 de septiembre: le dio a Opus 5.5 el prompt de donald, Midjourney y un panel de referencias, y 12 horas después tenía el vídeo. Ese post pasa de 20 millones de visualizaciones.</dd>
+          <dt>Qué sacamos</dt>
+          <dd>Es la puerta de la carpeta y la misma familia que pdoom-video: el prompt de partida viene del vídeo de P(doom) de @donaldjewkes. En las respuestas no hay detalles técnicos que añadir.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://x.com/anabology/status/2104604226059993391">Abrir el post</a>
+        </div>
+      </article>
+
+      <article class="ficha" aria-labelledby="f-drive">
+        <h4 id="f-drive">La carpeta «Slopcore»: tres vídeos con su cómo se hizo</h4>
+        <ul class="etiquetas"><li>Making-of</li><li>Nivel avanzado</li><li>Leídos los textos</li></ul>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Tres videoclips de anabology (ESCAPE VELOCITY, Bliss y Clodyssey) y, para cada uno, su cómo se hizo: el documento que lo cuenta, cada indicación del director, los prompts literales de cada agente, los de Midjourney, Seedance y Suno, las imágenes, el audio y el vídeo final.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Cómo trabaja un equipo de agentes en vídeo</strong>: un animador por capítulo, un director de arte que mira fotogramas de verdad en hojas de contacto y una ronda de arreglos. Se parece a nuestro equipo.</li>
+            <li><strong>Medir, no mirar a ojo</strong>: comprobar con herramientas que la letra sale a tiempo, que no hay destellos peligrosos y que la boca va con la voz.</li>
+            <li><strong>Sus errores, contados</strong>: una noche entera parada por un permiso sin aprobar, y revisiones vacías por falta de cuota que el sistema leyó como «nada que arreglar».</li>
+          </ul></dd>
+          <dt>Ojo</dt>
+          <dd>La imagen sale de Midjourney y Seedance, servicios de pago que no usamos, y choca con nuestra regla de que nada parezca generado por IA. Según sus cuentas, cada vídeo costó de 626 a 1.007 dólares en Claude a precio de API, más de 107 a 182 dólares en Seedance. Se aprende el método, no se copia el gasto.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Abrir la carpeta</a>
+        </div>
+      </article>
+
+      <h3 class="estantes-titulo">Por tema</h3>
+      <div class="estantes">
+        <div class="estante"><h3>three.js</h3><p>pdoom-video lo usa en todo el motor. Esperando tu material.</p></div>
+        <div class="estante"><h3>WebGPU</h3><p>Ni pdoom-video ni la carpeta lo usan. Esperando tu material.</p></div>
+        <div class="estante"><h3>Shaders</h3><p>La lente gravitacional de pdoom-video. Esperando tu material.</p></div>
+        <div class="estante"><h3>Vídeo y agentes</h3><p>La carpeta «Slopcore» y el post de anabology.</p></div>
+      </div>
+      <p class="nota">Cuando pases más material, cada recurso tendrá su ficha y su estante.</p>
     </section>
 
     <footer>
