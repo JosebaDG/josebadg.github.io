@@ -38,6 +38,14 @@ main { position: relative; z-index: 1; }
   margin: 0 auto;
 }
 .escena-cinco { justify-content: center; padding-top: 52vh; }
+/* Vuelta al punto: el logotipo, centrado; su punto (data-punto-final) es donde acaba la escena */
+.escena-vuelta { justify-content: center; align-items: center; text-align: center; padding-bottom: 8vh; }
+.escena-vuelta p { margin-left: auto; margin-right: auto; }
+.firma { margin: 2.2rem 0 0; }
+.firma-logo { position: relative; display: block; width: clamp(180px, 56vw, 300px); }
+.firma-logo img { display: block; width: 100%; height: auto; }
+/* El punto del símbolo dentro del logotipo apilado: 204,48 / 408,96 = 50 % y 73,5 / 182,78 = 40,21 % */
+.firma-punto { position: absolute; left: 50%; top: 40.21%; width: 2px; height: 2px; transform: translate(-50%, -50%); }
 h1, h2 { font-weight: 600; line-height: 1.15; margin: 0 0 0.6rem; overflow-wrap: anywhere; }
 h1 { font-size: clamp(1.9rem, 7vw, 3.4rem); }
 h2 { font-size: clamp(1.5rem, 5.5vw, 2.6rem); }

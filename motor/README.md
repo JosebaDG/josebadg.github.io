@@ -1,6 +1,6 @@
 # Motor de escenas
 
-Primera versión del motor de la web, en `josebadg.github.io/motor/`. El desplazamiento hace de reloj: cada escena es una función de ese tiempo y del reloj de movimiento propio, sin azar, así que el mismo punto de la página pinta siempre lo mismo. Esta página es un banco de pruebas con tres escenas y sus relevos: la intro, la curvatura y el big bang. Todavía no es la portada, y la página no se indexa.
+Primera versión del motor de la web, en `josebadg.github.io/motor/`. El desplazamiento hace de reloj: cada escena es una función de ese tiempo y del reloj de movimiento propio, sin azar, así que el mismo punto de la página pinta siempre lo mismo. Esta página es un banco de pruebas con cuatro escenas y sus relevos: la intro, la curvatura, el big bang y la vuelta al punto. Todavía no es la portada, y la página no se indexa.
 
 Método basado en [pdoom-video](https://github.com/mexicat/pdoom-video), de Giacomo Magnanini (MIT). Licencia MIT: ver `LICENSE`. Sin fuentes, audio, imágenes ni textos ajenos; el único código de fuera es three.js (MIT), dentro de `escenas/bigbang.min.js`.
 
@@ -11,6 +11,8 @@ Método basado en [pdoom-video](https://github.com/mexicat/pdoom-video), de Giac
 - `escenas/intro.js`: la intro, un fogonazo de 2,4 s al abrir. Lienzo 2D sin dependencias.
 - `escenas/curvatura.js`: el espacio-tiempo curvado hacia el punto. Es `curvatura.js` de la vista previa con este contrato. WebGL sin dependencias, unos 6 KB comprimido.
 - `escenas/bigbang.min.js`: el big bang en 3D (three.js, WebGPU con caída a WebGL 2), unos 247 KB comprimido. Se compila desde `escenas/fuente/bigbang.js` con `escenas/fuente/build.mjs`.
+- `escenas/vuelta.js`: la vuelta al punto, al final de la página. Lienzo 2D sin dependencias, unos 3 KB comprimido.
+- `marca/logo-apilado.svg`: copia exacta del logotipo apilado de `portada/marca/`, para la última sección.
 - `carteles/curvatura.jpg`: el cartel fijo de la curvatura. El de las cinco nubes es CSS.
 - `index.html` y `motor.css`: el banco de pruebas.
 
@@ -45,6 +47,7 @@ En `index.html` se dan de abajo arriba, la última encima:
 crearMotor({ capas, boton, escenas: [
   { nombre: 'bigbang', modulo: './escenas/bigbang.min.js', pesada: true },
   { nombre: 'curvatura', modulo: './escenas/curvatura.js' },
+  { nombre: 'vuelta', modulo: './escenas/vuelta.js', tardia: true },
   { nombre: 'intro', modulo: './escenas/intro.js' },
 ] });
 ```
@@ -58,6 +61,22 @@ Las escenas miran el mismo `centro()` del motor y leen sus momentos de `relevos.
 - `PUNTO.apagado` (T 0,58): la luz de la curvatura termina de apagarse. Su tramo acaba en 0,62.
 
 El big bang llega a las cinco nubes en T 1 y se funde entre T 1 y 1,35. `bigbang.min.js` no lleva una copia de `relevos.js`: lo importa como archivo aparte (`../relevos.js`) y el navegador lo lee al cargar, el mismo que lee la curvatura. Mover un relevo no obliga a recompilar. `build.mjs` falla si la salida no importa `../relevos.js` o si lleva sus valores dentro.
+
+La vuelta lee `VUELTA` de `relevos.js`, en la última transición:
+
+- `VUELTA.desde` (T 2): un cielo tenue de partículas empieza a encenderse debajo del texto de la sección 2.
+- `VUELTA.cae` (T 2,3): las partículas empiezan a caer en espiral hacia el punto del logotipo.
+- `VUELTA.llega` (T 2,9): ha llegado la última. Queda el punto con su halo, que respira con el reloj del motor hasta el final de la página (T 3).
+
+## Vuelta al punto
+
+- **Dónde acaba:** en el elemento con `data-punto-final`. Aquí es un `span` encima del punto del logotipo apilado. La escena lo mide en cada cuadro, así que sigue al logotipo mientras sube al desplazar. Si no hay ninguno, acaba en el `centro()` del motor.
+- **Antes de que se vea el logotipo:** las partículas caen hacia el borde de la pantalla por donde va a salir y suben con él. Nunca se van de la pantalla.
+- **Colores:** casi todas blancas y una de cada siete con el color de un agente, leído de los tokens `--c-*`. Al llegar se vuelven blancas.
+- **Carga:** es ligera, pero no hace falta al abrir, así que va con `tardia: true`. Se pide con las pesadas, después de la apertura, pero sale también con menos movimiento, con ahorro de datos y sin GPU.
+- **Menos movimiento:** ni cielo ni caída. El halo aparece ya formado sobre el punto y solo se funde al desplazar.
+- **Pausa:** el halo deja de respirar. La caída sigue, porque la mueve el desplazamiento y no el reloj.
+- **Si va lenta:** baja a la mitad de partículas, hasta un mínimo de 300 (de 1.000 a 3.200 según el aparato).
 
 ## Intro
 
@@ -78,7 +97,7 @@ Un fogonazo de 2,4 s al abrir la página, encima de todo. Negro y el punto quiet
 - **Vigilante de fps:** cuenta en ventanas de 1,5 s mientras corre el reloj. Dos ventanas seguidas por debajo de 30 fps bajan un nivel la escena activa más cara, primero la pesada. Un parón suelto de más de 250 ms (otra pestaña, una captura) no cuenta; tres seguidos bajan un nivel sin esperar. Si una escena pesada ya no puede bajar, se retira y su sección enseña el cartel. Si solo quedan ligeras, se para el movimiento propio, como al pulsar la pausa.
 - **Reducir movimiento:** el reloj no avanza, cada escena enseña su fotograma fijo y al desplazar solo se funde. La escena pesada no se carga, y si se activa con la página abierta, se retira. Sin botón de pausa, porque no hay nada que pausar.
 - **Pausa:** un botón de 44 × 44 px para el movimiento propio de todas las escenas a la vez (WCAG 2.2.2).
-- **Carga:** las ligeras al abrir. Las pesadas con el primer desplazamiento o cuando el navegador queda libre, y nunca con menos movimiento, con ahorro de datos ni sin WebGPU ni WebGL 2.
+- **Carga:** las ligeras al abrir, menos las tardías (`tardia: true`), que se piden con las pesadas pero sin sus condiciones. Las pesadas con el primer desplazamiento o cuando el navegador queda libre, y nunca con menos movimiento, con ahorro de datos ni sin WebGPU ni WebGL 2.
 - **Si una escena falla:** si no carga, pierde el contexto o lanza un error al pintar, se quita su lienzo y el `<html>` recibe `sin-<nombre>`, que enseña su cartel. El texto está siempre en el DOM.
 
 ## Compilar el big bang
@@ -122,9 +141,20 @@ Intro, medidas del 19 de octubre de 2026 con los mismos navegadores. Sin desbord
 
 En Chromium dura más de 2,4 s por un parón de 1,3 s al pintar la curvatura por primera vez, dibujando por software; ese parón cuenta solo 0,25 s. En WebKit dura lo previsto. El brillo del pico es aproximado: la captura no siempre cae justo en el pico. Después de la intro, la curvatura y el big bang cargan y pintan igual que antes.
 
+Vuelta al punto, medidas del 19 de octubre de 2026 con los mismos navegadores. Sin desbordamiento horizontal y sin errores nuevos en la consola (solo los avisos de three.js de que no hay WebGPU). Al abrir sigue esperando: no se pide hasta después de la apertura. Las ligeras de la apertura pasan de 16,2 a 17,0 KB comprimidos, por la sección nueva; la vuelta, unos 3,3 KB, y el logotipo, unos 3 KB, llegan después.
+
+| Caso | fps al recorrer su tramo | Distancia de la luz al punto en T 2,9 | Luz a menos de 40 px del punto en T 2,7 |
+| --- | --- | --- | --- |
+| Chromium 320 × 640 | 43 fps | 0,4 px | 36 % |
+| Chromium 390 × 844 | 37 fps | 0,4 px | 32 % |
+| Chromium 1280 × 800 | 17 a 29 fps según la vuelta | 0,8 px | 19 % |
+| WebKit 390 × 844 | 63 fps | 0,4 px | 31 % |
+| WebKit y Chromium 390, menos movimiento | 56 a 62 fps | 0,3 px (solo el halo, desde T 2,7) | 100 % |
+
+La distancia es la del centro de toda la luz de la capa, con el texto oculto. En ningún caso bajó de nivel. En T 2,15, con el texto encima, el cielo enciende entre el 0,1 y el 0,5 % de la pantalla.
+
 El script de las pruebas está fuera del repo. Falta mirarlo en un móvil de verdad.
 
 ## Pendiente
 
-- La vuelta del big bang al punto, que sigue en la vista previa.
 - Pasar la portada a este motor cuando el banco de pruebas esté aprobado.

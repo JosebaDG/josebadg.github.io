@@ -22,7 +22,9 @@ export function puedeGPU() {
   try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; }
 }
 
-// escenas: [{ nombre, modulo, pesada }], de abajo arriba (la última se pinta encima).
+// escenas: [{ nombre, modulo, pesada, tardia }], de abajo arriba (la última se pinta encima).
+// tardia: ligera, pero no hace falta al abrir (la vuelta, al final de la página): se pide con las
+// pesadas, después de la apertura, y sale también con menos movimiento, ahorro de datos o sin GPU.
 // pesada: se pide después de la apertura (primer desplazamiento o navegador libre) y nunca con
 // menos movimiento, con ahorro de datos o sin WebGPU ni WebGL 2.
 export function crearMotor({ escenas, capas, boton = null, secciones = '[data-escena]' }) {
@@ -215,13 +217,14 @@ export function crearMotor({ escenas, capas, boton = null, secciones = '[data-es
   const cargarPesadas = () => {
     if (tardias) return;
     tardias = true;
-    for (const v of vivas) if (v.def.pesada) cargar(v);
+    for (const v of vivas) if (v.def.pesada || v.def.tardia) cargar(v);
   };
   for (const v of vivas) {
+    if (v.def.tardia) continue;
     if (!v.def.pesada) { cargar(v); continue; }
     if (menosMovimiento || ahorro || !puedeGPU()) caer(v, 'lenta');
   }
-  if (vivas.some((v) => v.def.pesada && v.estado === 'esperando')) {
+  if (vivas.some((v) => (v.def.pesada || v.def.tardia) && v.estado === 'esperando')) {
     addEventListener('scroll', cargarPesadas, { once: true, passive: true });
     // Una escena que pide primer plano (la intro) no se interrumpe: la pesada se pide al acabar ella
     const ocupada = () => vivas.some((v) => v.estado === 'viva' && v.inst.ocupada && v.inst.ocupada());
