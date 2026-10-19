@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Explosión del punto · Laboratorio de animación y vídeo</title>
+  <meta name="description" content="Laboratorio visual: la explosión geométrica de un punto, con controles en directo.">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="lab.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="module" src="lab.min.js"></script>
+</head>
+<body>
+  <a class="saltar" href="#btn-panel">Saltar a los controles</a>
+  <canvas class="lienzo" aria-hidden="true"></canvas>
+
+  <header class="cabecera">
+    <p class="logo">singularity<span aria-hidden="true">·</span></p>
+    <p class="etiqueta">Laboratorio</p>
+  </header>
+
+  <main>
+    <section class="escena" id="punto" aria-labelledby="e0">
+      <div class="texto">
+        <h1 id="e0">Todo empieza con un punto.</h1>
+        <p>Desliza hacia abajo: el desplazamiento es el reloj. Abajo tienes los controles.</p>
+        <noscript><p>El laboratorio necesita JavaScript y WebGL para dibujar. Sin ellos, aquí solo queda el texto.</p></noscript>
+      </div>
+    </section>
+    <section class="escena" id="fogonazo" aria-labelledby="e1">
+      <div class="texto"><h2 id="e1">Un fogonazo. El punto se rompe.</h2></div>
+    </section>
+    <section class="escena" id="cinco" aria-labelledby="e2">
+      <div class="texto"><h2 id="e2">Uno se hace cinco.</h2></div>
+    </section>
+    <section class="escena" id="geometria" aria-labelledby="e3">
+      <div class="texto"><h2 id="e3">La geometría se ordena sola.</h2></div>
+    </section>
+    <section class="escena" id="vuelta" aria-labelledby="e4">
+      <div class="texto">
+        <h2 id="e4">Y todo vuelve al punto.</h2>
+        <p class="logo logo-grande">singularity<span aria-hidden="true">·</span></p>
+        <p>Si un estado te gusta, pulsa «Compartir» y manda el enlace.</p>
+        <p class="mas"><a href="/lab/#experimentos">Volver al laboratorio</a></p>
+      </div>
+    </section>
+  </main>
+
+  <div class="barra" role="group" aria-label="Reloj y acciones">
+    <button type="button" id="btn-pausa" class="boton" hidden>Pausa</button>
+    <label class="reloj" for="t"><span class="vh">Momento de la animación</span>
+      <input type="range" id="t" min="0" max="1" step="0.001" value="0.5">
+    </label>
+    <output id="t-salida" for="t" class="t-salida">0.50</output>
+    <button type="button" id="btn-panel" class="boton" aria-expanded="false" aria-controls="panel">Controles</button>
+    <button type="button" id="btn-compartir" class="boton boton-claro">Compartir</button>
+  </div>
+
+  <section id="panel" class="panel" aria-label="Controles del laboratorio" hidden>
+    <div class="panel-cabeza">
+      <h2>Controles</h2>
+      <button type="button" id="btn-foto" class="mini">Foto</button>
+      <button type="button" id="btn-cerrar" class="mini">Cerrar</button>
+    </div>
+    <div class="recetas">
+      <p class="recetas-titulo">Recetas</p>
+      <div id="presets" class="presets"></div>
+    </div>
+    <div id="panel-cuerpo"></div>
+  </section>
+
+  <p id="aviso" class="aviso" role="status" hidden></p>
+</body>
+</html>

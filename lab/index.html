@@ -3,75 +3,228 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Laboratorio · singularity·</title>
-  <meta name="description" content="Laboratorio visual: la explosión geométrica de un punto, con controles en directo.">
   <meta name="robots" content="noindex">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#000000">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23fff'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="lab.css">
-  <script>document.documentElement.classList.add('js')</script>
-  <script type="module" src="lab.min.js"></script>
+  <title>Laboratorio de animación y vídeo · The Singularity</title>
+  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
+  <link rel="apple-touch-icon" href="/portada/marca/apple-touch-icon.png">
+  <script>
+    // Los enlaces compartidos de la antigua /lab/ (la explosión del punto, con su estado en el #) siguen funcionando.
+    function aExplosion() {
+      if (/(^#|&)(s|n|f|d|m|t|p|k|ca|ci)=/.test(location.hash) || /[?&]video=1/.test(location.search)) {
+        location.replace('/lab/explosion/' + location.search + location.hash);
+      }
+    }
+    aExplosion(); addEventListener('hashchange', aExplosion);
+  </script>
+  <!--
+    Laboratorio de animación y vídeo: el departamento del equipo (Miles, Charlie, Maya y Simone). Jefe propuesto: Charlie.
+    Orden fijo: 1) Te espera (solo lo que espera el sí de Joseba, siempre arriba y separado), 2) Publicado,
+    3) Experimentos (pruebas sueltas de cada miembro), 4) Biblioteca (material archivado de Joseba, por tema).
+    Regla (DECISIONES.md de equipo-agentes, 19/10/2026): ningún PR llega a Joseba sin un enlace que se abra en el móvil
+    y enseñe lo que cambia. Las rondas del canal del equipo mantienen «Te espera» al día: añaden lo nuevo y quitan lo
+    fusionado o descartado (su copia /preview/prN/ y sus capturas de lab/capturas/).
+  -->
+  <style>
+    :root {
+      --negro: #000; --tinta: #f3ece2; --tinta-2: #bdb4a7; --oro: #f3cf96; --linea: #3a3631; --foco: #fff;
+      --espera-fondo: #15110b;
+      --c-miles: #a2bcff; --c-charlie: #47d6cf; --c-maya: #f89dc9; --c-simone: #e6b55d;
+      --f: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body { margin: 0; background: var(--negro); color: var(--tinta); font: 400 1.0625rem/1.5 var(--f); }
+    main { max-width: 40rem; margin: 0 auto; padding: max(1.75rem, env(safe-area-inset-top)) max(1.125rem, env(safe-area-inset-right)) 3rem max(1.125rem, env(safe-area-inset-left)); }
+    .marca { display: block; width: min(15rem, 70%); height: auto; margin: 0 0 1.25rem; }
+    h1 { font-size: 2rem; line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 0.5rem; }
+    h2 { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--oro); margin: 0 0 0.875rem; scroll-margin-top: 1rem; }
+    h3 { font-size: 1.25rem; line-height: 1.2; margin: 0 0 0.375rem; }
+    p { margin: 0 0 0.875rem; }
+    .intro { color: var(--tinta-2); }
+    .fecha { color: var(--tinta-2); font-size: 0.875rem; }
+    a { color: var(--tinta); }
+    a:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; border-radius: 4px; }
+    nav ul { list-style: none; padding: 0; margin: 1.25rem 0 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    nav a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.375rem 0.875rem; border: 1px solid var(--linea); border-radius: 999px; text-decoration: none; font-size: 0.9375rem; }
+    nav a.oro { border-color: var(--oro); color: var(--oro); font-weight: 600; }
+    section { margin: 0 0 2.75rem; }
+
+    /* 1. Te espera: siempre arriba y bien separado de lo demás. */
+    .zona-espera { background: var(--espera-fondo); border: 2px solid var(--oro); border-radius: 22px; padding: 1.25rem 1rem 0.5rem; margin-bottom: 1.5rem; }
+    .zona-espera > .intro { color: var(--tinta); }
+    .corte { margin: 0 0 2.75rem; padding: 0.875rem 0 0; border-top: 1px dashed var(--linea); color: var(--tinta-2); font-size: 0.875rem; }
+
+    .tarjeta { border: 1px solid var(--linea); border-radius: 18px; padding: 1.125rem; margin: 0 0 1rem; background: var(--negro); }
+    .tarjeta.espera { border-color: var(--oro); }
+    .estado { display: inline-block; font-size: 0.8125rem; font-weight: 600; padding: 0.125rem 0.625rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta-2); margin: 0 0 0.625rem; }
+    .espera .estado { border-color: var(--oro); color: var(--oro); }
+    .que { color: var(--tinta-2); }
+    figure { margin: 0 0 1rem; }
+    .par { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin: 0 0 1rem; }
+    .par figure { margin: 0; }
+    img { display: block; max-width: 100%; height: auto; }
+    figure img { width: 100%; border-radius: 12px; border: 1px solid var(--linea); background: #000; }
+    .captura-alta { max-width: 14rem; }
+    figcaption { font-size: 0.8125rem; color: var(--tinta-2); margin-top: 0.375rem; }
+    .acciones { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.5rem; }
+    .boton { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta); text-decoration: none; font-weight: 500; }
+    .boton.principal { background: var(--oro); border-color: var(--oro); color: #000; font-weight: 600; }
+    .boton:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
+    .nota { font-size: 0.875rem; color: var(--tinta-2); margin: 0.5rem 0 0; }
+    .vacio { color: var(--tinta-2); border: 1px dashed var(--linea); border-radius: 14px; padding: 0.875rem 1rem; margin: 0 0 1rem; }
+
+    /* 3. Experimentos, por miembro del equipo. */
+    .miembro { border-left: 3px solid var(--c, var(--linea)); padding: 0 0 0 0.875rem; margin: 0 0 1.5rem; }
+    .miembro h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.625rem; }
+    .miembro h3 small { font-size: 0.8125rem; font-weight: 600; color: var(--tinta-2); }
+    .miles { --c: var(--c-miles); } .charlie { --c: var(--c-charlie); } .maya { --c: var(--c-maya); } .simone { --c: var(--c-simone); }
+    ul.lista { list-style: none; padding: 0; margin: 0.5rem 0 0; display: grid; gap: 0.625rem; }
+    ul.lista a { display: block; padding: 0.875rem 1rem; border: 1px solid var(--linea); border-radius: 14px; text-decoration: none; min-height: 2.75rem; }
+    ul.lista strong { display: block; }
+    ul.lista span { color: var(--tinta-2); font-size: 0.9375rem; }
+
+    /* 4. Biblioteca: huecos por tema, vacíos de momento. */
+    .estantes { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.625rem; }
+    .estante { border: 1px dashed var(--linea); border-radius: 14px; padding: 0.875rem 1rem; }
+    .estante h3 { font-size: 1.0625rem; margin: 0 0 0.25rem; }
+    .estante p { color: var(--tinta-2); font-size: 0.9375rem; margin: 0; }
+
+    footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--linea); color: var(--tinta-2); font-size: 0.875rem; }
+    @media (min-width: 48rem) { h1 { font-size: 2.5rem; } }
+  </style>
 </head>
 <body>
-  <a class="saltar" href="#btn-panel">Saltar a los controles</a>
-  <canvas class="lienzo" aria-hidden="true"></canvas>
-
-  <header class="cabecera">
-    <p class="logo">singularity<span aria-hidden="true">·</span></p>
-    <p class="etiqueta">Laboratorio</p>
-  </header>
-
   <main>
-    <section class="escena" id="punto" aria-labelledby="e0">
-      <div class="texto">
-        <h1 id="e0">Todo empieza con un punto.</h1>
-        <p>Desliza hacia abajo: el desplazamiento es el reloj. Abajo tienes los controles.</p>
-        <noscript><p>El laboratorio necesita JavaScript y WebGL para dibujar. Sin ellos, aquí solo queda el texto.</p></noscript>
+    <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
+    <h1>Laboratorio de animación y vídeo</h1>
+    <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
+    <p class="fecha">Al día: 19 de octubre de 2026. Revisados josebadg.github.io, Pvpc-bridge y equipo-agentes.</p>
+
+    <nav aria-label="Secciones del laboratorio">
+      <ul>
+        <li><a class="oro" href="#espera">Te espera · 1</a></li>
+        <li><a href="#publicado">Publicado</a></li>
+        <li><a href="#experimentos">Experimentos</a></li>
+        <li><a href="#biblioteca">Biblioteca</a></li>
+      </ul>
+    </nav>
+
+    <section class="zona-espera" aria-labelledby="espera">
+      <h2 id="espera">Te espera · 1</h2>
+      <p class="intro">Solo lo que necesita tu sí. Míralo en el móvil y decide después.</p>
+
+      <article class="tarjeta espera" aria-labelledby="t13">
+        <span class="estado">Sin fusionar</span>
+        <h3 id="t13">El botón del correo, legible</h3>
+        <p class="que">El botón «Mostrar el correo de contacto» del final de la portada pasa a borde dorado y letra clara sobre negro, para que se lea bien. Nada más cambia.</p>
+        <div class="par">
+          <figure>
+            <img src="capturas/pr13-antes.png" width="600" height="260" alt="Antes: el botón con el estilo por defecto del navegador, en gris." loading="lazy">
+            <figcaption>Antes (la portada de ahora)</figcaption>
+          </figure>
+          <figure>
+            <img src="capturas/pr13-despues.png" width="600" height="260" alt="Después: el botón con borde dorado y letra clara sobre fondo negro." loading="lazy">
+            <figcaption>Después (con el PR #13)</figcaption>
+          </figure>
+        </div>
+        <div class="acciones">
+          <a class="boton principal" href="/preview/pr13/#contacto">Ver el después</a>
+          <a class="boton" href="/">Ver el antes</a>
+          <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/13">PR #13</a>
+        </div>
+        <p class="nota">«Ver el después» te deja junto al botón. En «Ver el antes» baja hasta el final. Ojo: en la captura, el botón de antes sale gris oscuro, y en tu iPhone puede verse gris claro. Compáralo en los dos enlaces antes de decidir.</p>
+      </article>
+
+      <p class="vacio">Pvpc-bridge: no hay PR abiertos ni nada que espere tu decisión.</p>
+    </section>
+
+    <p class="corte">Aquí acaba lo que te espera. Lo de abajo no necesita nada de ti.</p>
+
+    <section aria-labelledby="publicado">
+      <h2 id="publicado">Publicado</h2>
+
+      <article class="tarjeta" aria-labelledby="tportada">
+        <span class="estado">Publicado</span>
+        <h3 id="tportada">La portada: The Singularity</h3>
+        <p class="que">El espacio curvado hacia el punto que late, el big bang y el logotipo A «Pozo». Es la primera página de la web.</p>
+        <figure>
+          <img class="captura-alta" src="capturas/portada.jpg" width="600" height="1000" alt="La portada en tamaño iPhone: la malla del espacio curvada hacia el punto, sobre negro." loading="lazy">
+          <figcaption>La portada en tamaño iPhone</figcaption>
+        </figure>
+        <div class="acciones">
+          <a class="boton principal" href="/">Abrir la portada</a>
+          <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/12">PR #12</a>
+        </div>
+      </article>
+
+      <article class="tarjeta" aria-labelledby="tmotor">
+        <span class="estado">Publicado</span>
+        <h3 id="tmotor">Motor de escenas en /motor/</h3>
+        <p class="que">La página de pruebas con las cuatro escenas de Charlie: intro, espacio curvado, big bang y vuelta al punto. Oculta a los buscadores. La portada no pasa al motor hasta que lo veas en tu iPhone.</p>
+        <figure>
+          <img class="captura-alta" src="capturas/motor.jpg" width="600" height="1000" alt="La página /motor/ en tamaño iPhone: la malla del espacio curvada hacia el punto, sobre negro." loading="lazy">
+          <figcaption>/motor/ en tamaño iPhone</figcaption>
+        </figure>
+        <div class="acciones">
+          <a class="boton principal" href="/motor/">Abrir /motor/</a>
+          <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/14">PR #14</a>
+          <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/15">PR #15</a>
+          <a class="boton" href="https://github.com/JosebaDG/equipo-agentes/issues/12">Hilo #12</a>
+        </div>
+      </article>
+    </section>
+
+    <section aria-labelledby="experimentos">
+      <h2 id="experimentos">Experimentos</h2>
+      <p class="intro">Pruebas sueltas de cada miembro del equipo. No esperan nada de ti: están para jugar y para enseñar ideas antes de abrir un PR.</p>
+
+      <div class="miembro charlie">
+        <h3>Charlie <small>Jefe del departamento (propuesto)</small></h3>
+        <ul class="lista">
+          <li><a href="/preview/singularity/"><strong>Big bang en 3D y espacio curvado</strong><span>En la vista previa de The Singularity, donde se prueba la portada antes de publicarla.</span></a></li>
+        </ul>
+      </div>
+
+      <div class="miembro miles">
+        <h3>Miles</h3>
+        <ul class="lista">
+          <li><a href="/lab/explosion/"><strong>Explosión del punto</strong><span>Con controles en directo. Cada estado se comparte con un enlace.</span></a></li>
+          <li><a href="/preview/singularity/logotipo/"><strong>Logotipos A, B y C</strong><span>Elegiste el A. B y C quedan para probar.</span></a></li>
+          <li><a href="/preview/lonja/"><strong>La Lonja</strong><span>Portada de reserva, aparcada.</span></a></li>
+        </ul>
+      </div>
+
+      <div class="miembro maya">
+        <h3>Maya</h3>
+        <p class="vacio">Aún sin prueba suelta. Su sistema visual ya vive en la portada.</p>
+      </div>
+
+      <div class="miembro simone">
+        <h3>Simone</h3>
+        <p class="vacio">Aún sin prueba suelta. Sus textos por escena ya viven en la portada.</p>
       </div>
     </section>
-    <section class="escena" id="fogonazo" aria-labelledby="e1">
-      <div class="texto"><h2 id="e1">Un fogonazo. El punto se rompe.</h2></div>
-    </section>
-    <section class="escena" id="cinco" aria-labelledby="e2">
-      <div class="texto"><h2 id="e2">Uno se hace cinco.</h2></div>
-    </section>
-    <section class="escena" id="geometria" aria-labelledby="e3">
-      <div class="texto"><h2 id="e3">La geometría se ordena sola.</h2></div>
-    </section>
-    <section class="escena" id="vuelta" aria-labelledby="e4">
-      <div class="texto">
-        <h2 id="e4">Y todo vuelve al punto.</h2>
-        <p class="logo logo-grande">singularity<span aria-hidden="true">·</span></p>
-        <p>Si un estado te gusta, pulsa «Compartir» y manda el enlace.</p>
-        <p class="mas"><a href="../preview/">Vistas previas de la portada</a></p>
+
+    <section aria-labelledby="biblioteca">
+      <h2 id="biblioteca">Biblioteca</h2>
+      <p class="intro">Tu material archivado, ordenado por tema. Que algo esté aquí no obliga a usarlo.</p>
+      <div class="estantes">
+        <div class="estante"><h3>three.js</h3><p>Vacío por ahora.</p></div>
+        <div class="estante"><h3>WebGPU</h3><p>Vacío por ahora.</p></div>
+        <div class="estante"><h3>Shaders</h3><p>Vacío por ahora.</p></div>
+        <div class="estante"><h3>Recursos</h3><p>Vacío por ahora.</p></div>
       </div>
+      <p class="nota">Cuando pases el material, cada tema tendrá aquí sus enlaces con una línea de para qué sirve.</p>
     </section>
+
+    <footer>
+      <p>Departamento de animación y vídeo del equipo: Miles, Charlie, Maya y Simone. Jefe propuesto: Charlie, porque el motor es suyo.</p>
+      <p>La regla: ningún PR llega a Joseba sin un enlace que se abra en el móvil y enseñe lo que cambia. Todo lo pendiente está en «Te espera», y Joseba decide después de verlo.</p>
+      <p><a href="/">Ir a la portada</a></p>
+    </footer>
   </main>
-
-  <div class="barra" role="group" aria-label="Reloj y acciones">
-    <button type="button" id="btn-pausa" class="boton" hidden>Pausa</button>
-    <label class="reloj" for="t"><span class="vh">Momento de la animación</span>
-      <input type="range" id="t" min="0" max="1" step="0.001" value="0.5">
-    </label>
-    <output id="t-salida" for="t" class="t-salida">0.50</output>
-    <button type="button" id="btn-panel" class="boton" aria-expanded="false" aria-controls="panel">Controles</button>
-    <button type="button" id="btn-compartir" class="boton boton-claro">Compartir</button>
-  </div>
-
-  <section id="panel" class="panel" aria-label="Controles del laboratorio" hidden>
-    <div class="panel-cabeza">
-      <h2>Controles</h2>
-      <button type="button" id="btn-foto" class="mini">Foto</button>
-      <button type="button" id="btn-cerrar" class="mini">Cerrar</button>
-    </div>
-    <div class="recetas">
-      <p class="recetas-titulo">Recetas</p>
-      <div id="presets" class="presets"></div>
-    </div>
-    <div id="panel-cuerpo"></div>
-  </section>
-
-  <p id="aviso" class="aviso" role="status" hidden></p>
 </body>
 </html>

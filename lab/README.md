@@ -1,18 +1,20 @@
-# Laboratorio visual
+# Laboratorio de animación y vídeo
 
-Página de experimentos para la portada «singularity·»: la explosión geométrica de un punto. No es la portada.
+El departamento del equipo (Miles, Charlie, Maya y Simone) para animación, 3D y vídeo en el navegador, en https://josebadg.github.io/lab/ (noindex). Jefe propuesto: Charlie, porque el motor es suyo. Joseba lo aprobó el 19/10/2026.
 
-- **Reloj:** todo lo que se dibuja es función de `t` (0 a 1) y de una semilla. `t` sale del desplazamiento, del modo automático o del deslizador de abajo.
-- **Estado en la URL:** cada control va en el `#` del enlace. «Compartir» guarda también el momento (`t`) y deja el modo fijo, para que quien lo abra vea el mismo fotograma.
-- **Recetas:** Big bang, Cinco, Cristal, Supernova, Espiral, Red y Lonja (con la persiana).
-- **Accesibilidad:** con `prefers-reduced-motion` arranca en modo fijo, sin fogonazo y sin animación automática. El lienzo es decorativo (`aria-hidden`) y el texto va en el HTML.
-- **Micro vídeos:** `?video=1` oculta la interfaz y expone `labRender(t)`, que devuelve el fotograma exacto de ese `t`. Así se renderizan vídeos fotograma a fotograma con un navegador sin pantalla.
+## Secciones, en este orden
 
-Parámetros del enlace: `s` semilla, `n` fragmentos, `f` forma (tetra, octa, ico, cubo, tri, aguja), `d` reparto (esfera, espiral, anillos, red), `k` simetría, `ca` caos, `ci` uno se hace cinco, `p` colores del equipo, `g` giro, `r` alcance, `ta` tamaño, `z` zoom, `h` hilos, `b` brillo, `gr` grano, `cf`/`ce`/`bg` colores, `pe` persiana, `m` modo (scroll, auto, fijo), `t` momento, `v` velocidad.
+1. **Te espera** (`#espera`): solo lo que espera el sí de Joseba, siempre arriba y separado del resto. Es el antiguo escaparate de `/preview/`. Cada tarjeta lleva una línea en castellano llano, captura (antes y después si cambia algo que ya existe), «Ver el después» a una vista previa publicada y el enlace al PR o hilo. Nunca el diff de GitHub como enlace para ver.
+2. **Publicado** (`#publicado`): lo que ya está en la web (la portada, `/motor/` y lo que vaya saliendo).
+3. **Experimentos** (`#experimentos`): pruebas sueltas de cada miembro. Cada uno añade las suyas en su bloque.
+4. **Biblioteca** (`#biblioteca`): material archivado de Joseba por tema (three.js, WebGPU, shaders, recursos). Que algo esté aquí no obliga a usarlo.
 
-Código: `src/lab.js`, empaquetado con esbuild en `lab.min.js` junto a three.js 0.186.1 (MIT). El método (el desplazamiento como reloj y cada fotograma como función de `t`) se inspira en [pdoom-video](https://github.com/mexicat/pdoom-video) (MIT); no copia su código.
+## Dónde va cada cosa
 
-```
-npm i three@0.186.1 esbuild
-npx esbuild src/lab.js --bundle --minify --format=esm --target=es2020 --legal-comments=eof --outfile=lab.min.js
-```
+- `lab/index.html`: esta página. `lab/capturas/`: capturas de las tarjetas (PNG o JPG ligeros, Playwright con WebKit a 390 × 844).
+- `lab/explosion/`: la explosión del punto (experimento de Miles; antes estaba en `/lab/`). Los enlaces compartidos antiguos (`/lab/#s=…`) se reenvían allí.
+- Las vistas previas siguen en `/preview/`: `singularity/`, `lonja/` y las copias de PR sin fusionar en `/preview/prN/`. `/preview/` a secas reenvía a `/lab/#espera`.
+
+## Cómo se mantiene
+
+Las rondas del canal del equipo ponen al día «Te espera»: añaden lo nuevo y quitan lo fusionado o descartado (con su `/preview/prN/` y sus capturas). Antes de publicar: WebKit 390 × 844 y escritorio 1280, sin desbordes ni errores, y axe sin fallos WCAG 2.2 AA. La regla vive en `DECISIONES.md` de JosebaDG/equipo-agentes.

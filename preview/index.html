@@ -6,120 +6,23 @@
   <meta name="robots" content="noindex">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#000000">
-  <title>Escaparate · lo que espera tu sí</title>
-  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
-  <link rel="apple-touch-icon" href="/portada/marca/apple-touch-icon.png">
-  <!--
-    Escaparate: todo lo que espera el sí de Joseba, para verlo en el móvil antes de decidir.
-    Regla (DECISIONES.md de equipo-agentes, 19/10/2026): ningún PR llega a Joseba sin un enlace que se abra en el
-    móvil y enseñe lo que cambia. Las rondas del canal del equipo lo mantienen al día: añaden lo nuevo y quitan lo
-    fusionado o descartado (y su carpeta /preview/prN/ y sus capturas).
-    Cada tarjeta: enlace que se abre en el móvil, una línea en castellano llano, captura y enlace al PR o hilo.
-  -->
+  <title>El escaparate está ahora en el laboratorio</title>
+  <!-- 19/10/2026: el escaparate pasa a ser la sección «Te espera» del Laboratorio de animación y vídeo (/lab/).
+       Las vistas previas siguen aquí: singularity/, lonja/ y las copias de PR sin fusionar en prN/. -->
+  <meta http-equiv="refresh" content="0; url=/lab/#espera">
+  <link rel="canonical" href="/lab/">
+  <script>location.replace('/lab/#espera');</script>
   <style>
-    :root {
-      --negro: #000; --tinta: #f3ece2; --tinta-2: #bdb4a7; --oro: #f3cf96; --linea: #3a3631; --foco: #fff;
-      --f: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-    * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
-    body { margin: 0; background: var(--negro); color: var(--tinta); font: 400 1.0625rem/1.5 var(--f); }
-    main { max-width: 40rem; margin: 0 auto; padding: max(2rem, env(safe-area-inset-top)) max(1.125rem, env(safe-area-inset-right)) 3rem max(1.125rem, env(safe-area-inset-left)); }
-    h1 { font-size: 2.25rem; line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 0.5rem; }
-    h2 { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--oro); margin: 2.5rem 0 0.875rem; }
-    h3 { font-size: 1.25rem; line-height: 1.2; margin: 0 0 0.375rem; }
-    p { margin: 0 0 0.875rem; }
-    .intro { color: var(--tinta-2); }
-    .fecha { color: var(--tinta-2); font-size: 0.875rem; }
-    a { color: var(--tinta); }
-    a:focus-visible, .boton:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
-    .tarjeta { border: 1px solid var(--linea); border-radius: 18px; padding: 1.125rem; margin: 0 0 1rem; }
-    .tarjeta.espera { border-color: var(--oro); }
-    .estado { display: inline-block; font-size: 0.8125rem; font-weight: 600; padding: 0.125rem 0.625rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta-2); margin: 0 0 0.625rem; }
-    .espera .estado { border-color: var(--oro); color: var(--oro); }
-    .que { color: var(--tinta-2); }
-    figure { margin: 0 0 1rem; }
-    .par { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin: 0 0 1rem; }
-    .par figure { margin: 0; }
-    img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--linea); background: #000; }
-    .captura-alta { max-width: 16rem; }
-    figcaption { font-size: 0.8125rem; color: var(--tinta-2); margin-top: 0.375rem; }
-    .acciones { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.5rem; }
-    .boton { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta); text-decoration: none; font-weight: 500; }
-    .boton.principal { background: var(--oro); border-color: var(--oro); color: #000; font-weight: 600; }
-    .nota { font-size: 0.875rem; color: var(--tinta-2); margin: 0.5rem 0 0; }
-    .vacio { color: var(--tinta-2); border: 1px dashed var(--linea); border-radius: 14px; padding: 0.875rem 1rem; }
-    ul.lista { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.625rem; }
-    ul.lista a { display: block; padding: 0.875rem 1rem; border: 1px solid var(--linea); border-radius: 14px; text-decoration: none; min-height: 2.75rem; }
-    ul.lista strong { display: block; }
-    ul.lista span { color: var(--tinta-2); font-size: 0.9375rem; }
-    footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--linea); color: var(--tinta-2); font-size: 0.875rem; }
+    body { margin: 0; background: #000; color: #f3ece2; font: 400 1.0625rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 40rem; margin: 0 auto; padding: 2rem 1.125rem; }
+    a { color: #f3cf96; }
+    a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
   </style>
 </head>
 <body>
   <main>
-    <h1>Escaparate</h1>
-    <p class="intro">Todo lo que espera tu sí, para verlo con tus propios ojos antes de decidir. Abre cada enlace en el móvil y decide después.</p>
-    <p class="fecha">Al día: 19 de octubre de 2026. Revisados josebadg.github.io, Pvpc-bridge y equipo-agentes.</p>
-
-    <h2 id="espera">Espera tu sí · 1</h2>
-
-    <article class="tarjeta espera" aria-labelledby="t13">
-      <span class="estado">Sin fusionar</span>
-      <h3 id="t13">El botón del correo, legible</h3>
-      <p class="que">El botón «Mostrar el correo de contacto» del final de la portada pasa a borde dorado y letra clara sobre negro, para que se lea bien. Nada más cambia.</p>
-      <div class="par">
-        <figure>
-          <img src="capturas/pr13-antes.png" width="600" height="260" alt="Antes: el botón con el estilo por defecto del navegador, en gris." loading="lazy">
-          <figcaption>Antes (la portada de ahora)</figcaption>
-        </figure>
-        <figure>
-          <img src="capturas/pr13-despues.png" width="600" height="260" alt="Después: el botón con borde dorado y letra clara sobre fondo negro." loading="lazy">
-          <figcaption>Después (con el PR #13)</figcaption>
-        </figure>
-      </div>
-      <div class="acciones">
-        <a class="boton principal" href="/preview/pr13/#contacto">Ver el después</a>
-        <a class="boton" href="/">Ver el antes</a>
-        <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/13">PR #13</a>
-      </div>
-      <p class="nota">«Ver el después» te deja junto al botón. En «Ver el antes» baja hasta el final. Las capturas salen de WebKit en el ordenador: en tu iPhone el gris de antes puede verse distinto, así que compáralo en los dos enlaces.</p>
-    </article>
-
-    <h2 id="publicado">Publicado, para mirar</h2>
-
-    <article class="tarjeta" aria-labelledby="tmotor">
-      <span class="estado">Publicado</span>
-      <h3 id="tmotor">Motor de escenas en /motor/</h3>
-      <p class="que">La página de pruebas con las cuatro escenas de Charlie: intro, espacio curvado, big bang y vuelta al punto. Oculta a los buscadores; la portada no cambia hasta que la veas.</p>
-      <figure>
-        <img class="captura-alta" src="capturas/motor.jpg" width="600" height="1000" alt="La página /motor/ en tamaño iPhone: la malla del espacio curvada hacia el punto, sobre negro." loading="lazy">
-        <figcaption>/motor/ en tamaño iPhone</figcaption>
-      </figure>
-      <div class="acciones">
-        <a class="boton principal" href="/motor/">Abrir /motor/</a>
-        <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/14">PR #14</a>
-        <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/15">PR #15</a>
-        <a class="boton" href="https://github.com/JosebaDG/equipo-agentes/issues/12">Hilo #12</a>
-      </div>
-    </article>
-
-    <h2 id="nada">Sin nada pendiente</h2>
-    <p class="vacio">Pvpc-bridge: no hay PR abiertos ni nada que espere tu decisión.</p>
-
-    <h2 id="pruebas">Pruebas y reserva</h2>
-    <p class="intro">No esperan nada de ti. Están para jugar y enseñar ideas.</p>
-    <ul class="lista">
-      <li><a href="singularity/"><strong>The Singularity, vista previa</strong><span>Donde se prueba la portada antes de publicarla.</span></a></li>
-      <li><a href="singularity/logotipo/"><strong>Logotipos A, B y C</strong><span>Elegiste el A; B y C quedan para probar.</span></a></li>
-      <li><a href="lonja/"><strong>La Lonja</strong><span>Portada de reserva, aparcada.</span></a></li>
-      <li><a href="../lab/"><strong>Laboratorio</strong><span>La explosión del punto con controles en directo.</span></a></li>
-    </ul>
-
-    <footer>
-      <p>La regla: ningún PR llega a Joseba sin un enlace que se abra en el móvil y enseñe lo que cambia. Todo lo pendiente está aquí, y Joseba decide después de verlo.</p>
-      <p><a href="/">Ir a la portada</a></p>
-    </footer>
+    <h1>El escaparate se ha mudado</h1>
+    <p>Ahora es la sección «Te espera» del laboratorio: <a href="/lab/#espera">ir al laboratorio</a>.</p>
   </main>
 </body>
 </html>

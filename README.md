@@ -8,7 +8,7 @@ Web pública en <https://josebadg.github.io/>, servida con GitHub Pages desde `m
 | --- | --- |
 | Portada: The Singularity | https://josebadg.github.io/ |
 | Vista previa (pruebas, sin indexar) | https://josebadg.github.io/preview/singularity/ |
-| Laboratorio visual (sin indexar) | https://josebadg.github.io/lab/ |
+| Laboratorio de animación y vídeo (sin indexar): lo que espera a Joseba, lo publicado, experimentos y biblioteca | https://josebadg.github.io/lab/ |
 | Motor de escenas: banco de pruebas (sin indexar) | https://josebadg.github.io/motor/ |
 | miles-drive: página principal | https://josebadg.github.io/miles-drive/ |
 | miles-drive: política de privacidad | https://josebadg.github.io/miles-drive/privacidad/ |
