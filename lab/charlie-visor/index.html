@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Visor de escenas del motor · Laboratorio</title>
+  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
+  <link rel="stylesheet" href="visor.css">
+</head>
+<body>
+  <!--
+    Visor de escenas (Charlie, laboratorio de animación y vídeo). Carga una escena de /motor/ con su contrato
+    (tramo, iniciar(ctx) → pintar(t, reloj)) y la deja quieta en el fotograma que diga la URL:
+    ?escena=curvatura&t=0.35&r=1.2   (t en el tiempo T del motor, r = segundos del reloj)
+    &mm=1 → fotograma de «reducir movimiento» · &ui=0 → sin controles, para capturas.
+    No toca /motor/ ni la portada: importa sus escenas tal cual.
+  -->
+  <div class="capas" id="capas" aria-hidden="true"></div>
+
+  <!-- Para la vuelta: el logotipo quieto donde acaba la página (su punto es el destino de las partículas) -->
+  <p class="firma" id="firma" hidden><span class="firma-logo"><img src="/motor/marca/logo-apilado.svg" alt="The Singularity" width="409" height="183" decoding="async"><span class="firma-punto" data-punto-final aria-hidden="true"></span></span></p>
+
+  <main class="panel" id="panel">
+    <h1 class="titulo">Visor de escenas <a href="/lab/#experimentos">Laboratorio</a></h1>
+
+    <div class="fila">
+      <label for="escena">Escena</label>
+      <select id="escena">
+        <option value="curvatura">Espacio curvado</option>
+        <option value="bigbang">Big bang (3D, unos 900 KB)</option>
+        <option value="vuelta">Vuelta al punto</option>
+        <option value="intro" disabled>Intro (va con tiempo real: mírala en /motor/)</option>
+      </select>
+    </div>
+
+    <div class="fila">
+      <label for="t">t del motor <output id="tSale" for="t">0,000</output></label>
+      <input id="t" type="range" min="0" max="1" step="0.001" value="0">
+    </div>
+
+    <div class="fila" id="filaReloj">
+      <label for="r">Reloj <output id="rSale" for="r">0,00 s</output></label>
+      <input id="r" type="range" min="0" max="12" step="0.01" value="0">
+    </div>
+
+    <div class="botones">
+      <button type="button" id="marcha" aria-pressed="false">Mover reloj</button>
+      <label class="casilla"><input type="checkbox" id="mm"> Menos movimiento</label>
+      <button type="button" id="copiar">Copiar enlace</button>
+      <button type="button" id="ocultar" aria-label="Ocultar controles">Ocultar</button>
+    </div>
+
+    <p class="estado" id="estado" role="status" aria-live="polite"></p>
+  </main>
+
+  <button type="button" class="mostrar" id="mostrar" hidden>Controles</button>
+
+  <script type="module" src="visor.js"></script>
+</body>
+</html>
