@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex">
   <meta name="color-scheme" content="dark">
-  <title>Motor de escenas · prueba con tres escenas</title>
+  <title>Motor de escenas · prueba con cuatro escenas</title>
   <link rel="stylesheet" href="motor.css">
   <link rel="modulepreload" href="escenas/curvatura.js">
   <link rel="modulepreload" href="escenas/intro.js">
 </head>
 <body>
-  <!-- Banco de pruebas del motor: tres escenas y sus relevos. Nada de aquí es todavía la portada. -->
+  <!-- Banco de pruebas del motor: cuatro escenas y sus relevos. Nada de aquí es todavía la portada. -->
   <div class="motor-capas" id="capas" aria-hidden="true"></div>
 
   <main>
@@ -32,6 +32,14 @@
       <p>Un solo bucle, un solo vigilante de fps y un solo control de menos movimiento para todas. Si una escena no puede, su sección enseña un cartel fijo y el texto sigue ahí.</p>
       <p class="credito">Método basado en <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>, de Giacomo Magnanini (MIT).</p>
     </section>
+
+    <section class="escena escena-vuelta" data-escena>
+      <h2>¿Cuál es tu punto?</h2>
+      <p>Todo esto empezó con uno. Al llegar aquí, todo vuelve a él.</p>
+      <!-- Logotipo apilado: marca/logo-apilado.svg es copia exacta de portada/marca/ (sale de gen.py; no se edita
+           a mano). El span marca su punto (cx 204,48 · cy 73,5 de 408,96 × 182,78): ahí acaba la vuelta. -->
+      <p class="firma"><span class="firma-logo"><img src="marca/logo-apilado.svg" alt="The Singularity" width="409" height="183" loading="lazy" decoding="async"><span class="firma-punto" data-punto-final aria-hidden="true"></span></span></p>
+    </section>
   </main>
 
   <button class="motor-pausa" id="pausa" type="button" aria-pressed="false" aria-label="Pausar el movimiento" hidden>
@@ -40,13 +48,15 @@
 
   <script type="module">
     import { crearMotor } from './motor.js';
-    // De abajo arriba: el big bang se enciende debajo de la luz de la curvatura, y la intro va encima de todo
+    // De abajo arriba: el big bang se enciende debajo de la luz de la curvatura, la vuelta no coincide con
+    // ninguna (va al final) y la intro va encima de todo
     window.motor = crearMotor({
       capas: document.getElementById('capas'),
       boton: document.getElementById('pausa'),
       escenas: [
         { nombre: 'bigbang', modulo: './escenas/bigbang.min.js', pesada: true },
         { nombre: 'curvatura', modulo: './escenas/curvatura.js' },
+        { nombre: 'vuelta', modulo: './escenas/vuelta.js', tardia: true },
         { nombre: 'intro', modulo: './escenas/intro.js' },
       ],
     });
