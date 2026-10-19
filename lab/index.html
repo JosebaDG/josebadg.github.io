@@ -19,12 +19,12 @@
     aExplosion(); addEventListener('hashchange', aExplosion);
   </script>
   <!--
-    Laboratorio de animación y vídeo: el departamento del equipo (Miles, Charlie, Maya y Simone). Jefe: Charlie.
-    Orden fijo: 1) Te espera (solo lo que espera el sí de Joseba, siempre arriba y separado), 2) Publicado,
-    3) Experimentos (pruebas sueltas de cada miembro), 4) Biblioteca (material archivado de Joseba, por tema).
-    Regla (DECISIONES.md de equipo-agentes, 19/10/2026): ningún PR llega a Joseba sin un enlace que se abra en el móvil
-    y enseñe lo que cambia. Las rondas del canal del equipo mantienen «Te espera» al día: añaden lo nuevo y quitan lo
-    fusionado o descartado (su copia /preview/prN/ y sus capturas de lab/capturas/).
+    Laboratorio de animación y vídeo del equipo.
+    Orden fijo: 1) Te espera (solo lo que espera una decisión, siempre arriba y separado), 2) Publicado,
+    3) Experimentos (pruebas sueltas de cada miembro), 4) Biblioteca (recursos ordenados por la necesidad que resuelven).
+    Regla: ningún cambio pendiente se pide sin un enlace que se abra en el móvil y enseñe lo que cambia.
+    «Te espera» se mantiene al día: se añade lo nuevo y se quita lo fusionado o descartado (su copia /preview/prN/
+    y sus capturas de lab/capturas/). Ante una necesidad nueva, primero se busca en la Biblioteca y después fuera.
   -->
   <style>
     :root {
@@ -86,7 +86,25 @@
     ul.lista strong { display: block; }
     ul.lista span { color: var(--tinta-2); font-size: 0.9375rem; }
 
-    /* 4. Biblioteca: fichas cortas por recurso y estantes por tema. */
+    /* 4. Biblioteca: ordenada por necesidad; cada recurso cuelga de lo que resuelve. */
+    [hidden] { display: none !important; }
+    .buscador { margin: 0 0 0.5rem; }
+    .buscador label { display: block; font-weight: 600; margin: 0 0 0.375rem; }
+    .buscador input { width: 100%; min-height: 2.75rem; font: inherit; padding: 0.5rem 0.875rem; border-radius: 12px; border: 1px solid var(--oro); background: var(--espera-fondo); color: var(--tinta); }
+    .buscador input::placeholder { color: var(--tinta-2); opacity: 1; }
+    .buscador input:focus-visible { outline: 2px solid var(--foco); outline-offset: 2px; }
+    .indice-necesidades { margin: 0.75rem 0 1.25rem; }
+    .necesidad { border: 1px solid var(--linea); border-radius: 18px; padding: 1rem 1.125rem 0.375rem; margin: 0 0 0.875rem; scroll-margin-top: 1rem; }
+    .necesidad.sin-material { border-style: dashed; }
+    .necesidad h3 { font-size: 1.125rem; line-height: 1.25; }
+    .para { color: var(--tinta-2); }
+    .recursos { margin: 0 0 0.75rem; padding-left: 1.125rem; }
+    .recursos li { margin: 0 0 0.5rem; }
+    .aficha { font-size: 0.875rem; color: var(--oro); white-space: nowrap; }
+    .ojo { font-size: 0.9375rem; border-left: 2px solid var(--oro); padding-left: 0.625rem; }
+    .casa, .resuelve { font-size: 0.9375rem; color: var(--tinta-2); }
+    .casa a, .resuelve a { color: var(--tinta); }
+    .ficha { scroll-margin-top: 1rem; }
     .ruta { border: 1px solid var(--linea); border-radius: 14px; padding: 0.875rem 1rem; margin: 0 0 1.25rem; }
     .ruta ol { margin: 0.25rem 0 0; padding-left: 1.25rem; }
     .ruta li { margin: 0 0 0.375rem; }
@@ -101,10 +119,6 @@
     .ficha dd ul { margin: 0.125rem 0 0; padding-left: 1.125rem; }
     .ficha dd li { margin: 0 0 0.25rem; }
     .estantes-titulo { font-size: 1.0625rem; margin: 1.5rem 0 0.625rem; }
-    .estantes { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 0.625rem; }
-    .estante { border: 1px dashed var(--linea); border-radius: 14px; padding: 0.875rem 1rem; }
-    .estante h3 { font-size: 1.0625rem; margin: 0 0 0.25rem; }
-    .estante p { color: var(--tinta-2); font-size: 0.9375rem; margin: 0; }
 
     footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--linea); color: var(--tinta-2); font-size: 0.875rem; }
     @media (min-width: 48rem) { h1 { font-size: 2.5rem; } }
@@ -115,7 +129,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 19 de octubre de 2026. Revisados josebadg.github.io, Pvpc-bridge y equipo-agentes. Biblioteca con sus tres primeras fichas.</p>
+    <p class="fecha">Al día: 19 de octubre de 2026. Revisados los repos del equipo. Biblioteca ordenada por necesidad.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -182,7 +196,6 @@
           <a class="boton principal" href="/motor/">Abrir /motor/</a>
           <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/14">PR #14</a>
           <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/15">PR #15</a>
-          <a class="boton" href="https://github.com/JosebaDG/equipo-agentes/issues/12">Hilo #12</a>
         </div>
       </article>
     </section>
@@ -222,23 +235,144 @@
 
     <section aria-labelledby="biblioteca">
       <h2 id="biblioteca">Biblioteca</h2>
-      <p class="intro">Tu material, una ficha corta por recurso. Que algo esté aquí no obliga a usarlo: capturar no es comprometerse.</p>
+      <p class="intro">Ordenada por necesidad, no por fuente. Cuando necesitemos algo, primero se busca aquí y después fuera: así no reinventamos la rueda, ahorramos créditos y avanzamos con más contundencia. Que algo esté aquí no obliga a usarlo.</p>
+
+      <div class="buscador" hidden>
+        <label for="buscar-necesidad">¿Qué necesitas?</label>
+        <input id="buscar-necesidad" type="search" autocomplete="off" enterkeyhint="search" placeholder="Por ejemplo: vídeo, agujero negro, guion" aria-describedby="buscar-resultado">
+        <p id="buscar-resultado" class="nota" aria-live="polite"></p>
+      </div>
+
+      <nav aria-label="Necesidades de la Biblioteca">
+        <ul class="indice-necesidades">
+          <li><a href="#n-presentar">Presentar logros y concepto</a></li>
+          <li><a href="#n-scroll">Animar con el scroll</a></li>
+          <li><a href="#n-luz">Luz y gravedad</a></li>
+          <li><a href="#n-video">Vídeo y hojas de contacto</a></li>
+          <li><a href="#n-medir">Revisar con datos</a></li>
+          <li><a href="#n-direccion">Biblia de estilo y guion</a></li>
+          <li><a href="#n-equipo">Equipo de agentes creativos</a></li>
+          <li><a href="#n-datos">Datos que mueven la imagen</a></li>
+          <li><a href="#n-texto">Texto que se mueve</a></li>
+        </ul>
+      </nav>
+
+      <div class="necesidades">
+        <article class="necesidad" id="n-presentar" data-claves="web portada presentar logros concepto proyecto escaparate visual atractivo singularity landing comunidad">
+          <h3>Presentar logros y concepto con visuales</h3>
+          <p class="para">Para que quien llegue entienda el proyecto de un vistazo. Así salió la portada The Singularity.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: una idea contada en escenas, con paleta de roles y un motivo que vuelve (su chispa es nuestro punto). <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+          <p class="casa">Hecho en casa: <a href="/">la portada</a> y <a href="/motor/">/motor/</a>.</p>
+        </article>
+
+        <article class="necesidad" id="n-scroll" data-claves="scroll desplazamiento animacion animar escenas motor tiempo reloj linea de tiempo determinista reducir movimiento">
+          <h3>Animar con el scroll</h3>
+          <p class="para">Para que la página avance, retroceda y salte como un vídeo según bajas.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: el tiempo como única fuente, una escena por archivo y nada al azar sin semilla. Es el método pdoom. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+          <p class="casa">Hecho en casa: <a href="/motor/">/motor/</a> y el <a href="/lab/charlie-visor/">visor de escenas</a>.</p>
+        </article>
+
+        <article class="necesidad" id="n-luz" data-claves="luz brillo bloom gravedad agujero negro lente gravitacional shader glsl webgl anillo espacio curvado lineas particulas">
+          <h3>Efectos de luz y gravedad</h3>
+          <p class="para">Para el agujero negro, el brillo del punto y miles de líneas sin que el móvil sufra.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: lente gravitacional (<code>spacetime-lens.ts</code>) con anillo de Einstein, brillo solo para la señal y líneas en GPU. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: licencia MIT, se cita al autor. Su raymarching es demasiado lento para el móvil.</p>
+          <p class="casa">Hecho en casa: el espacio curvado de <a href="/">la portada</a>.</p>
+        </article>
+
+        <article class="necesidad" id="n-video" data-claves="video mp4 exportar grabar fotogramas hoja de contacto stills redes clip render">
+          <h3>Exportar a vídeo y sacar hojas de contacto</h3>
+          <p class="para">Para sacar vídeos cortos de las escenas y ver muchos momentos de una escena en una sola imagen.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: exporta fotograma a fotograma por tiempo, no grabando la pantalla, y saca fotogramas y hojas de contacto (<code>render.ts</code>). <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: su director de arte revisa con hojas de contacto de los momentos clave. <a class="aficha" href="#f-drive">Ficha</a></li>
+          </ul>
+          <p class="casa">Hecho en casa: el <a href="/lab/charlie-visor/">visor de escenas</a> enlaza un momento exacto.</p>
+        </article>
+
+        <article class="necesidad" id="n-medir" data-claves="revisar comprobar medir calidad pruebas tests pr visual destellos accesibilidad mirar a ojo">
+          <h3>Revisar con datos, no a ojo</h3>
+          <p class="para">Para dar por bueno un cambio visual con pruebas y no con «lo he mirado».</p>
+          <ul class="recursos">
+            <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: comprueban con herramientas que la letra sale a tiempo y que no hay destellos peligrosos. <a class="aficha" href="#f-drive">Ficha</a></li>
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: como cada fotograma depende solo del tiempo, se puede comparar el mismo momento antes y después. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+        </article>
+
+        <article class="necesidad" id="n-direccion" data-claves="direccion biblia de estilo guion paleta tipografia tono storyboard idea treatment prompt">
+          <h3>Dirección escrita: biblia de estilo y guion</h3>
+          <p class="para">Para que el equipo pula escenas con un rumbo escrito y no a ciegas.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video/blob/main/docs/TREATMENT.md">pdoom-video, TREATMENT.md</a>: la idea, la paleta, la tipografía y una ficha por escena, escritas antes de programar. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: los prompts escritos como un guion, de una sola mano, y el registro de cada indicación del director. <a class="aficha" href="#f-drive">Ficha</a></li>
+          </ul>
+          <p class="ojo">La nuestra aún no existe: la biblia es de Maya y el guion de Simone.</p>
+        </article>
+
+        <article class="necesidad" id="n-equipo" data-claves="equipo agentes orquestar orquestacion organizar roles director animador jueces claude coste creditos fallos">
+          <h3>Organizar un equipo de agentes creativos</h3>
+          <p class="para">Para repartir el trabajo visual entre agentes sin pisarse y sin quemar créditos.</p>
+          <ul class="recursos">
+            <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: un animador por capítulo, un director de arte que mira fotogramas reales y una ronda de arreglos. También cuenta sus fallos. <a class="aficha" href="#f-drive">Ficha</a></li>
+            <li><a href="https://x.com/anabology/status/2104604226059993391">Post de @anabology</a>: la puerta de entrada a la carpeta, con lo que costó en horas. <a class="aficha" href="#f-post">Ficha</a></li>
+            <li><a href="https://github.com/mexicat/pdoom-video/blob/main/docs/ENGINE.md">pdoom-video, ENGINE.md</a>: reglas para varios autores. Cada uno toca sus escenas y el motor tiene un dueño. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: cada vídeo de Slopcore costó de 626 a 1.007 dólares en Claude a precio de API, y usa Midjourney y Seedance, de pago, que chocan con nuestra regla de que nada parezca generado por IA. Se aprende el método, no se copia el gasto.</p>
+        </article>
+
+        <article class="necesidad" id="n-datos" data-claves="datos grafica precio pvpc musica audio ritmo convertir datos en escena visualizacion">
+          <h3>Que los datos o la música muevan la imagen</h3>
+          <p class="para">Para convertir un dato, como el precio de cada hora, en una escena que se entiende sin leer.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: una gráfica que cae a un paisaje 3D y la música como entrada del shader (<code>audio.ts</code>). <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+          <p class="casa">Idea en casa: las 24 horas del PVPC como una canción. Sin plan todavía.</p>
+        </article>
+
+        <article class="necesidad" id="n-texto" data-claves="texto tipografia letras particulas trazo escribir solo palabras">
+          <h3>Texto que se mueve</h3>
+          <p class="para">Para frases que se forman con puntos o se escriben solas.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: texto hecho de partículas (<code>textPoints</code>) y letras de un solo trazo (<code>stroke.ts</code>). Para más adelante. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: el texto sigue en el HTML para que se lea. El efecto solo decora.</p>
+        </article>
+
+        <article class="necesidad sin-material" id="n-pendiente" data-claves="webgpu three.js threejs 3d rendimiento sonido musica propia sin material buscar fuera">
+          <h3>Sin material todavía</h3>
+          <p class="para">Necesidades que ya asoman y para las que aún no tenemos nada. Se busca fuera y lo que salga se ficha aquí.</p>
+          <ul class="recursos">
+            <li><strong>WebGPU</strong>: ni pdoom-video ni la carpeta lo usan. Charlie medirá la lente en WebGPU.</li>
+            <li><strong>three.js a fondo</strong>: pdoom-video lo usa en todo el motor, pero solo hemos visto su uso.</li>
+          </ul>
+        </article>
+
+        <p class="vacio buscador-nada" hidden>No hay nada en la Biblioteca para eso. Se busca fuera y, lo que sirva, se ficha aquí bajo esa necesidad.</p>
+      </div>
 
       <div class="ruta">
         <h3>Cómo se digiere lo que entra</h3>
         <ol>
-          <li><strong>Ficha.</strong> Cada recurso que pases tiene aquí su ficha en la siguiente ronda del equipo: qué es, nivel, qué podemos sacar y qué ojo tener.</li>
-          <li><strong>Experimento.</strong> Solo si la ficha resuelve algo que ya nos frena o nos hace falta. Charlie lleva uno abierto como mucho, en Experimentos.</li>
-          <li><strong>Aprendizaje.</strong> Al cerrar el experimento, una línea en su ficha con lo aprendido. Si cambia cómo trabajamos, va a la lista del método.</li>
-          <li><strong>Comunidad.</strong> Lo que funciona y entendemos se publica como nota de taller, citando el original y su licencia. Lo que sale a los buscadores lo decides tú.</li>
+          <li><strong>Buscar aquí primero.</strong> Ante una necesidad nueva, primero se busca en la Biblioteca y después fuera.</li>
+          <li><strong>Ficha bajo su necesidad.</strong> Cada recurso que llegue tiene su ficha en la siguiente ronda del equipo y se cuelga de la necesidad o necesidades que resuelve. Si no encaja en ninguna, se abre una necesidad nueva.</li>
+          <li><strong>Experimento.</strong> Solo si resuelve algo que ya nos frena o nos hace falta. Charlie lleva uno abierto como mucho, en Experimentos.</li>
+          <li><strong>Aprendizaje.</strong> Al cerrar el experimento, una línea en su ficha. Si cambia cómo trabajamos, va a la lista del método.</li>
+          <li><strong>Comunidad.</strong> Lo que funciona se publica como nota de taller, citando el original y su licencia. Lo que sale a los buscadores lo decides tú.</li>
         </ol>
       </div>
 
-      <h3 class="estantes-titulo">Referencias de cabecera</h3>
+      <h3 class="estantes-titulo">Fichas por recurso</h3>
 
       <article class="ficha" aria-labelledby="f-pdoom">
         <h4 id="f-pdoom">pdoom-video, el repo que lo empezó todo</h4>
         <ul class="etiquetas"><li>Código</li><li>Nivel avanzado</li><li>En estudio</li><li>Licencia MIT</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-presentar">presentar</a>, <a href="#n-scroll">scroll</a>, <a href="#n-luz">luz y gravedad</a>, <a href="#n-video">vídeo</a>, <a href="#n-medir">revisar</a>, <a href="#n-direccion">dirección</a>, <a href="#n-equipo">equipo</a>, <a href="#n-datos">datos</a> y <a href="#n-texto">texto</a>.</p>
         <dl>
           <dt>Qué es</dt>
           <dd>El videoclip de «I'm Upping My P(doom)», de 3 min 42 s, hecho entero con código por Giacomo Magnanini (mexicat) con Claude: three.js, shaders GLSL y Canvas2D. Cada fotograma depende solo del tiempo, y el vídeo se exporta fotograma a fotograma. Tiene 40 escenas y un motor de 14 piezas.</dd>
@@ -253,7 +387,7 @@
             <li>Para más adelante: texto hecho de partículas, letras de un solo trazo que se escriben solas y la música moviendo la imagen.</li>
           </ul></dd>
           <dt>Ojo</dt>
-          <dd>Está pensado para vídeo a 1920 × 1080, no para un móvil con scroll. Se toman ideas y se adaptan: no se copia el motor.</dd>
+          <dd>Está pensado para vídeo a 1920 × 1080, no para un móvil con scroll. Se toman ideas y se adaptan: no se copia el motor. Licencia MIT: todo lo que derive de él cita al autor así: «Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT».</dd>
         </dl>
         <div class="acciones">
           <a class="boton principal" href="https://github.com/mexicat/pdoom-video">Abrir el repo</a>
@@ -263,6 +397,7 @@
       <article class="ficha" aria-labelledby="f-post">
         <h4 id="f-post">El post de @anabology en X</h4>
         <ul class="etiquetas"><li>Post</li><li>Nivel de entrada</li><li>Leído</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a>.</p>
         <dl>
           <dt>Qué es</dt>
           <dd>El 28 de septiembre de 2026 anabology compartió una carpeta pública con el «cómo se hizo», los prompts, las imágenes, el audio y el vídeo final. Cita su post del 25 de septiembre: le dio a Opus 5.5 el prompt de donald, Midjourney y un panel de referencias, y 12 horas después tenía el vídeo. Ese post pasa de 20 millones de visualizaciones.</dd>
@@ -277,6 +412,7 @@
       <article class="ficha" aria-labelledby="f-drive">
         <h4 id="f-drive">La carpeta «Slopcore»: tres vídeos con su cómo se hizo</h4>
         <ul class="etiquetas"><li>Making-of</li><li>Nivel avanzado</li><li>Leídos los textos</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a>, <a href="#n-video">hojas de contacto</a>, <a href="#n-medir">revisar con datos</a> y <a href="#n-direccion">dirección</a>.</p>
         <dl>
           <dt>Qué es</dt>
           <dd>Tres videoclips de anabology (ESCAPE VELOCITY, Bliss y Clodyssey) y, para cada uno, su cómo se hizo: el documento que lo cuenta, cada indicación del director, los prompts literales de cada agente, los de Midjourney, Seedance y Suno, las imágenes, el audio y el vídeo final.</dd>
@@ -293,15 +429,7 @@
           <a class="boton principal" href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Abrir la carpeta</a>
         </div>
       </article>
-
-      <h3 class="estantes-titulo">Por tema</h3>
-      <div class="estantes">
-        <div class="estante"><h3>three.js</h3><p>pdoom-video lo usa en todo el motor. Esperando tu material.</p></div>
-        <div class="estante"><h3>WebGPU</h3><p>Ni pdoom-video ni la carpeta lo usan. Esperando tu material.</p></div>
-        <div class="estante"><h3>Shaders</h3><p>La lente gravitacional de pdoom-video. Esperando tu material.</p></div>
-        <div class="estante"><h3>Vídeo y agentes</h3><p>La carpeta «Slopcore» y el post de anabology.</p></div>
-      </div>
-      <p class="nota">Cuando pases más material, cada recurso tendrá su ficha y su estante.</p>
+      <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>
     </section>
 
     <footer>
@@ -310,5 +438,39 @@
       <p><a href="/">Ir a la portada</a></p>
     </footer>
   </main>
+  <script>
+    // Buscador de la Biblioteca: filtra las necesidades por lo que se escribe (sin tildes ni mayúsculas).
+    (function () {
+      var caja = document.querySelector('.buscador');
+      if (!caja || !''.normalize) return;
+      caja.hidden = false;
+      var entrada = document.getElementById('buscar-necesidad');
+      var aviso = document.getElementById('buscar-resultado');
+      var nada = document.querySelector('.buscador-nada');
+      var fichas = [].slice.call(document.querySelectorAll('.necesidad'));
+      var vacias = ['necesito', 'necesitamos', 'quiero', 'queremos', 'buscar', 'hacer', 'algo', 'para', 'como', 'con', 'una', 'uno', 'los', 'las', 'del', 'que', 'por'];
+      function limpia(t) { return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+      function texto(n, sel) { return limpia([].map.call(n.querySelectorAll(sel), function (e) { return e.textContent; }).join(' ') + ' ' + (n.getAttribute('data-claves') || '')); }
+      // Primero manda la necesidad (título, para qué y claves); si no sale nada, se mira también en los recursos.
+      var cortos = fichas.map(function (n) { return texto(n, 'h3, .para'); });
+      var largos = fichas.map(function (n) { return limpia(n.textContent + ' ' + (n.getAttribute('data-claves') || '')); });
+      function puntos(lista, palabras) { return lista.map(function (t) { return palabras.filter(function (p) { return t.indexOf(p) >= 0; }).length; }); }
+      entrada.addEventListener('input', function () {
+        var palabras = limpia(entrada.value).split(/[^a-z0-9.]+/).filter(function (p) { return p.length > 2 && vacias.indexOf(p) < 0; });
+        var nota = puntos(cortos, palabras);
+        var tope = Math.max.apply(null, nota);
+        if (tope === 0) { nota = puntos(largos, palabras); tope = Math.max.apply(null, nota); }
+        var vistas = 0;
+        fichas.forEach(function (n, i) {
+          var si = !palabras.length || (tope > 0 && nota[i] === tope);
+          n.hidden = !si;
+          if (si) vistas++;
+        });
+        var buscando = palabras.length > 0;
+        nada.hidden = !(buscando && vistas === 0);
+        aviso.textContent = !buscando ? '' : vistas === 0 ? 'Nada todavía: toca buscar fuera.' : vistas === 1 ? '1 necesidad encontrada.' : vistas + ' necesidades encontradas.';
+      });
+    })();
+  </script>
 </body>
 </html>
