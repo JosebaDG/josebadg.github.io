@@ -1,8 +1,0 @@
-/* Vista previa del PR #22 (https://github.com/JosebaDG/josebadg.github.io/pull/22), sin fusionar.
-   Copia exacta de las reglas que el PR añade a motor/motor.css. Al fusionar o descartar el PR, esta carpeta se borra. */
-.salida { margin-top: 2.4rem; font-size: 0.85rem; color: var(--tenue); }
-.salida a { color: var(--tenue); text-underline-offset: 3px; display: inline-block; padding: 0.7rem 0.4rem; }
-.salida a:hover { color: var(--texto); }
-
-/* Solo de esta vista previa: la etiqueta va arriba, porque abajo a la derecha está el botón de pausa del motor. */
-.vista-previa { top: max(0.75rem, env(safe-area-inset-top)); bottom: auto; }
