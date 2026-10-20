@@ -6,89 +6,23 @@
   <meta name="robots" content="noindex">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#000000">
-  <title>Muelle en T · Laboratorio</title>
-  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
-  <link rel="stylesheet" href="../../motor/motor.css">
-  <link rel="stylesheet" href="muelle.css">
-  <link rel="stylesheet" href="/preview/volver.css">
-  <link rel="modulepreload" href="../../motor/escenas/curvatura.js">
-  <link rel="modulepreload" href="../../motor/escenas/intro.js">
+  <title>El muelle en T está ahora en el laboratorio</title>
+  <!-- 20/10/2026: el PR #25 se fusionó y el muelle vive en /lab/charlie-muelle/.
+       Esta página solo reenvía allí para que el enlace que ya circulaba siga funcionando. -->
+  <meta http-equiv="refresh" content="0; url=/lab/charlie-muelle/">
+  <link rel="canonical" href="/lab/charlie-muelle/">
+  <script>location.replace('/lab/charlie-muelle/' + location.search + location.hash);</script>
+  <style>
+    body { margin: 0; background: #000; color: #f3ece2; font: 400 1.0625rem/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 40rem; margin: 0 auto; padding: 2rem 1.125rem; }
+    a { color: #f3cf96; }
+    a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  </style>
 </head>
 <body>
-  <!--
-    VISTA PREVIA del PR #25 (sin fusionar): copia de lab/charlie-muelle/. Se quita al fusionar o descartar el PR.
-    Muelle en T (Charlie, laboratorio de animación y vídeo). Las cuatro escenas de /motor/ con una copia del
-    motor (motor.js de esta carpeta) que suaviza el tiempo con un muelle opcional. /motor/ no cambia.
-    Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT.
-    ?muelle=0|1 · &preset=suave|medio|firme|rebote · &w=2..30 &z=0.3..1.5 (a mano) · &ui=0 sin panel (vídeos)
-    &registro=1 guarda el T de cada cuadro (pruebas).
-  -->
-  <div class="motor-capas" id="capas" aria-hidden="true"></div>
-
-  <header class="muelle-panel" id="panel">
-    <div class="muelle-fila">
-      <button type="button" id="interruptor" aria-pressed="true">Muelle: <b>sí</b></button>
-      <label class="muelle-oculto" for="preset">Preset del muelle</label>
-      <select id="preset">
-        <option value="suave">Suave</option>
-        <option value="medio">Medio</option>
-        <option value="firme">Firme</option>
-        <option value="rebote">Con rebote</option>
-        <option value="mano">A mano</option>
-      </select>
-      <button type="button" id="golpe" aria-describedby="golpeQue">Golpe</button>
-    </div>
-    <div class="muelle-fila">
-      <p class="muelle-lectura" aria-hidden="true"><span>dedo <b id="lecturaScroll">0,00</b></span><span>motor <b id="lecturaMotor">0,00</b></span><span id="lecturaNota"></span></p>
-      <button type="button" class="muelle-mini" id="ajustar" aria-expanded="false" aria-controls="ajuste">Ajustar</button>
-      <a class="muelle-volver" href="/lab/#experimentos">Laboratorio</a>
-    </div>
-    <div class="muelle-ajuste" id="ajuste" hidden>
-      <div class="muelle-deslizador">
-        <label for="w">Rigidez ω <output id="wSale" for="w">9,0</output></label>
-        <input id="w" type="range" min="2" max="30" step="0.5" value="9">
-      </div>
-      <div class="muelle-deslizador">
-        <label for="z">Amortiguación ζ <output id="zSale" for="z">1,00</output></label>
-        <input id="z" type="range" min="0.3" max="1.5" step="0.05" value="1">
-      </div>
-      <p class="muelle-nota">ζ = 1 es el amortiguamiento crítico: llega lo antes posible sin pasarse. Tras un salto, se queda a menos del 2 % en <output id="asienta">0,65 s</output>.</p>
-    </div>
-    <p class="muelle-estado" id="estado" role="status"></p>
-  </header>
-
   <main>
-    <section class="escena escena-punto" data-escena>
-      <div class="cartel cartel-curvatura" aria-hidden="true"></div>
-      <h1>Todo empieza con un punto.</h1>
-      <p class="pista" id="golpeQue">Toca «Golpe» con el muelle y sin él: es el mismo desplazamiento brusco cada vez. O desliza rápido con el dedo.</p>
-    </section>
-
-    <section class="escena escena-cinco" data-escena>
-      <div class="cartel cartel-cinco" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-      <h2>Y de un punto salen cinco.</h2>
-      <p>Una persona y cuatro agentes, cada uno con su color.</p>
-    </section>
-
-    <section class="escena escena-fin" data-escena>
-      <h2>El tiempo persigue al dedo.</h2>
-      <p>Sin muelle, el tiempo del motor copia al desplazamiento. Con muelle lo persigue: un desplazamiento brusco se convierte en un movimiento que llega sin pasarse. Cada escena sigue siendo una función del tiempo; solo cambia qué tiempo se pinta.</p>
-      <p class="credito">Método basado en <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>, de Giacomo Magnanini (MIT). <a href="https://github.com/JosebaDG/josebadg.github.io/blob/lab/charlie-muelle/lab/charlie-muelle/README.md">Cómo funciona</a> · <a href="clips/muelle-golpe.mp4">Vídeo lado a lado</a>.</p>
-    </section>
-
-    <section class="escena escena-vuelta" data-escena>
-      <h2>¿Cuál es tu punto?</h2>
-      <p>Todo esto empezó con uno. Al llegar aquí, todo vuelve a él.</p>
-      <p class="firma"><span class="firma-logo"><img src="../../motor/marca/logo-apilado.svg" alt="The Singularity" width="409" height="183" loading="lazy" decoding="async"><span class="firma-punto" data-punto-final aria-hidden="true"></span></span></p>
-      <p class="credito"><a href="/">Portada</a> · <a href="/lab/">Laboratorio</a> · <a href="/motor/">El motor sin muelle</a></p>
-    </section>
+    <h1>El muelle se ha mudado</h1>
+    <p>Ya está publicado en el laboratorio: <a href="/lab/charlie-muelle/">abrir el muelle en T</a>.</p>
   </main>
-
-  <button class="motor-pausa" id="pausa" type="button" aria-pressed="false" aria-label="Pausar el movimiento" hidden>
-    <span aria-hidden="true"></span>
-  </button>
-
-  <a class="vista-previa" href="/lab/#experimentos">PR #25 · volver al laboratorio</a>
-  <script type="module" src="panel.js"></script>
 </body>
 </html>
