@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Vídeos y hojas de contacto del motor · Laboratorio</title>
+  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
+  <!--
+    Vídeos cortos y hojas de contacto de las escenas del motor, sacados fotograma a fotograma desde el visor
+    (/lab/charlie-visor/) con exportar.py: se avanza t a mano y se fotografía cada fotograma, sin grabar la pantalla.
+    Los vídeos llevan preload="none" y póster: no se baja nada hasta que se toca «reproducir».
+    Cada momento de la hoja abre ese mismo fotograma en el visor.
+  -->
+  <style>
+    :root {
+      --negro: #000; --tinta: #f3ece2; --tinta-2: #bdb4a7; --oro: #f3cf96; --linea: #3a3631; --foco: #fff; --charlie: #47d6cf;
+      --f: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--negro); color: var(--tinta); font: 400 1.0625rem/1.5 var(--f); }
+    main { max-width: 40rem; margin: 0 auto; padding: max(1.75rem, env(safe-area-inset-top)) max(1.125rem, env(safe-area-inset-right)) 3rem max(1.125rem, env(safe-area-inset-left)); }
+    .volver { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--tinta-2); font-size: 0.9375rem; }
+    h1 { font-size: 2rem; line-height: 1.08; letter-spacing: -0.025em; margin: 0.5rem 0 0.75rem; }
+    h2 { font-size: 1.25rem; line-height: 1.2; margin: 0 0 0.375rem; }
+    h3 { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--oro); margin: 1.25rem 0 0.625rem; }
+    p { margin: 0 0 0.875rem; }
+    .intro { color: var(--tinta-2); }
+    a { color: var(--tinta); }
+    a:focus-visible, video:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; border-radius: 4px; }
+    ul.como { padding-left: 1.25rem; color: var(--tinta-2); margin: 0 0 2rem; }
+    ul.como li { margin: 0 0 0.375rem; }
+    code { font-size: 0.875em; color: var(--tinta); }
+    .escena { border: 1px solid var(--linea); border-left: 3px solid var(--charlie); border-radius: 18px; padding: 1.125rem; margin: 0 0 1.5rem; }
+    .que { color: var(--tinta-2); }
+    figure { margin: 0 0 0.75rem; }
+    video { display: block; width: 100%; max-width: 16rem; height: auto; aspect-ratio: 540 / 1168; margin: 0 auto; border-radius: 14px; border: 1px solid var(--linea); background: #000; }
+    img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--linea); background: #000; }
+    figcaption { font-size: 0.8125rem; color: var(--tinta-2); margin-top: 0.375rem; text-align: center; }
+    .momentos { list-style: none; padding: 0; margin: 0 0 0.75rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; }
+    .momentos a { display: flex; align-items: center; justify-content: center; min-height: 2.75rem; border: 1px solid var(--linea); border-radius: 10px; text-decoration: none; font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+    .momentos a:hover { border-color: var(--charlie); }
+    .boton { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta); text-decoration: none; font-weight: 500; }
+    .peso { font-size: 0.8125rem; color: var(--tinta-2); margin: 0.5rem 0 0; }
+    footer { color: var(--tinta-2); font-size: 0.875rem; border-top: 1px solid var(--linea); padding-top: 1rem; }
+  </style>
+</head>
+<body>
+<main>
+  <a class="volver" href="/lab/#experimentos">← Laboratorio</a>
+  <h1>Vídeos y hojas de contacto del motor</h1>
+  <p class="intro">Cada escena del motor en un vídeo corto y en una hoja con 12 momentos. Se sacan desde el visor, fotograma a fotograma, así que salen iguales en cualquier equipo.</p>
+  <ul class="como">
+    <li>Los vídeos no se descargan hasta que tocas reproducir.</li>
+    <li>Cada momento de la hoja abre ese fotograma exacto en el <a href="/lab/charlie-visor/">visor</a>.</li>
+    <li>Grabados con WebKit, el motor de Safari y de Chrome en el iPhone, a 390 × 844.</li>
+  </ul>
+
+  <article class="escena" aria-labelledby="e-curvatura">
+    <h2 id="e-curvatura">Espacio curvado</h2>
+    <p class="que">La malla se hunde hacia el punto, late y se apaga cuando entra el big bang. Tramo 0 a 0,62 del motor, en 6 segundos.</p>
+    <figure>
+      <video controls playsinline muted loop preload="none" width="540" height="1168" poster="clips/curvatura-poster.jpg" aria-label="Vídeo del espacio curvado, 6 segundos, sin sonido">
+        <source src="clips/curvatura.mp4" type="video/mp4">
+        <source src="clips/curvatura.webm" type="video/webm">
+      </video>
+      <figcaption>6 s · MP4 372 KB · WebM 373 KB</figcaption>
+    </figure>
+    <h3>Hoja de contacto</h3>
+    <figure>
+      <img src="clips/curvatura-hoja.jpg" width="990" height="1581" loading="lazy" decoding="async" alt="Hoja de contacto del espacio curvado: 12 fotogramas de t 0 a 0,62, de la malla encendida a la pantalla casi negra.">
+    </figure>
+    <ul class="momentos" aria-label="Abrir cada momento en el visor">
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0&amp;r=0">0,000</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.055&amp;r=0.53">0,055</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.114&amp;r=1.1">0,114</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.17&amp;r=1.63">0,170</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.225&amp;r=2.17">0,225</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.281&amp;r=2.7">0,281</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.339&amp;r=3.27">0,339</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.395&amp;r=3.8">0,395</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.45&amp;r=4.33">0,450</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.506&amp;r=4.87">0,506</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.565&amp;r=5.43">0,565</a></li>
+      <li><a href="/lab/charlie-visor/?escena=curvatura&amp;t=0.62&amp;r=5.97">0,620</a></li>
+    </ul>
+  </article>
+
+  <article class="escena" aria-labelledby="e-bigbang">
+    <h2 id="e-bigbang">Big bang</h2>
+    <p class="que">El punto 3D se enciende bajo la luz de la curvatura, explota y se reparte. Tramo 0,30 a 1,35 del motor, en 6 segundos.</p>
+    <figure>
+      <video controls playsinline muted loop preload="none" width="540" height="1168" poster="clips/bigbang-poster.jpg" aria-label="Vídeo del big bang, 6 segundos, sin sonido">
+        <source src="clips/bigbang.mp4" type="video/mp4">
+        <source src="clips/bigbang.webm" type="video/webm">
+      </video>
+      <figcaption>6 s · MP4 2,0 MB · WebM 2,5 MB</figcaption>
+    </figure>
+    <h3>Hoja de contacto</h3>
+    <figure>
+      <img src="clips/bigbang-hoja.jpg" width="990" height="1581" loading="lazy" decoding="async" alt="Hoja de contacto del big bang: 12 fotogramas de t 0,30 a 1,35, del punto que se enciende a la explosión, que se reparte y se apaga.">
+    </figure>
+    <ul class="momentos" aria-label="Abrir cada momento en el visor">
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=0.3&amp;r=0">0,300</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=0.394&amp;r=0.53">0,394</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=0.494&amp;r=1.1">0,494</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=0.587&amp;r=1.63">0,587</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=0.681&amp;r=2.17">0,681</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=0.775&amp;r=2.7">0,775</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=0.875&amp;r=3.27">0,875</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=0.969&amp;r=3.8">0,969</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=1.063&amp;r=4.33">1,063</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=1.156&amp;r=4.87">1,156</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=1.256&amp;r=5.43">1,256</a></li>
+      <li><a href="/lab/charlie-visor/?escena=bigbang&amp;t=1.35&amp;r=5.97">1,350</a></li>
+    </ul>
+  </article>
+
+  <article class="escena" aria-labelledby="e-vuelta">
+    <h2 id="e-vuelta">Vuelta al punto</h2>
+    <p class="que">Sale un cielo tenue, cae en espiral al punto del logotipo y queda un halo que respira. Tramo 2,0 a 3,0 del motor, en 5 segundos.</p>
+    <figure>
+      <video controls playsinline muted loop preload="none" width="540" height="1168" poster="clips/vuelta-poster.jpg" aria-label="Vídeo de la vuelta al punto, 5 segundos, sin sonido">
+        <source src="clips/vuelta.mp4" type="video/mp4">
+        <source src="clips/vuelta.webm" type="video/webm">
+      </video>
+      <figcaption>5 s · MP4 575 KB · WebM 604 KB</figcaption>
+    </figure>
+    <h3>Hoja de contacto</h3>
+    <figure>
+      <img src="clips/vuelta-hoja.jpg" width="990" height="1581" loading="lazy" decoding="async" alt="Hoja de contacto de la vuelta al punto: 12 fotogramas de t 2,0 a 3,0, del cielo tenue al halo sobre el logotipo.">
+    </figure>
+    <ul class="momentos" aria-label="Abrir cada momento en el visor">
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2&amp;r=0">2,000</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.094&amp;r=0.47">2,094</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.181&amp;r=0.9">2,181</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.275&amp;r=1.37">2,275</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.362&amp;r=1.8">2,362</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.456&amp;r=2.27">2,456</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.544&amp;r=2.7">2,544</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.638&amp;r=3.17">2,638</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.725&amp;r=3.6">2,725</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.819&amp;r=4.07">2,819</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=2.906&amp;r=4.5">2,906</a></li>
+      <li><a href="/lab/charlie-visor/?escena=vuelta&amp;t=3&amp;r=4.97">3,000</a></li>
+    </ul>
+  </article>
+
+  <footer>
+    <p>La intro no está: va con tiempo real, no con t, así que no tiene fotogramas que recorrer. Se ve en <a href="/motor/">/motor/</a>.</p>
+    <p>Idea de <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>, de Giacomo Magnanini (MIT): exportar por tiempo y no grabando la pantalla. Cómo volver a sacarlos, en el README de esta carpeta.</p>
+  </footer>
+</main>
+</body>
+</html>

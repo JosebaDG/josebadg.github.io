@@ -29,6 +29,8 @@ Como todo lo que pinta una escena depende solo de T y del reloj, el mismo enlace
 
 Espera a `document.documentElement.dataset.listo === '1'` (o `'fallo'`). En la consola, `visor.ir('bigbang', 0.6, 0.8)` cambia de fotograma, `visor.estado()` dice dónde está y `visor.enlace()` da su URL.
 
+Para recorrer una escena fotograma a fotograma sin volver a cargarla: `visor.tramo()` da `{ desde, hasta, late }` y `await visor.fotograma(t, r)` mueve t y el reloj y se resuelve cuando el fotograma está pintado y asentado. Lo usa [exportar.py](../charlie-video/README.md) para los vídeos y las hojas de contacto.
+
 WebKit no enseña un WebGL pintado en el mismo cuadro en que aparece el lienzo, y la captura salía negra. Por eso el visor repinta el mismo fotograma unos pocos cuadros después de cargar, medir o mover un deslizador, y solo entonces marca `listo`.
 
 Basado en [pdoom-video](https://github.com/mexicat/pdoom-video), de Giacomo Magnanini (MIT), como el motor.

@@ -202,4 +202,19 @@ window.visor = {
   ir: (n, t, r = 0) => { reloj = r; rangoR.value = String(r); tPedido = t; selEscena.value = n; return cargar(n); },
   estado: () => ({ escena: viva && viva.nombre, T, reloj, menosMovimiento, listo: html.dataset.listo }),
   enlace,
+  // Para exportar vídeo fotograma a fotograma (lab/charlie-video/): mueve t y reloj sobre la escena ya
+  // cargada, sin volver a importarla, y se resuelve cuando el fotograma está pintado y asentado.
+  tramo: () => (viva ? { desde: viva.tramo[0], hasta: viva.tramo[1], late: viva.late } : null),
+  fotograma: (t, r = 0) => new Promise((resolver) => {
+    if (!viva) { resolver(false); return; }
+    T = limitar(t, viva.tramo[0], viva.tramo[1]);
+    reloj = Math.max(0, r);
+    rangoT.value = String(T);
+    rangoR.value = String(reloj);
+    html.dataset.listo = '0';
+    asentar = ASENTAR;
+    pedir();
+    const mirar = () => (html.dataset.listo === '1' ? resolver(true) : html.dataset.listo === 'fallo' ? resolver(false) : requestAnimationFrame(mirar));
+    requestAnimationFrame(mirar);
+  }),
 };
