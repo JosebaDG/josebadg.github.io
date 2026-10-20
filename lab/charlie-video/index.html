@@ -52,12 +52,28 @@
 <main>
   <a class="volver" href="/lab/#experimentos">← Laboratorio</a>
   <h1>Vídeos y hojas de contacto del motor</h1>
-  <p class="intro">Cada escena del motor en un vídeo corto y en una hoja con 12 momentos. Se sacan desde el visor, fotograma a fotograma, así que salen iguales en cualquier equipo.</p>
+  <p class="intro">La intro y cada escena del motor en un vídeo corto y en una hoja con 12 momentos. Se sacan desde el visor, fotograma a fotograma, así que salen iguales en cualquier equipo.</p>
   <ul class="como">
     <li>Los vídeos no se descargan hasta que tocas reproducir.</li>
     <li>Cada momento de la hoja abre ese fotograma exacto en el <a href="/lab/charlie-visor/">visor</a>.</li>
     <li>Grabados con WebKit, el motor de Safari y de Chrome en el iPhone, a 390 × 844.</li>
   </ul>
+
+  <article class="escena" aria-labelledby="e-intro">
+    <h2 id="e-intro">Intro: el fogonazo</h2>
+    <p class="que">Lo primero que se ve al abrir <a href="/motor/">/motor/</a>: el punto se enciende, estalla en un fogonazo y una onda de cinco colores, uno por cada miembro del equipo, cruza la pantalla mientras el negro se abre y deja ver la curvatura. Dura 2,4 segundos. En el vídeo va primero a velocidad real y después el fogonazo y la onda a cámara lenta, a 1/4.</p>
+    <figure>
+      <video controls playsinline muted loop preload="none" width="540" height="1168" poster="clips/intro-poster.jpg" aria-label="Vídeo de la intro del motor, 8,6 segundos, sin sonido: 3 segundos a velocidad real y el fogonazo a cámara lenta">
+        <source src="clips/intro.mp4" type="video/mp4">
+      </video>
+      <figcaption>8,6 s (3 s reales + cámara lenta) · MP4 513 KB</figcaption>
+    </figure>
+    <h3>Hoja de contacto</h3>
+    <figure>
+      <img src="clips/intro-hoja.jpg" width="990" height="1581" loading="lazy" decoding="async" alt="Hoja de contacto de la intro: 12 fotogramas de 0 a 2,4 segundos, del negro con el punto al fogonazo, la onda de cinco colores y la curvatura que queda debajo.">
+    </figure>
+    <p class="peso">Esta no tiene t: va con el tiempo real, así que sus momentos van en segundos y no se abren en el visor. Se graba con el reloj falso de Playwright, adelantándolo 1/30 s por fotograma. En la web sale una vez por pestaña, no con «reducir movimiento» y no si la página abre desplazada; cualquier gesto la salta.</p>
+  </article>
 
   <article class="escena" aria-labelledby="e-curvatura">
     <h2 id="e-curvatura">Espacio curvado</h2>
@@ -150,7 +166,7 @@
   </article>
 
   <footer>
-    <p>La intro no está: va con tiempo real, no con t, así que no tiene fotogramas que recorrer. Se ve en <a href="/motor/">/motor/</a>.</p>
+    <p>Las escenas se sacan avanzando t; la intro, que va con tiempo real, avanzando el reloj de la página a mano. Las dos, fotograma a fotograma.</p>
     <p>Idea de <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>, de Giacomo Magnanini (MIT): exportar por tiempo y no grabando la pantalla. Cómo volver a sacarlos, en el README de esta carpeta.</p>
   </footer>
 </main>
