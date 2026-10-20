@@ -165,7 +165,7 @@ async def exportar_intro(pw, base, a):
     # El reloj falso cubre performance.now(), Date y requestAnimationFrame. Parado, la intro no corre sola.
     await p.clock.install(time=1_800_000_000_000)
     await p.clock.pause_at(1_800_000_000_500)
-    await p.goto(f'{base}/motor/', wait_until='load')   # pestaña nueva: sessionStorage vacío y página arriba
+    await p.goto(f'{base}/motor/', wait_until='load')   # contexto nuevo: localStorage vacío y página arriba
     await p.wait_for_timeout(1500)   # módulos y curvatura cargados, en tiempo de verdad
     n = round(a.segundos * a.fps)
     tmp = tempfile.mkdtemp(prefix='video-intro-')
@@ -178,10 +178,10 @@ async def exportar_intro(pw, base, a):
         siguiente = round((i + 1) * 1000 / a.fps)
         await p.clock.run_for(siguiente - round(acumulado))
         acumulado = siguiente
-    vista = await p.evaluate("sessionStorage.getItem('motor-intro-vista')")
+    vista = await p.evaluate("localStorage.getItem('motor-intro-vista')")
     await nav.close()
     if vista != '1':
-        raise RuntimeError('la intro no ha terminado: sessionStorage no marca motor-intro-vista')
+        raise RuntimeError('la intro no ha terminado: localStorage no marca motor-intro-vista')
 
     # Vídeo: los segundos a velocidad real y, detrás, el fogonazo y la onda a cámara lenta
     a0, a1 = INTRO_LENTA

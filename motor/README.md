@@ -84,7 +84,7 @@ Un fogonazo de 2,4 s al abrir la página, encima de todo. Negro y el punto quiet
 
 - **Va con el tiempo real, no con el desplazamiento:** dura lo mismo en un equipo lento. Un hueco de más de 0,25 s entre cuadros no cuenta.
 - **Se salta con cualquier gesto:** tocar, una tecla, la rueda o desplazar. Se funde en 0,3 s. Con la pausa del motor se quita al momento. No lleva botón de «Saltar»: para 2,4 s se leería tarde y cualquier gesto ya vale.
-- **Una vez por sesión:** al volver a la página en la misma pestaña no se repite (`sessionStorage`). Tampoco sale si la página abre ya desplazada.
+- **Una vez por visitante:** sale en la primera visita desde ese navegador y no se repite, ni en otra pestaña ni tras cerrarlo (`localStorage`). «Primera visita» es eso, y un fogonazo de 2,4 s en cada pestaña nueva cansa. Si el navegador no deja guardar, se vuelve a ver. Tampoco sale si la página abre ya desplazada.
 - **Menos movimiento:** no hay fogonazo; la página abre en el fotograma fijo de la curvatura.
 - **Un solo destello, de subida suave:** lejos del límite de tres por segundo de WCAG 2.3.1.
 - **No la interrumpe la escena pesada:** mientras dura, el motor no pide el big bang (`ocupada()`); se pide al acabar o con el primer desplazamiento, que ya la salta.
