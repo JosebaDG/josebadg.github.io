@@ -37,10 +37,10 @@ const tramoDe = (x, a, b) => limitar((x - a) / (b - a), 0, 1);
 const suave = (x) => x * x * (3 - 2 * x);
 
 function yaVista() {
-  try { return sessionStorage.getItem(VISTA) === '1'; } catch { return false; }
+  try { return localStorage.getItem(VISTA) === '1'; } catch { return false; }
 }
 function marcarVista() {
-  try { sessionStorage.setItem(VISTA, '1'); } catch { /* sin almacenamiento: se verá otra vez */ }
+  try { localStorage.setItem(VISTA, '1'); } catch { /* sin almacenamiento: se verá otra vez */ }
 }
 
 function rgb(hex) {

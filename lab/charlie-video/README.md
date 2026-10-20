@@ -37,7 +37,7 @@ Y en `clips.json`, el t y el reloj de cada momento, el tramo, los fotogramas y l
 
 La intro de `/motor/` (`motor/escenas/intro.js`) no va con t: va con el tiempo real desde su primer cuadro y dura 2,4 s. Por eso no sale en el visor y tiene su propio modo, `exportar.py intro`:
 
-- Abre `/motor/` servido en local en WebKit, 390 × 844 a escala 2, en una pestaña nueva: `sessionStorage` vacío, página arriba y sin «reducir movimiento», que son las condiciones para que salga.
+- Abre `/motor/` servido en local en WebKit, 390 × 844 a escala 2, en un contexto nuevo del navegador: `localStorage` vacío, página arriba y sin «reducir movimiento», que son las condiciones para que salga.
 - Instala el reloj falso de Playwright (`page.clock.install` y `pause_at`), que cubre `performance.now()`, `Date` y `requestAnimationFrame`. Parado, la intro no corre sola mientras carga la curvatura.
 - En cada fotograma fotografía y adelanta el reloj 1/30 s con `page.clock.run_for` (33, 33, 34 ms…). 90 fotogramas, 3 s.
 - Al acabar comprueba que `motor-intro-vista` vale `1`: si no, la intro no ha terminado y para.

@@ -33,7 +33,7 @@ CUADRO_MS = 1000 / 60
 MODOS = [('sin muelle', 'muelle=0'), ('suave', 'preset=suave'), ('medio', 'preset=medio'), ('firme', 'preset=firme')]
 # Chromium sin GPU: SwiftShader, para que el big bang cargue y su latido cuente como en un móvil
 ARGS = {'chromium': ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'], 'webkit': []}
-INTRO_VISTA = "try { sessionStorage.setItem('motor-intro-vista', '1') } catch (e) {}"   # sin intro: no tapa nada
+INTRO_VISTA = "try { localStorage.setItem('motor-intro-vista', '1') } catch (e) {}"   # sin intro: no tapa nada
 
 
 def servir():
