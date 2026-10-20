@@ -237,3 +237,15 @@ html:has(.latido-pausa[aria-pressed="true"]) .firma :is(.iso-punto, .iso-onda) {
 .escena[data-escena="vuelta"] { min-height: auto; padding-top: var(--e-6); }
 /* Aire entre el logotipo y el botón del correo */
 .contacto { margin-top: var(--e-5); }
+
+/* Botón del correo con contraste AA: copia de las reglas de portada/punto.css (PR #13, publicado el 19/10),
+   para que la vista previa no se quede por detrás de la portada. */
+.boton {
+  font: inherit; font-size: 1rem;
+  color: var(--tinta); background: var(--negro);
+  border: 1px solid var(--oro); border-radius: 999px;
+  padding: 0.5rem 1.125rem; min-height: 2.75rem;
+  cursor: pointer;
+}
+.boton:hover { background: #1a1612; }
+.boton:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }

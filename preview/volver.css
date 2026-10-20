@@ -1,0 +1,12 @@
+/* Solo de las vistas previas de /preview/ (noindex): etiqueta fija para saber dónde estás y volver al laboratorio.
+   Autocontenida (sin variables de la página) para servir igual en singularity/, lonja/ y prN/. */
+.vista-previa {
+  position: fixed; left: max(0.75rem, env(safe-area-inset-left)); bottom: max(0.75rem, env(safe-area-inset-bottom));
+  z-index: 50; max-width: calc(100vw - 1.5rem);
+  padding: 0.5rem 0.875rem; border-radius: 999px;
+  background: #000; color: #f3ece2; border: 1px solid #f3cf96;
+  font: 500 0.8125rem/1.3 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-decoration: none;
+}
+.vista-previa:hover { background: #1a1612; }
+.vista-previa:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+@media print { .vista-previa { display: none; } }
