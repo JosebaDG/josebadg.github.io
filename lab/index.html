@@ -255,6 +255,7 @@
           <li><a href="#n-equipo">Equipo de agentes creativos</a></li>
           <li><a href="#n-datos">Datos que mueven la imagen</a></li>
           <li><a href="#n-texto">Texto que se mueve</a></li>
+          <li><a href="#n-comunidad">Comunidad y conocimiento compartido</a></li>
         </ul>
       </nav>
 
@@ -345,6 +346,15 @@
             <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: texto hecho de partículas (<code>textPoints</code>) y letras de un solo trazo (<code>stroke.ts</code>). Para más adelante. <a class="aficha" href="#f-pdoom">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: el texto sigue en el HTML para que se lea. El efecto solo decora.</p>
+        </article>
+
+        <article class="necesidad" id="n-comunidad" data-claves="comunidad conocimiento compartido comun bien comun soberania privacidad datos aprendizaje federado federated learning gobernanza gobernar decidir juntos rumbo licencia cooperativa ostrom miembros carta">
+          <h3>Comunidad y conocimiento compartido</h3>
+          <p class="para">Para aprender juntos sin que nadie entregue lo que piensa: quién es miembro, qué es de cada uno, qué pasa a ser común y quién decide el rumbo.</p>
+          <ul class="recursos">
+            <li><a href="aprendizaje-federado/">Aprender juntos sin entregar lo que pensamos</a>: el paper de Google sobre aprendizaje federado demostrablemente privado, explicado desde cero, y las piezas para gobernar una comunidad (cooperativas, licencias de bien común y los principios de Ostrom). <a class="aficha" href="#f-federado">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: la técnica de Google solo funciona con multitudes. En un grupo de cinco, el ruido que protege a cada uno taparía casi todo. Lo que sirve hoy es la forma de trabajar.</p>
         </article>
 
         <article class="necesidad sin-material" id="n-pendiente" data-claves="webgpu three.js threejs 3d rendimiento sonido musica propia sin material buscar fuera">
@@ -457,6 +467,31 @@
         <div class="acciones">
           <a class="boton principal" href="https://github.com/google-research/harness2">Abrir el repo</a>
           <a class="boton" href="https://arxiv.org/abs/2610.14224">Leer el artículo</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-federado">
+        <h4 id="f-federado">Aprendizaje federado privado, de Google Research, y comunidad soberana</h4>
+        <ul class="etiquetas"><li>Paper</li><li>Nivel avanzado</li><li>Estudiado</li><li>Investigación propia</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-comunidad">comunidad y conocimiento compartido</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>«Toward provably private learning from federated data», de Daly y 11 coautores (Google Research, septiembre de 2026). Cuenta cómo aprender de millones de móviles sin ver los datos de ninguno: cada móvil sube sus datos cifrados y atados a una política pública que dice qué programa puede leerlos, y ese programa corre en zonas blindadas del chip y añade el ruido justo para que nadie sepa si una persona estaba o no. En el teclado Gboard gastó tres veces menos privacidad y se entrenó en 3 semanas en vez de 2 meses, sin empeorar.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Reglas antes que datos</strong>: la política se publica antes de tocar nada. Para nosotros, decidir y apuntar las reglas antes de trabajar.</li>
+            <li><strong>Solo sale lo destilado</strong>: fuera solo salen resultados agregados. Es nuestra regla de lo público: lo que se piensa dentro se queda dentro.</li>
+            <li><strong>Auditable</strong>: un registro que nadie puede reescribir. El nuestro es el historial de git.</li>
+            <li><strong>La pieza que Google no trae</strong>: la técnica protege, pero no reparte el poder. Quién decide el rumbo sale de otras piezas: cooperativas de datos, licencias de bien común y los principios de Elinor Ostrom.</li>
+          </ul></dd>
+          <dt>Lo que no usamos</dt>
+          <dd>La técnica en sí, por ahora. Necesita multitudes, salas blindadas en servidores y mucho montaje, y nosotros producimos decisiones, textos y lecciones, no datos para entrenar un modelo.</dd>
+          <dt>Ojo</dt>
+          <dd>«Demostrable» todavía significa «hacia» la prueba: las matemáticas de la privacidad están probadas, pero hay que fiarse del fabricante del chip que las ejecuta, y falta probar que el software está bien escrito. Escala aún modesta: modelos de hasta 10 millones de parámetros. Con cinco miembros, el ruido lo tapa todo.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="aprendizaje-federado/">Leer la investigación</a>
+          <a class="boton" href="https://arxiv.org/abs/2609.31494">Leer el paper</a>
+          <a class="boton" href="https://research.google/blog/toward-provably-private-learning-from-federated-data/">Blog de Google</a>
         </div>
       </article>
       <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>

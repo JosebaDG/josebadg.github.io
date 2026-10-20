@@ -12,6 +12,7 @@ El departamento del equipo (Miles, Charlie, Maya y Simone) para animación, 3D y
 ## Dónde va cada cosa
 
 - `lab/index.html`: esta página. `lab/capturas/`: capturas de las tarjetas (PNG o JPG ligeros, Playwright con WebKit a 390 × 844).
+- `lab/aprendizaje-federado/`: la investigación «Aprender juntos sin entregar lo que pensamos» (paper de Google sobre aprendizaje federado privado y cómo se gobierna una comunidad), enlazada desde la ficha `#f-federado` de la Biblioteca, bajo la necesidad «Comunidad y conocimiento compartido» (`#n-comunidad`). Página completa publicada el 20/10/2026, noindex.
 - `lab/explosion/`: la explosión del punto (experimento de Miles; antes estaba en `/lab/`). Los enlaces compartidos antiguos (`/lab/#s=…`) se reenvían allí.
 - Las vistas previas siguen en `/preview/`: `singularity/`, `lonja/` y las copias de PR sin fusionar en `/preview/prN/`. `/preview/` a secas reenvía a `/lab/#espera`.
 
