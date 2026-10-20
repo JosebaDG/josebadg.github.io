@@ -129,7 +129,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 20 de octubre de 2026. Nuevo en Experimentos: el muelle en T de Charlie, revisado y publicado. Nueva necesidad en la Biblioteca: adaptar un texto largo a vídeo, con cuatro herramientas abiertas para un piloto de investigación; sus avisos de licencia, ya comprobados. No hay nada pendiente.</p>
+    <p class="fecha">Al día: 20 de octubre de 2026. Nueva necesidad en la Biblioteca: IA dentro del móvil, sin nube, con PocketPal AI y Core AI de Apple; la de hacer una app para el móvil ya tiene proyecto que la pide, el asistente de natación. No hay nada pendiente.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -282,6 +282,7 @@
           <li><a href="#n-comunidad">Comunidad y conocimiento compartido</a></li>
           <li><a href="#n-adaptar">Adaptar un texto a vídeo</a></li>
           <li><a href="#n-app">Hacer una app para el móvil</a></li>
+          <li><a href="#n-local">IA dentro del móvil, sin nube</a></li>
         </ul>
       </nav>
 
@@ -399,14 +400,25 @@
           <p class="ojo">Ojo: todo esto genera imagen y vídeo con IA, y eso choca con la regla de nuestras webs de que nada parezca generado por IA. Si el piloto sigue, cómo encaja esa regla se decide aparte. Ningún texto de un autor se usa sin su permiso por escrito.</p>
         </article>
 
-        <article class="necesidad" id="n-app" data-claves="app aplicacion movil iphone ios android nativa swift swiftui xcode mac linux windows app store testflight widget notificaciones push pwa web instalable expo react native skip xtool natacion">
+        <article class="necesidad" id="n-app" data-claves="app aplicacion movil iphone ios android nativa swift swiftui xcode mac linux windows app store testflight widget notificaciones push pwa web instalable expo react native skip xtool natacion pocketpal core ai">
           <h3>Hacer una app para el móvil</h3>
-          <p class="para">Para llevar un proyecto al móvil como app, o decidir que basta con una web instalable. De momento es una idea capturada: ningún proyecto lo pide todavía.</p>
+          <p class="para">Para llevar un proyecto al móvil como app, o decidir que basta con una web instalable. El asistente de natación ya la pide: parte de una app abierta que ejecuta modelos en el propio teléfono (ver <a href="#n-local">IA dentro del móvil</a>).</p>
           <ul class="recursos">
             <li><a href="https://github.com/xtool-org/xtool">xtool</a> (MIT): compila, firma e instala apps de iPhone hechas en Swift y SwiftUI desde Linux o Windows, sin Mac. Para publicar en el App Store todavía no basta. <a class="aficha" href="#f-xtool">Ficha</a></li>
             <li><strong>Web instalable</strong>: lo que ya hacemos, añadido a la pantalla de inicio del iPhone. Desde iOS 16.4 puede mandar notificaciones. Sin cuentas, sin pagos y sin tienda. <a class="aficha" href="#f-xtool">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: cualquier app de iPhone pasa por Apple. Para publicar hace falta su programa de desarrollador, que es de pago, y eso lo decide Joseba.</p>
+        </article>
+
+        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen core ai coreai aimodel core ml llama gguf pocketpal neural engine natacion">
+          <h3>IA dentro del móvil, sin nube</h3>
+          <p class="para">Para que un modelo de lenguaje o de voz funcione en el propio teléfono, sin conexión y sin mandar datos fuera. Importa sobre todo cuando hay datos personales, como los de menores.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/a-ghorbani/pocketpal-ai">PocketPal AI</a> (MIT): app abierta en React Native que ya ejecuta modelos GGUF en el iPhone y en Android. Es la base del asistente de natación. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://github.com/apple/coreai-models">Core AI de Apple</a> (BSD-3): recetas oficiales para llevar Whisper, Gemma y Qwen al motor nuevo de Apple en el dispositivo. Pide iOS 27 y Xcode 27. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://github.com/john-rocky/coreai-model-zoo">Core AI Model Zoo</a> (BSD-3): colección comunitaria con muchos más modelos ya convertidos, voz a texto y texto a voz incluidos, y la librería CoreAIKit, que no es de Apple. <a class="aficha" href="#f-coreai">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: cada modelo trae su propia licencia, distinta de la del código. Que todo sea local no quiere decir que esté cifrado: los datos pueden acabar en la copia de seguridad del teléfono.</p>
         </article>
 
         <article class="necesidad sin-material" id="n-pendiente" data-claves="webgpu three.js threejs 3d rendimiento sonido musica propia sin material buscar fuera">
@@ -647,6 +659,41 @@
         <div class="acciones">
           <a class="boton principal" href="https://github.com/xtool-org/xtool">xtool en GitHub</a>
           <a class="boton" href="https://xtool.sh/tutorials/xtooldocs/first-app">Tutorial: primera app</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-coreai">
+        <h4 id="f-coreai">Modelos en el propio iPhone: PocketPal AI y Core AI de Apple</h4>
+        <ul class="etiquetas"><li>Plataforma</li><li>Nivel avanzado</li><li>Leídos la documentación de Apple, los dos repos de Core AI y la demo en X; PocketPal, con sus pruebas ejecutadas</li><li>Sin probar en un iPhone</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-local">IA dentro del móvil, sin nube</a> y <a href="#n-app">hacer una app para el móvil</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd><ul>
+            <li><strong>PocketPal AI</strong>: app abierta (MIT) en React Native que descarga modelos GGUF y los ejecuta en el teléfono. Muy activa, unas 8.700 estrellas.</li>
+            <li><strong>Core AI</strong>: framework de Apple para ejecutar modelos en el iPhone y el Mac. Aparece en su documentación a partir de iOS y macOS 27. Los modelos se exportan al formato <code>.aimodel</code>. El repo oficial trae recetas para Whisper (large-v3-turbo y large-v3), Gemma 3, 3n y 4, y Qwen 2, 3 y 3.5.</li>
+            <li><strong>Core AI Model Zoo</strong>: colección de un desarrollador independiente con cientos de modelos ya convertidos, ejemplos en Swift y la librería CoreAIKit.</li>
+          </ul></dd>
+          <dt>Qué aporta</dt>
+          <dd>Voz a texto, un modelo de lenguaje y, con el zoo, texto a voz, todo en el dispositivo y sin conexión, que es lo que pide una piscina con mala cobertura. Una demo publicada en X en julio de 2026 encadena Whisper, Kokoro y un modelo de lenguaje en una app SwiftUI.</dd>
+          <dt>Lo que no está confirmado</dt>
+          <dd><ul>
+            <li>Que Core AI sustituya a Core ML lo dice el zoo, no Apple. En la documentación de Apple, Core ML no aparece como obsoleto.</li>
+            <li>CoreAIKit es de un tercero, no de Apple. Kokoro-82M, el texto a voz, solo está en el zoo y con voces en inglés.</li>
+            <li>El código de ejemplo que circula es seudocódigo mientras nadie lo compile.</li>
+          </ul></dd>
+          <dt>Dónde encajaría</dt>
+          <dd>En el asistente de natación. Hoy se queda en PocketPal: pasarse a Core AI obliga a escribir en Swift nativo y a pedir iOS 27 en el teléfono, que es rehacer el motor. Core AI se mira cuando el dictado con Whisper dentro de la app actual se quede corto.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Licencias</strong>: el código es MIT o BSD-3, pero cada modelo tiene la suya (Gemma, Qwen, LFM y otras). Se lee la del modelo antes de usarlo.</li>
+            <li><strong>Privacidad</strong>: local no es cifrado. Con datos de menores, qué se guarda, dónde y en qué copia de seguridad se decide antes de cargar datos reales.</li>
+            <li><strong>Coste</strong>: todo es gratis. Publicar en el App Store exige el programa de desarrollador de Apple, que es de pago.</li>
+            <li><strong>IA a la vista</strong>: aquí la IA ayuda a escribir notas e informes, no genera imagen ni vídeo, así que no choca con la regla de que nada parezca generado por IA.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/a-ghorbani/pocketpal-ai">PocketPal AI en GitHub</a>
+          <a class="boton" href="https://developer.apple.com/documentation/coreai">Core AI en Apple</a>
+          <a class="boton" href="https://github.com/john-rocky/coreai-model-zoo">El zoo de modelos</a>
         </div>
       </article>
       <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>
