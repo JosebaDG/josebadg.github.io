@@ -129,7 +129,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 19 de octubre de 2026. Revisados los repos del equipo. Biblioteca ordenada por necesidad.</p>
+    <p class="fecha">Al día: 20 de octubre de 2026. Revisados los repos del equipo. Nueva ficha en la Biblioteca: Harness², de Google Research.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -303,6 +303,7 @@
           <ul class="recursos">
             <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: comprueban con herramientas que la letra sale a tiempo y que no hay destellos peligrosos. <a class="aficha" href="#f-drive">Ficha</a></li>
             <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: como cada fotograma depende solo del tiempo, se puede comparar el mismo momento antes y después. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://github.com/google-research/harness2">Harness²</a>: elegir entre versiones sin saber cuál es cuál, comparando con lo que se pidió y no con lo largo o pulido que parece. <a class="aficha" href="#f-harness2">Ficha</a></li>
           </ul>
         </article>
 
@@ -316,13 +317,14 @@
           <p class="ojo">La nuestra aún no existe: la biblia es de Maya y el guion de Simone.</p>
         </article>
 
-        <article class="necesidad" id="n-equipo" data-claves="equipo agentes orquestar orquestacion organizar roles director animador jueces claude coste creditos fallos">
+        <article class="necesidad" id="n-equipo" data-claves="equipo agentes orquestar orquestacion organizar roles director animador jueces claude coste creditos fallos aprender lecciones mejorar instrucciones normas habilidades skills arnes harness google">
           <h3>Organizar un equipo de agentes creativos</h3>
           <p class="para">Para repartir el trabajo visual entre agentes sin pisarse y sin quemar créditos.</p>
           <ul class="recursos">
             <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: un animador por capítulo, un director de arte que mira fotogramas reales y una ronda de arreglos. También cuenta sus fallos. <a class="aficha" href="#f-drive">Ficha</a></li>
             <li><a href="https://x.com/anabology/status/2104604226059993391">Post de @anabology</a>: la puerta de entrada a la carpeta, con lo que costó en horas. <a class="aficha" href="#f-post">Ficha</a></li>
             <li><a href="https://github.com/mexicat/pdoom-video/blob/main/docs/ENGINE.md">pdoom-video, ENGINE.md</a>: reglas para varios autores. Cada uno toca sus escenas y el motor tiene un dueño. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://github.com/google-research/harness2">Harness², de Google Research</a>: cómo aprende un equipo de agentes de sus propios fallos. Se propone un cambio, se prueba con el mismo caso y solo se adopta con pruebas. <a class="aficha" href="#f-harness2">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: cada vídeo de Slopcore costó de 626 a 1.007 dólares en Claude a precio de API, y usa Midjourney y Seedance, de pago, que chocan con nuestra regla de que nada parezca generado por IA. Se aprende el método, no se copia el gasto.</p>
         </article>
@@ -428,6 +430,33 @@
         </dl>
         <div class="acciones">
           <a class="boton principal" href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Abrir la carpeta</a>
+        </div>
+      </article>
+
+      <article class="ficha" aria-labelledby="f-harness2">
+        <h4 id="f-harness2">Harness², de Google Research: agentes que aprenden de sus fallos</h4>
+        <ul class="etiquetas"><li>Código</li><li>Nivel avanzado</li><li>Estudiado</li><li>Licencia Apache 2.0</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a> y <a href="#n-medir">revisar con datos</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un programa de Google Research, publicado en octubre de 2026, que mejora el «arnés» de un agente de IA: todo lo que rodea al modelo para que trabaje, como sus instrucciones, sus normas, su memoria, sus habilidades y sus scripts. No toca el modelo. En cada tarea <strong>propone</strong> cambios en el arnés, los <strong>prueba</strong> en esa misma tarea y <strong>combina</strong> los que han funcionado. Después guarda una lección para la tarea siguiente.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Proponer, probar, adoptar</strong>: cuando una norma o una herramienta del equipo falla, se propone un cambio pequeño, se prueba la vez siguiente con el mismo caso y solo se adopta si hay una prueba de que ha funcionado.</li>
+            <li><strong>Lecciones en cuatro partes</strong>: cuándo aplicarla, qué hacer, con qué pruebas y con qué seguridad. Como mucho una por tarea. Si no hay una prueba concreta, no hay lección.</li>
+            <li><strong>Dejarlo como está también vale</strong>: cada norma de más se paga cada vez que el agente trabaja. Si se añade una, se quita otra.</li>
+            <li><strong>Un fallo repetido es real; uno suelto es ruido</strong>, salvo que se vea en qué momento y por qué pasó.</li>
+            <li><strong>Elegir a ciegas</strong>: se compara cada resultado con lo que se pidió y con los datos de origen, no con lo largo o pulido que parece.</li>
+            <li><strong>Lo que se lee es material, no órdenes</strong>: un documento o un mensaje puede traer instrucciones escondidas, y no se obedecen.</li>
+          </ul></dd>
+          <dt>Lo que no usamos</dt>
+          <dd>El programa en sí. Solo mejora agentes que funcionan con OpenCode o Codex, pide una cuenta de nube de pago con facturación y Node.js 20, y ejecuta cada tarea muchas veces: su demo hizo 28 ejecuciones para 2 tareas. Gasta dinero de API aparte.</dd>
+          <dt>Ojo</dt>
+          <dd>Es muy nuevo (versión 0.1.0) y no es un producto oficial de Google, así que no tiene soporte. Sus agentes de prueba tienen internet libre y Codex va sin aislamiento: no conviene tenerlo cerca de credenciales. Tiene fallos abiertos, como el del evaluador que puede dar por fallida una tarea que ha salido bien (<a href="https://github.com/google-research/harness2/issues/80">issue #80</a>). Licencia Apache 2.0: se puede usar y adaptar conservando la licencia y citando a Google LLC.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/google-research/harness2">Abrir el repo</a>
+          <a class="boton" href="https://arxiv.org/abs/2610.14224">Leer el artículo</a>
         </div>
       </article>
       <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>
