@@ -129,7 +129,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 20 de octubre de 2026. Nuevo en Experimentos: el muelle en T de Charlie, revisado y publicado. Nueva ficha en la Biblioteca: lo que le falta al laboratorio para servir a cualquier proyecto. No hay nada pendiente.</p>
+    <p class="fecha">Al día: 20 de octubre de 2026. Nuevo en Experimentos: el muelle en T de Charlie, revisado y publicado. Nueva necesidad en la Biblioteca: adaptar un texto largo a vídeo, con cuatro herramientas abiertas para un piloto de investigación. No hay nada pendiente.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -280,6 +280,7 @@
           <li><a href="#n-datos">Datos que mueven la imagen</a></li>
           <li><a href="#n-texto">Texto que se mueve</a></li>
           <li><a href="#n-comunidad">Comunidad y conocimiento compartido</a></li>
+          <li><a href="#n-adaptar">Adaptar un texto a vídeo</a></li>
         </ul>
       </nav>
 
@@ -340,6 +341,7 @@
           <ul class="recursos">
             <li><a href="https://github.com/mexicat/pdoom-video/blob/main/docs/TREATMENT.md">pdoom-video, TREATMENT.md</a>: la idea, la paleta, la tipografía y una ficha por escena, escritas antes de programar. <a class="aficha" href="#f-pdoom">Ficha</a></li>
             <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: los prompts escritos como un guion, de una sola mano, y el registro de cada indicación del director. <a class="aficha" href="#f-drive">Ficha</a></li>
+            <li><a href="https://github.com/HBAI-Ltd/Toonflow-app">Toonflow</a> y <a href="https://github.com/HKUDS/ViMax">ViMax</a>: pasan de un texto a guion y storyboard antes de generar nada. Sirve mirar cómo ordenan esos pasos. <a class="aficha" href="#f-adaptar">Ficha</a></li>
           </ul>
           <p class="ojo">La nuestra aún no existe: la biblia es de Maya y el guion de Simone.</p>
         </article>
@@ -382,6 +384,18 @@
             <li><a href="aprendizaje-federado/">Aprender juntos sin entregar lo que pensamos</a>: el paper de Google sobre aprendizaje federado demostrablemente privado, explicado desde cero, y las piezas para gobernar una comunidad (cooperativas, licencias de bien común y los principios de Ostrom). <a class="aficha" href="#f-federado">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: la técnica de Google solo funciona con multitudes. En un grupo de cinco, el ruido que protege a cada uno taparía casi todo. Lo que sirve hoy es la forma de trabajar.</p>
+        </article>
+
+        <article class="necesidad" id="n-adaptar" data-claves="adaptar texto a video novela libro relato cuento guion storyboard trailer tráiler serie corto animacion novel2video agentes video generativo comfyui ltx vimax toonflow arcreel personajes escenas">
+          <h3>Adaptar un texto a vídeo</h3>
+          <p class="para">Para pasar un texto largo, como una novela, a guion, storyboard y vídeo con herramientas abiertas que ya existen, sin construirlas nosotros. De momento es un piloto de investigación, no un producto.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/HKUDS/ViMax">ViMax</a> (MIT): la referencia de novela a vídeo, con agentes de director, guionista y productor. Sus generadores de vídeo son servicios de pago. <a class="aficha" href="#f-adaptar">Ficha</a></li>
+            <li><a href="https://github.com/HBAI-Ltd/Toonflow-app">Toonflow</a> (MIT): guion, storyboard, personajes y escenarios en un lienzo, y admite ComfyUI en el propio equipo. <a class="aficha" href="#f-adaptar">Ficha</a></li>
+            <li><a href="https://github.com/ArcReel/ArcReel">ArcReel</a> (AGPL-3.0): de la novela a personajes, storyboard y vídeo, con control de lo que cuesta cada paso. <a class="aficha" href="#f-adaptar">Ficha</a></li>
+            <li><a href="https://github.com/Lightricks/LTX-2">LTX-2</a>: modelo abierto que genera vídeo y audio. Gratis por debajo de 10 millones de dólares de ingresos al año. <a class="aficha" href="#f-adaptar">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: todo esto genera imagen y vídeo con IA, y eso choca con la regla de nuestras webs de que nada parezca generado por IA. Si el piloto sigue, cómo encaja esa regla se decide aparte. Ningún texto de un autor se usa sin su permiso por escrito.</p>
         </article>
 
         <article class="necesidad sin-material" id="n-pendiente" data-claves="webgpu three.js threejs 3d rendimiento sonido musica propia sin material buscar fuera">
@@ -559,6 +573,37 @@
         <div class="acciones">
           <a class="boton principal" href="https://github.com/mexicat/pdoom-video/blob/main/docs/ENGINE.md">pdoom-video, ENGINE.md</a>
           <a class="boton" href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-adaptar">
+        <h4 id="f-adaptar">De novela a vídeo con herramientas abiertas: ViMax, Toonflow, ArcReel y LTX-2</h4>
+        <ul class="etiquetas"><li>Herramientas</li><li>Nivel intermedio</li><li>Leído el README y la licencia</li><li>Sin probar</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-adaptar">adaptar un texto a vídeo</a> y <a href="#n-direccion">guion y storyboard</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Cuatro proyectos abiertos que encontró Maya el 20 de octubre de 2026 para un piloto de investigación: ver si un texto largo se puede convertir en un tráiler de 30 a 60 segundos pilotando herramientas que ya existen. Todavía no hay nada instalado ni probado.</dd>
+          <dt>Qué aporta cada uno</dt>
+          <dd><ul>
+            <li><strong><a href="https://github.com/HKUDS/ViMax">ViMax</a></strong>, licencia MIT: el flujo completo, de la novela al vídeo, repartido entre agentes con papeles (director, guionista, productor). Es la referencia para ver cómo se ordena el trabajo.</li>
+            <li><strong><a href="https://github.com/HBAI-Ltd/Toonflow-app">Toonflow</a></strong>, licencia MIT: guion, storyboard, personajes y escenarios en un lienzo, y puede generar con ComfyUI en el propio equipo en vez de con un servicio de pago.</li>
+            <li><strong><a href="https://github.com/ArcReel/ArcReel">ArcReel</a></strong>, licencia AGPL-3.0: de la novela a personajes, escenarios, storyboard y vídeo, con coherencia entre planos y un registro de lo que cuesta cada paso.</li>
+            <li><strong><a href="https://github.com/Lightricks/LTX-2">LTX-2</a></strong>, licencia comunitaria propia: el motor que genera el vídeo y el audio. Ya va por la versión 2.5.</li>
+          </ul></dd>
+          <dt>Qué mediríamos</dt>
+          <dd>Si llega la primera prueba: horas, dinero y créditos por tráiler, y lo fiel que queda al texto.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Coste</strong>: los generadores de vídeo de ViMax son servicios de pago. Hacerlo en casa pide una tarjeta gráfica potente.</li>
+            <li><strong>Licencias</strong>: ArcReel es AGPL-3.0. Si se modifica y se ofrece como servicio, hay que publicar el código y citar a sus autores. LTX-2 es gratis por debajo de 10 millones de dólares de ingresos al año; por encima, hay que pagar licencia. Según lo que vio Maya, MiniMax H3, el modelo que traen por defecto varios de estos flujos, excluye la Unión Europea en su licencia, y huobao-drama no permite uso comercial.</li>
+            <li><strong>Derechos</strong>: ningún texto de un autor se usa sin su permiso por escrito.</li>
+            <li><strong>Estilo</strong>: todo esto genera imagen y vídeo con IA, y eso choca con la regla de nuestras webs de que nada parezca generado por IA. Si el piloto sigue, cómo encaja esa regla se decide aparte.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/HKUDS/ViMax">ViMax</a>
+          <a class="boton" href="https://github.com/HBAI-Ltd/Toonflow-app">Toonflow</a>
+          <a class="boton" href="https://github.com/ArcReel/ArcReel">ArcReel</a>
+          <a class="boton" href="https://github.com/Lightricks/LTX-2/blob/main/LICENSE">Licencia de LTX-2</a>
         </div>
       </article>
       <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>
