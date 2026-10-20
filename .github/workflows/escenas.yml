@@ -1,0 +1,43 @@
+# Prueba barajada de las escenas del motor (paso 1 del laboratorio).
+# Pinta cada escena en el visor 12 fotogramas en orden y luego barajados, y compara su hash.
+# Si una escena guarda estado entre fotogramas, la prueba falla y dice qué fotogramas cambian.
+# Contrato que comprueba: lab/charlie-visor/CONTRATO.md
+name: Escenas
+
+on:
+  pull_request:
+    paths:
+      - "motor/escenas/**"
+      - "motor/relevos.js"
+      - "lab/charlie-visor/**"
+      - ".github/workflows/escenas.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: escenas-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  barajada:
+    name: ${{ matrix.escena }} en ${{ matrix.navegador }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        escena: [curvatura, bigbang, vuelta]
+        navegador: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Playwright y su navegador
+        run: |
+          pip install playwright==1.64.0
+          python -m playwright install --with-deps ${{ matrix.navegador }}
+      - name: Orden frente a barajado
+        run: python lab/charlie-visor/determinismo.py --raiz . --escena ${{ matrix.escena }} --navegador ${{ matrix.navegador }} --n 12

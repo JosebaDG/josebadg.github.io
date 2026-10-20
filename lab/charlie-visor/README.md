@@ -31,6 +31,8 @@ Espera a `document.documentElement.dataset.listo === '1'` (o `'fallo'`). En la c
 
 Para recorrer una escena fotograma a fotograma sin volver a cargarla: `visor.tramo()` da `{ desde, hasta, late }` y `await visor.fotograma(t, r)` mueve t y el reloj y se resuelve cuando el fotograma está pintado y asentado. Lo usa [exportar.py](../charlie-video/README.md) para los vídeos y las hojas de contacto.
 
+Las reglas que cumple cada escena y la prueba barajada que lo comprueba en cada PR están en [CONTRATO.md](CONTRATO.md) (borrador).
+
 WebKit no enseña un WebGL pintado en el mismo cuadro en que aparece el lienzo, y la captura salía negra. Por eso el visor repinta el mismo fotograma unos pocos cuadros después de cargar, medir o mover un deslizador, y solo entonces marca `listo`.
 
 Basado en [pdoom-video](https://github.com/mexicat/pdoom-video), de Giacomo Magnanini (MIT), como el motor.

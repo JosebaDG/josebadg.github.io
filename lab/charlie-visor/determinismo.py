@@ -7,7 +7,9 @@ y compara el hash de cada fotograma. Si una escena guarda estado entre fotograma
 
   python3 lab/charlie-visor/determinismo.py --raiz . --escena curvatura --n 12   (desde la raíz del repo)
 
-Sale 0 si todo coincide; 1 si algún fotograma difiere (y dice cuáles).
+Sale 0 si todo coincide; 1 si algún fotograma difiere (y dice cuáles); 2 si la escena no carga
+o si todos los fotogramas salen iguales (una pantalla vacía también «coincide», y eso no prueba nada).
+Contrato que comprueba: lab/charlie-visor/CONTRATO.md. En cada PR la corre .github/workflows/escenas.yml.
 """
 import argparse, asyncio, functools, hashlib, http.server, random, sys, threading, time
 from playwright.async_api import async_playwright
@@ -29,6 +31,10 @@ async def pasada(pw, base, a, orden):
     p = await ctx.new_page()
     await p.goto(f'{base}/lab/charlie-visor/?escena={a.escena}&ui=0&mm=0')
     await p.wait_for_function("['1','fallo'].includes(document.documentElement.dataset.listo)", timeout=90000)
+    if await p.evaluate('document.documentElement.dataset.listo') == 'fallo':
+        motivo = await p.text_content('#estado')
+        await nav.close()
+        raise NoCarga(motivo or 'sin detalle')
     tramo = await p.evaluate('visor.tramo()')
     hashes, t0 = {}, time.time()
     for i in orden:
@@ -42,14 +48,25 @@ async def pasada(pw, base, a, orden):
     return hashes, ms
 
 
+class NoCarga(Exception):
+    pass
+
+
 async def principal(a):
     base = servir(a.raiz)
     orden = list(range(a.n))
     barajado = orden[:]
     random.Random(7).shuffle(barajado)
     async with async_playwright() as pw:
-        h1, ms1 = await pasada(pw, base, a, orden)
-        h2, ms2 = await pasada(pw, base, a, barajado)
+        try:
+            h1, ms1 = await pasada(pw, base, a, orden)
+            h2, ms2 = await pasada(pw, base, a, barajado)
+        except NoCarga as e:
+            print(f'{a.escena} en {a.navegador}: no ha cargado ({e})')
+            return 2
+    if len(set(h1.values())) == 1:
+        print(f'{a.escena} en {a.navegador}: los {a.n} fotogramas son iguales; la escena no se está pintando')
+        return 2
     malos = [i for i in orden if h1[i] != h2[i]]
     print(f'{a.escena} en {a.navegador}: {a.n} fotogramas, {ms1:.0f} ms/fotograma en orden, {ms2:.0f} barajados')
     print('distintos:', malos if malos else 'ninguno')
