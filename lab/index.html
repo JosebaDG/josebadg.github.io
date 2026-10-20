@@ -118,6 +118,7 @@
     .ficha dd { margin: 0; color: var(--tinta-2); }
     .ficha dd ul, .ficha dd ol { margin: 0.125rem 0 0; padding-left: 1.125rem; }
     .ficha dd li { margin: 0 0 0.25rem; }
+    .ficha code { overflow-wrap: anywhere; }
     .estantes-titulo { font-size: 1.0625rem; margin: 1.5rem 0 0.625rem; }
 
     footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--linea); color: var(--tinta-2); font-size: 0.875rem; }
@@ -402,7 +403,7 @@
 
         <article class="necesidad" id="n-app" data-claves="app aplicacion movil iphone ios android nativa swift swiftui xcode mac linux windows app store testflight widget notificaciones push pwa web instalable expo react native skip xtool natacion pocketpal core ai">
           <h3>Hacer una app para el móvil</h3>
-          <p class="para">Para llevar un proyecto al móvil como app, o decidir que basta con una web instalable. El asistente de natación ya la pide: parte de una app abierta que ejecuta modelos en el propio teléfono (ver <a href="#n-local">IA dentro del móvil</a>).</p>
+          <p class="para">Para llevar un proyecto al móvil como app, o decidir que basta con una web instalable. El asistente de natación ya la pide: será una app propia en SwiftUI, hecha en el Mac con Xcode, que ejecuta modelos en el propio teléfono (ver <a href="#n-local">IA dentro del móvil</a>).</p>
           <ul class="recursos">
             <li><a href="https://github.com/xtool-org/xtool">xtool</a> (MIT): compila, firma e instala apps de iPhone hechas en Swift y SwiftUI desde Linux o Windows, sin Mac. Para publicar en el App Store todavía no basta. <a class="aficha" href="#f-xtool">Ficha</a></li>
             <li><strong>Web instalable</strong>: lo que ya hacemos, añadido a la pantalla de inicio del iPhone. Desde iOS 16.4 puede mandar notificaciones. Sin cuentas, sin pagos y sin tienda. <a class="aficha" href="#f-xtool">Ficha</a></li>
@@ -410,13 +411,14 @@
           <p class="ojo">Ojo: cualquier app de iPhone pasa por Apple. Para publicar hace falta su programa de desarrollador, que es de pago, y eso lo decide Joseba.</p>
         </article>
 
-        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen core ai coreai aimodel core ml llama gguf pocketpal neural engine natacion">
+        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen parakeet core ai coreai aimodel core ml foundation models instruments wwdc llama gguf pocketpal neural engine swiftui natacion">
           <h3>IA dentro del móvil, sin nube</h3>
           <p class="para">Para que un modelo de lenguaje o de voz funcione en el propio teléfono, sin conexión y sin mandar datos fuera. Importa sobre todo cuando hay datos personales, como los de menores.</p>
           <ul class="recursos">
-            <li><a href="https://github.com/a-ghorbani/pocketpal-ai">PocketPal AI</a> (MIT): app abierta en React Native que ya ejecuta modelos GGUF en el iPhone y en Android. Es la base del asistente de natación. <a class="aficha" href="#f-coreai">Ficha</a></li>
-            <li><a href="https://github.com/apple/coreai-models">Core AI de Apple</a> (BSD-3): recetas oficiales para llevar Whisper, Gemma y Qwen al motor nuevo de Apple en el dispositivo. Pide iOS 27 y Xcode 27. <a class="aficha" href="#f-coreai">Ficha</a></li>
-            <li><a href="https://github.com/john-rocky/coreai-model-zoo">Core AI Model Zoo</a> (BSD-3): colección comunitaria con muchos más modelos ya convertidos, voz a texto y texto a voz incluidos, y la librería CoreAIKit, que no es de Apple. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://developer.apple.com/documentation/coreai">Core AI de Apple</a>: el motor de Apple para ejecutar modelos en el iPhone y el Mac. Pide iOS 27 y Xcode 27. Es la base del asistente de natación. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://github.com/apple/coreai-models">Modelos oficiales de Core AI</a> (BSD-3): recetas para convertir modelos y piezas en Swift ya hechas, con voz a texto (Parakeet, Whisper) y modelos de lenguaje (Qwen, Gemma). <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://developer.apple.com/videos/play/wwdc2026/324/">Sesiones de la WWDC 2026</a>: presentación de Core AI, integración en la app y optimización, con transcripción y código. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://github.com/john-rocky/coreai-model-zoo">Core AI Model Zoo</a> (BSD-3): colección de un desarrollador independiente, no de Apple, con muchos más modelos ya convertidos, texto a voz incluido. <a class="aficha" href="#f-coreai">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: cada modelo trae su propia licencia, distinta de la del código. Que todo sea local no quiere decir que esté cifrado: los datos pueden acabar en la copia de seguridad del teléfono.</p>
         </article>
@@ -662,38 +664,40 @@
         </div>
       </article>
       <article class="ficha" aria-labelledby="f-coreai">
-        <h4 id="f-coreai">Modelos en el propio iPhone: PocketPal AI y Core AI de Apple</h4>
-        <ul class="etiquetas"><li>Plataforma</li><li>Nivel avanzado</li><li>Leídos la documentación de Apple, los dos repos de Core AI y la demo en X; PocketPal, con sus pruebas ejecutadas</li><li>Sin probar en un iPhone</li></ul>
+        <h4 id="f-coreai">Modelos en el propio iPhone: Core AI de Apple</h4>
+        <ul class="etiquetas"><li>Plataforma</li><li>Nivel avanzado</li><li>Leídas la documentación oficial, tres sesiones de la WWDC 2026 y el repo oficial</li><li>Sin probar en un iPhone</li></ul>
         <p class="resuelve">Resuelve: <a href="#n-local">IA dentro del móvil, sin nube</a> y <a href="#n-app">hacer una app para el móvil</a>.</p>
         <dl>
           <dt>Qué es</dt>
+          <dd>El framework de Apple para ejecutar modelos propios en el iPhone y el Mac, a partir de iOS y macOS 27 y con Xcode 27. Los modelos van en archivos <code>.aimodel</code>. Se convierten en el Mac desde PyTorch con la extensión oficial de Python y se comprimen con su herramienta de optimización. El repo oficial trae recetas por modelo y un paquete Swift con piezas listas: voz a texto, modelos de lenguaje y visión.</dd>
+          <dt>Cómo se usa desde Swift</dt>
           <dd><ul>
-            <li><strong>PocketPal AI</strong>: app abierta (MIT) en React Native que descarga modelos GGUF y los ejecuta en el teléfono. Muy activa, unas 8.700 estrellas.</li>
-            <li><strong>Core AI</strong>: framework de Apple para ejecutar modelos en el iPhone y el Mac. Aparece en su documentación a partir de iOS y macOS 27. Los modelos se exportan al formato <code>.aimodel</code>. El repo oficial trae recetas para Whisper (large-v3-turbo y large-v3), Gemma 3, 3n y 4, y Qwen 2, 3 y 3.5.</li>
-            <li><strong>Core AI Model Zoo</strong>: colección de un desarrollador independiente con cientos de modelos ya convertidos, ejemplos en Swift y la librería CoreAIKit.</li>
+            <li><strong>Cualquier modelo</strong>: <code>AIModel(contentsOf:)</code>, después <code>loadFunction(named: "main")</code> y <code>run(inputs:)</code>.</li>
+            <li><strong>Voz a texto</strong>: <code>SpeechRecognitionModel(resourcesAt:)</code> y <code>transcribe(audioURL:)</code>, del paquete oficial <code>CoreAISpeech</code>. También sirve para dictado en directo.</li>
+            <li><strong>Modelo de lenguaje</strong>: <code>CoreAILanguageModel</code> dentro de <code>LanguageModelSession</code>, la misma forma de trabajar que el modelo de Apple. Puede devolver datos con campos fijos en vez de texto libre.</li>
           </ul></dd>
-          <dt>Qué aporta</dt>
-          <dd>Voz a texto, un modelo de lenguaje y, con el zoo, texto a voz, todo en el dispositivo y sin conexión, que es lo que pide una piscina con mala cobertura. Una demo publicada en X en julio de 2026 encadena Whisper, Kokoro y un modelo de lenguaje en una app SwiftUI.</dd>
-          <dt>Lo que no está confirmado</dt>
+          <dt>Primera carga y medidas</dt>
+          <dd>La primera vez, el iPhone adapta el modelo a su chip, tarda y lo guarda en caché. Se puede adelantar en el Mac con <code>xcrun coreai-build compile</code> o pedirlo antes con <code>AIModel.specialize</code>. Para medir hay una plantilla Core AI en Instruments y un indicador en Xcode, mejor en el iPhone de verdad.</dd>
+          <dt>Para el asistente de natación</dt>
+          <dd>Desde el 20 de octubre será una app propia en SwiftUI. Para voz a texto en castellano, el camino oficial ya montado es Parakeet v3 de NVIDIA, que entiende 25 idiomas europeos, español incluido. Whisper tiene receta, pero el paquete Swift espera otro formato y por defecto transcribe en inglés. Ojo: Parakeet exportado sin opciones solo escucha los primeros 5 segundos y corta el resto sin avisar; para notas largas se exporta con <code>--dynamic</code>.</dd>
+          <dt>Lo que no es como se decía</dt>
           <dd><ul>
-            <li>Que Core AI sustituya a Core ML lo dice el zoo, no Apple. En la documentación de Apple, Core ML no aparece como obsoleto.</li>
-            <li>CoreAIKit es de un tercero, no de Apple. Kokoro-82M, el texto a voz, solo está en el zoo y con voces en inglés.</li>
-            <li>El código de ejemplo que circula es seudocódigo mientras nadie lo compile.</li>
+            <li>Apple no llama a Core AI «sucesor de Core ML». Lo presenta como la siguiente evolución, y manda a Core ML los modelos que no son redes neuronales.</li>
+            <li><code>SpeechToTextSession</code> y <code>TextToSpeechSession</code> no aparecen en ninguna fuente oficial.</li>
+            <li>El repo oficial no trae texto a voz. Kokoro y similares solo están en el zoo, que es de un tercero, igual que CoreAIKit.</li>
           </ul></dd>
-          <dt>Dónde encajaría</dt>
-          <dd>En el asistente de natación. Hoy se queda en PocketPal: pasarse a Core AI obliga a escribir en Swift nativo y a pedir iOS 27 en el teléfono, que es rehacer el motor. Core AI se mira cuando el dictado con Whisper dentro de la app actual se quede corto.</dd>
           <dt>Ojo</dt>
           <dd><ul>
-            <li><strong>Licencias</strong>: el código es MIT o BSD-3, pero cada modelo tiene la suya (Gemma, Qwen, LFM y otras). Se lee la del modelo antes de usarlo.</li>
-            <li><strong>Privacidad</strong>: local no es cifrado. Con datos de menores, qué se guarda, dónde y en qué copia de seguridad se decide antes de cargar datos reales.</li>
+            <li><strong>Licencias</strong>: el código oficial es BSD-3, pero cada modelo tiene la suya. Parakeet es CC-BY-4.0 y obliga a citar a NVIDIA.</li>
+            <li><strong>Memoria</strong>: un modelo de lenguaje puede pasarse del límite de memoria de una app. Apple remite a un permiso de memoria ampliada.</li>
+            <li><strong>Privacidad</strong>: local no es cifrado. Con datos de menores, qué se guarda y en qué copia de seguridad se decide antes de cargar datos reales.</li>
             <li><strong>Coste</strong>: todo es gratis. Publicar en el App Store exige el programa de desarrollador de Apple, que es de pago.</li>
-            <li><strong>IA a la vista</strong>: aquí la IA ayuda a escribir notas e informes, no genera imagen ni vídeo, así que no choca con la regla de que nada parezca generado por IA.</li>
           </ul></dd>
         </dl>
         <div class="acciones">
-          <a class="boton principal" href="https://github.com/a-ghorbani/pocketpal-ai">PocketPal AI en GitHub</a>
-          <a class="boton" href="https://developer.apple.com/documentation/coreai">Core AI en Apple</a>
-          <a class="boton" href="https://github.com/john-rocky/coreai-model-zoo">El zoo de modelos</a>
+          <a class="boton principal" href="https://developer.apple.com/documentation/coreai">Core AI en Apple</a>
+          <a class="boton" href="https://github.com/apple/coreai-models">Repo oficial</a>
+          <a class="boton" href="https://developer.apple.com/videos/play/wwdc2026/324/">Meet Core AI</a>
         </div>
       </article>
       <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>
