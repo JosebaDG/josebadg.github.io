@@ -42,7 +42,7 @@ En `lab/charlie-visor/`:
 
 - Sale **0** si todo coincide.
 - Sale **1** si algún fotograma cambia, y dice cuáles.
-- Sale **2** si la escena no carga o si los 12 fotogramas son iguales, porque una pantalla vacía también «coincide».
+- Sale **2** si la escena no carga, si el visor no la conoce (abriría «curvatura» en su lugar) o si los 12 fotogramas son iguales, porque una pantalla vacía también «coincide».
 
 Corre en GitHub Actions (`.github/workflows/escenas.yml`) en cada PR que toque `motor/escenas/`, `motor/relevos.js` o `lab/charlie-visor/`, para cada escena en Chromium y en WebKit. Una escena nueva se añade a la matriz del workflow.
 

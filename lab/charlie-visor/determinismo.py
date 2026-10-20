@@ -7,8 +7,8 @@ y compara el hash de cada fotograma. Si una escena guarda estado entre fotograma
 
   python3 lab/charlie-visor/determinismo.py --raiz . --escena curvatura --n 12   (desde la raíz del repo)
 
-Sale 0 si todo coincide; 1 si algún fotograma difiere (y dice cuáles); 2 si la escena no carga
-o si todos los fotogramas salen iguales (una pantalla vacía también «coincide», y eso no prueba nada).
+Sale 0 si todo coincide; 1 si algún fotograma difiere (y dice cuáles); 2 si la escena no carga,
+si el visor no la conoce o si todos los fotogramas salen iguales (una pantalla vacía también «coincide», y eso no prueba nada).
 Contrato que comprueba: lab/charlie-visor/CONTRATO.md. En cada PR la corre .github/workflows/escenas.yml.
 """
 import argparse, asyncio, functools, hashlib, http.server, random, sys, threading, time
@@ -35,6 +35,11 @@ async def pasada(pw, base, a, orden):
         motivo = await p.text_content('#estado')
         await nav.close()
         raise NoCarga(motivo or 'sin detalle')
+    # El visor abre «curvatura» si no conoce el nombre: sin esto, una escena que falte en ESCENAS pasaría probando otra
+    viva = await p.evaluate('visor.estado().escena')
+    if viva != a.escena:
+        await nav.close()
+        raise NoCarga(f'el visor ha abierto «{viva}»; falta «{a.escena}» en ESCENAS de visor.js')
     tramo = await p.evaluate('visor.tramo()')
     hashes, t0 = {}, time.time()
     for i in orden:
