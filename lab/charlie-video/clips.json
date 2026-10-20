@@ -274,5 +274,89 @@
    }
   ],
   "errores": []
+ },
+ "intro": {
+  "escena": "intro",
+  "modo": "reloj real (reloj falso de Playwright)",
+  "pagina": "/motor/",
+  "navegador": "webkit",
+  "fps": 30,
+  "fotogramas": 90,
+  "dura": 2.4,
+  "lenta": {
+   "fotogramas": [
+    10,
+    51
+   ],
+   "factor": 4
+  },
+  "segundos": 8.6,
+  "vista": "390x844@2",
+  "video": "540x1168",
+  "kb": {
+   "mp4": 513,
+   "poster": 30,
+   "hoja": 156
+  },
+  "hoja": {
+   "columnas": 4,
+   "filas": 3,
+   "px": [
+    990,
+    1581
+   ]
+  },
+  "poster_segundo": 0.73,
+  "momentos": [
+   {
+    "fotograma": 0,
+    "segundo": 0.0
+   },
+   {
+    "fotograma": 7,
+    "segundo": 0.23
+   },
+   {
+    "fotograma": 13,
+    "segundo": 0.43
+   },
+   {
+    "fotograma": 20,
+    "segundo": 0.67
+   },
+   {
+    "fotograma": 26,
+    "segundo": 0.87
+   },
+   {
+    "fotograma": 33,
+    "segundo": 1.1
+   },
+   {
+    "fotograma": 39,
+    "segundo": 1.3
+   },
+   {
+    "fotograma": 46,
+    "segundo": 1.53
+   },
+   {
+    "fotograma": 52,
+    "segundo": 1.73
+   },
+   {
+    "fotograma": 59,
+    "segundo": 1.97
+   },
+   {
+    "fotograma": 65,
+    "segundo": 2.17
+   },
+   {
+    "fotograma": 72,
+    "segundo": 2.4
+   }
+  ],
+  "errores": []
  }
 }
