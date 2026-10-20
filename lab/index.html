@@ -116,7 +116,7 @@
     .ficha dl { margin: 0 0 0.75rem; }
     .ficha dt { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--oro); margin: 0.625rem 0 0.125rem; }
     .ficha dd { margin: 0; color: var(--tinta-2); }
-    .ficha dd ul { margin: 0.125rem 0 0; padding-left: 1.125rem; }
+    .ficha dd ul, .ficha dd ol { margin: 0.125rem 0 0; padding-left: 1.125rem; }
     .ficha dd li { margin: 0 0 0.25rem; }
     .estantes-titulo { font-size: 1.0625rem; margin: 1.5rem 0 0.625rem; }
 
@@ -129,7 +129,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 20 de octubre de 2026. Publicados con tu sí los dos cambios de navegación: ninguna página de la web se queda sin salida. Has visto /motor/ en tu iPhone: el equipo vuelve a trabajar en él. No hay nada pendiente.</p>
+    <p class="fecha">Al día: 20 de octubre de 2026. Nuevo en Experimentos: el muelle en T de Charlie, revisado y publicado. Nueva ficha en la Biblioteca: lo que le falta al laboratorio para servir a cualquier proyecto. No hay nada pendiente.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -235,7 +235,7 @@
           <li><a href="/lab/charlie-muelle/"><strong>Muelle en T</strong><span>El motor con un muelle en el tiempo: un desplazamiento brusco ya no se come el big bang. Con interruptor para comparar, presets y rigidez a mano.</span></a></li>
           <li><a href="/preview/singularity/"><strong>Big bang en 3D y espacio curvado</strong><span>En la vista previa de The Singularity, donde se prueba la portada antes de publicarla.</span></a></li>
         </ul>
-        <p class="nota">Ruta, sacada de pdoom-video y de la carpeta «Slopcore» (ver Biblioteca), de una en una: 1) exportar desde el visor, fotograma a fotograma, sus vídeos cortos y una hoja de contacto de cada escena (hecho); 2) la lente gravitacional de pdoom-video en WebGL2 (en marcha); 3) la misma lente en WebGPU, para medir cuál va mejor en el móvil.</p>
+        <p class="nota">Ruta, sacada de pdoom-video y de la carpeta «Slopcore» (ver Biblioteca), de una en una: 1) exportar desde el visor, fotograma a fotograma, sus vídeos cortos y una hoja de contacto de cada escena (hecho); 2) la lente gravitacional de pdoom-video en WebGL2 (hecho); 3) la misma lente en WebGPU, para medir cuál va mejor en el móvil (en marcha). Aparte, el muelle en T (hecho). Lo que viene después sale de la <a href="#f-labvideo">hoja de ruta del laboratorio</a>, de pocos pasos en pocos.</p>
       </div>
 
       <div class="miembro miles">
@@ -312,23 +312,25 @@
           <p class="casa">Hecho en casa: el espacio curvado de <a href="/">la portada</a>.</p>
         </article>
 
-        <article class="necesidad" id="n-video" data-claves="video mp4 exportar grabar fotogramas hoja de contacto stills redes clip render">
+        <article class="necesidad" id="n-video" data-claves="video mp4 exportar grabar fotogramas hoja de contacto stills redes clip render formatos perfiles vertical horizontal cuadrado 4k master color bt.709 ffmpeg x264 nvenc audio sonido gpu blender remotion gsap mediabunny desenfoque proposito general">
           <h3>Exportar a vídeo y sacar hojas de contacto</h3>
           <p class="para">Para sacar vídeos cortos de las escenas y ver muchos momentos de una escena en una sola imagen.</p>
           <ul class="recursos">
             <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: exporta fotograma a fotograma por tiempo, no grabando la pantalla, y saca fotogramas y hojas de contacto (<code>render.ts</code>). <a class="aficha" href="#f-pdoom">Ficha</a></li>
             <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: su director de arte revisa con hojas de contacto de los momentos clave. <a class="aficha" href="#f-drive">Ficha</a></li>
+            <li><strong>Estudio de Charlie: un laboratorio de vídeo para cualquier proyecto</strong>. Nuestro método ya es el bueno; faltan audio, más formatos de salida, pruebas automáticas y potencia para lo pesado. Con el panorama de herramientas y una hoja de ruta por pasos. <a class="aficha" href="#f-labvideo">Ficha</a></li>
           </ul>
           <p class="casa">Hecho en casa: el <a href="/lab/charlie-visor/">visor de escenas</a> enlaza un momento exacto.</p>
         </article>
 
-        <article class="necesidad" id="n-medir" data-claves="revisar comprobar medir calidad pruebas tests pr visual destellos accesibilidad mirar a ojo">
+        <article class="necesidad" id="n-medir" data-claves="revisar comprobar medir calidad pruebas tests pr visual destellos accesibilidad mirar a ojo determinismo barajado regresion visual automaticas github actions">
           <h3>Revisar con datos, no a ojo</h3>
           <p class="para">Para dar por bueno un cambio visual con pruebas y no con «lo he mirado».</p>
           <ul class="recursos">
             <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: comprueban con herramientas que la letra sale a tiempo y que no hay destellos peligrosos. <a class="aficha" href="#f-drive">Ficha</a></li>
             <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: como cada fotograma depende solo del tiempo, se puede comparar el mismo momento antes y después. <a class="aficha" href="#f-pdoom">Ficha</a></li>
             <li><a href="https://github.com/google-research/harness2">Harness²</a>: elegir entre versiones sin saber cuál es cuál, comparando con lo que se pidió y no con lo largo o pulido que parece. <a class="aficha" href="#f-harness2">Ficha</a></li>
+            <li><strong>Estudio de Charlie</strong>: pintar los fotogramas en orden y barajados y comparar, en cada PR, y unos pocos fotogramas de referencia por escena para cazar cambios sin querer. <a class="aficha" href="#f-labvideo">Ficha</a></li>
           </ul>
         </article>
 
@@ -354,11 +356,12 @@
           <p class="ojo">Ojo: cada vídeo de Slopcore costó de 626 a 1.007 dólares en Claude a precio de API, y usa Midjourney y Seedance, de pago, que chocan con nuestra regla de que nada parezca generado por IA. Se aprende el método, no se copia el gasto.</p>
         </article>
 
-        <article class="necesidad" id="n-datos" data-claves="datos grafica precio pvpc musica audio ritmo convertir datos en escena visualizacion">
+        <article class="necesidad" id="n-datos" data-claves="datos grafica precio pvpc musica audio ritmo convertir datos en escena visualizacion beats bpm tempo envolvente volumen librosa sonido">
           <h3>Que los datos o la música muevan la imagen</h3>
           <p class="para">Para convertir un dato, como el precio de cada hora, en una escena que se entiende sin leer.</p>
           <ul class="recursos">
             <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: una gráfica que cae a un paisaje 3D y la música como entrada del shader (<code>audio.ts</code>). <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><strong>Estudio de Charlie</strong>: el tempo se fija a mano, porque librosa da el compás pero no el BPM exacto; la envolvente de volumen, en cambio, sale limpia y es lo que necesita una escena que reaccione al sonido. <a class="aficha" href="#f-labvideo">Ficha</a></li>
           </ul>
           <p class="casa">Idea en casa: las 24 horas del PVPC como una canción. Sin plan todavía.</p>
         </article>
@@ -516,6 +519,46 @@
           <a class="boton principal" href="aprendizaje-federado/">Leer la investigación</a>
           <a class="boton" href="https://arxiv.org/abs/2609.31494">Leer el paper</a>
           <a class="boton" href="https://research.google/blog/toward-provably-private-learning-from-federated-data/">Blog de Google</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-labvideo">
+        <h4 id="f-labvideo">Un laboratorio de vídeo para cualquier proyecto: el estudio de Charlie</h4>
+        <ul class="etiquetas"><li>Estudio del equipo</li><li>Nivel intermedio</li><li>Estudiado</li><li>Hoja de ruta</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-video">vídeo</a>, <a href="#n-medir">revisar</a> y <a href="#n-datos">datos y música</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un estudio de Charlie del 20 de octubre de 2026. Ejecutó <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a> en nuestra máquina de pruebas y leyó entera la <a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">carpeta «Slopcore»</a>, que es pública, para responder una pregunta: ¿qué le falta a nuestro laboratorio para servir a cualquier proyecto, y no solo a la portada? Su respuesta: grabar fotograma a fotograma según el tiempo ya es el método bueno. Faltan audio, más formatos de salida, pruebas automáticas y potencia para lo pesado.</dd>
+          <dt>Lo que aprendimos</dt>
+          <dd><ul>
+            <li><strong>El determinismo se comprueba</strong>: se pintan los fotogramas en orden y barajados y se comparan. Nuestras escenas lo pasan en Chromium y en WebKit, pero de momento la prueba se pasa a mano.</li>
+            <li><strong>El color hay que etiquetarlo</strong>: sin etiqueta BT.709, cada navegador puede enseñar otro color. Probado: en ffmpeg, las opciones <code>-color_primaries</code> dejan el vídeo sin etiquetar, y <code>-x264-params colorprim=bt709</code> lo etiqueta bien.</li>
+            <li><strong>El tempo se fija a mano</strong>: con una pista de clics a 120 BPM, librosa estimó 117,5. Da el compás, no el tempo exacto. La envolvente de volumen sí sale limpia.</li>
+            <li><strong>Vídeo dentro de una escena</strong>: al grabar sin pantalla, nunca con el elemento <code>&lt;video&gt;</code>, que no da instantes exactos. Se sacan los fotogramas del clip y se dibuja el que toca en cada t, como hace Remotion.</li>
+            <li><strong>Dos codificaciones</strong>: un máster de calidad (x264, CRF 16) y una versión web más ligera (CRF 23 a 26). Los codificadores por hardware sirven para borradores.</li>
+          </ul></dd>
+          <dt>Herramientas, con veredicto</dt>
+          <dd><ul>
+            <li><a href="https://threejs.org/docs/pages/BloomNode.html">three.js TSL</a>: ya la usamos y hay que ir a más, con el brillo solo en lo que importa.</li>
+            <li><a href="https://gsap.com">GSAP</a>: sí, para páginas. Ahora es gratis con todos sus añadidos, y su línea de tiempo se puede llevar a un instante exacto.</li>
+            <li><a href="https://docs.blender.org/manual/en/latest/advanced/command_line/render.html">Blender sin interfaz</a>: planos 3D en PNG con transparencia para el motor.</li>
+            <li><a href="https://www.remotion.dev/docs/license">Remotion</a>: la idea sí, la librería no, porque obliga a usar React.</li>
+            <li><a href="https://github.com/Vanilagy/mediabunny">mediabunny</a>: para experimentar con MP4 hechos en el propio navegador.</li>
+            <li><a href="https://github.com/redotvideo/revideo">Revideo</a> y <a href="https://github.com/theatre-js/theatre">Theatre.js</a>: humo. Uno está sin mantener y el otro se cerró en privado.</li>
+          </ul></dd>
+          <dt>Hoja de ruta, un PR por paso</dt>
+          <dd>Son diez pasos, y el equipo se los reparte de pocos en pocos. Los tres primeros:
+            <ol>
+              <li><strong>La prueba barajada en cada PR</strong>, con el contrato de escena por escrito. Cuesta poco y protege todo lo que venga después.</li>
+              <li><strong>Más salidas al exportar</strong>: perfiles vertical, horizontal, cuadrado y 4K, máster y versión web, y color etiquetado.</li>
+              <li><strong>Audio</strong>: la pista dentro del MP4 y un archivo con los beats y la envolvente, para que la escena lo lea en cada t.</li>
+            </ol>
+            Después, sin fecha: grabar también las animaciones CSS, grabar cualquier página recorriéndola con el scroll, regresión visual, plantillas de escena, desenfoque de movimiento con varias pestañas en paralelo y vídeo dentro de las escenas.</dd>
+          <dt>Ojo</dt>
+          <dd>Lo pesado (4K, desenfoque con decenas de muestras, separar la voz, profundidad y recortes de figura) solo es viable con una GPU. Por ahora es una propuesta, sin decidir. Las cifras de velocidad que prometen algunos blogs no citan ninguna fuente: las mediremos nosotros. Y Slopcore usa imágenes, música y vídeo generados con servicios de pago. Eso choca con nuestra regla de que nada parezca hecho por IA, así que aprendemos el método, no el gasto.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/mexicat/pdoom-video/blob/main/docs/ENGINE.md">pdoom-video, ENGINE.md</a>
+          <a class="boton" href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>
         </div>
       </article>
       <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>
