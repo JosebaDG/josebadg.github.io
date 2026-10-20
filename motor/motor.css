@@ -52,6 +52,10 @@ h2 { font-size: clamp(1.5rem, 5.5vw, 2.6rem); }
 p { margin: 0 0 0.8rem; color: var(--tenue); max-width: 36rem; }
 .pista { font-size: 0.95rem; }
 .credito { font-size: 0.85rem; }
+/* Salida al final de la última escena: pequeña y en tono tenue, para no competir con la firma */
+.salida { margin-top: 2.4rem; font-size: 0.85rem; color: var(--tenue); }
+.salida a { color: var(--tenue); text-underline-offset: 3px; display: inline-block; padding: 0.7rem 0.4rem; }
+.salida a:hover { color: var(--texto); }
 a { color: var(--c-charlie); }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--c-charlie); outline-offset: 3px; }
 
