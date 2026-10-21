@@ -130,7 +130,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 21 de octubre de 2026. Nuevo apartado, <a href="/lab/innovacion/">Innovación</a>: tecnologías desmontadas hasta que se entienden. El primero, un shader de una línea, paso a paso. No hay nada pendiente.</p>
+    <p class="fecha">Al día: 21 de octubre de 2026. Publicado el apartado <a href="/lab/innovacion/">Innovación</a>, con tu sí, el de Charlie y el de Miles: tecnologías desmontadas hasta que se entienden. El primero, <a href="/lab/innovacion/shader/">un shader de una línea, paso a paso</a>. No hay nada pendiente.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -222,6 +222,21 @@
           <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/15">PR #15</a>
         </div>
       </article>
+
+      <article class="tarjeta" aria-labelledby="tshader">
+        <span class="estado">Publicado</span>
+        <h3 id="tshader">Innovación: desmontar un shader</h3>
+        <p class="que">El shader de una línea de Yohei Nishitsuji (licencia MIT), desmontado en seis pasos que se pueden tocar. Pinta con WebGPU o, si no lo hay, con WebGL2. Publicado el 21 de octubre con tu sí, el de Charlie y el de Miles.</p>
+        <figure>
+          <img class="captura-alta" src="capturas/innovacion-shader.jpg" width="600" height="1000" alt="La página del shader en tamaño iPhone: el dibujo fractal en azules y blancos, encima del título «Desmontar un shader»." loading="lazy">
+          <figcaption>El shader en tamaño iPhone</figcaption>
+        </figure>
+        <div class="acciones">
+          <a class="boton principal" href="/lab/innovacion/shader/">Abrir el shader</a>
+          <a class="boton" href="/lab/innovacion/">Innovación</a>
+          <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/31">PR #31</a>
+        </div>
+      </article>
     </section>
 
     <section aria-labelledby="experimentos">
@@ -310,14 +325,15 @@
           <p class="casa">Hecho en casa: <a href="/motor/">/motor/</a> y el <a href="/lab/charlie-visor/">visor de escenas</a>.</p>
         </article>
 
-        <article class="necesidad" id="n-luz" data-claves="luz brillo bloom gravedad agujero negro lente gravitacional shader glsl webgl anillo espacio curvado lineas particulas">
+        <article class="necesidad" id="n-luz" data-claves="luz brillo bloom gravedad agujero negro lente gravitacional shader shaders glsl wgsl webgl webgpu twigl fractal raymarching pliegue entender un shader anillo espacio curvado lineas particulas">
           <h3>Efectos de luz y gravedad</h3>
           <p class="para">Para el agujero negro, el brillo del punto y miles de líneas sin que el móvil sufra.</p>
           <ul class="recursos">
             <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: lente gravitacional (<code>spacetime-lens.ts</code>) con anillo de Einstein, brillo solo para la señal y líneas en GPU. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://x.com/YoheiNishitsuji/status/1999814369925046474">«Simulated reality», de Yohei Nishitsuji</a>: un mundo fractal en una línea de GLSL, con pliegue y raymarching. Para entender cómo piensa un shader. <a class="aficha" href="#f-nishitsuji">Ficha</a></li>
           </ul>
-          <p class="ojo">Ojo: licencia MIT, se cita al autor. Su raymarching es demasiado lento para el móvil.</p>
-          <p class="casa">Hecho en casa: el espacio curvado de <a href="/">la portada</a>.</p>
+          <p class="ojo">Ojo: las dos con licencia MIT, se cita al autor. Su raymarching es demasiado lento para pintarlo 60 veces por segundo en el móvil.</p>
+          <p class="casa">Hecho en casa: el espacio curvado de <a href="/">la portada</a> y <a href="/lab/innovacion/shader/">el shader desmontado en seis pasos</a>.</p>
         </article>
 
         <article class="necesidad" id="n-video" data-claves="video mp4 exportar grabar fotogramas hoja de contacto stills redes clip render formatos perfiles vertical horizontal cuadrado 4k master color bt.709 ffmpeg x264 nvenc audio sonido gpu blender remotion gsap mediabunny desenfoque proposito general">
@@ -442,7 +458,7 @@
           <h3>Sin material todavía</h3>
           <p class="para">Necesidades que ya asoman y para las que aún no tenemos nada. Se busca fuera y lo que salga se ficha aquí.</p>
           <ul class="recursos">
-            <li><strong>WebGPU</strong>: ni pdoom-video ni la carpeta lo usan. Charlie ha portado la lente a WebGPU para medirla frente a WebGL2 (<a href="/lab/charlie-lente-gpu/?t=0.85">página</a>).</li>
+            <li><strong>WebGPU</strong>: ni pdoom-video ni la carpeta lo usan. Charlie ha portado la lente a WebGPU para medirla frente a WebGL2 (<a href="/lab/charlie-lente-gpu/?t=0.85">página</a>), y <a href="/lab/innovacion/shader/">el shader desmontado</a> lleva las mismas cuentas en WGSL y en GLSL.</li>
             <li><strong>three.js a fondo</strong>: pdoom-video lo usa en todo el motor, pero solo hemos visto su uso.</li>
           </ul>
         </article>
@@ -748,6 +764,33 @@
           <a class="boton principal" href="https://webassembly.github.io/spec/core/">Especificación</a>
           <a class="boton" href="https://github.com/WebAssembly/WASI">WASI</a>
           <a class="boton" href="https://github.com/bytecodealliance/wasmtime">Wasmtime</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-nishitsuji">
+        <h4 id="f-nishitsuji">«Simulated reality», el shader de una línea de Yohei Nishitsuji</h4>
+        <ul class="etiquetas"><li>Shader</li><li>Nivel medio</li><li>Desmontado y probado por el equipo</li><li>Licencia MIT</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-luz">efectos de luz y gravedad</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un shader de una sola línea para <a href="https://twigl.app?ol=true&amp;ss=-OgMbTexmkAwvg_2mnM_">twigl</a>, publicado el 13 de diciembre de 2025 en <a href="https://x.com/YoheiNishitsuji/status/1999814369925046474">este post</a>. Pinta un mundo 3D fractal que se pliega sobre sí mismo.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Cómo nace un fractal</strong>: estirar y doblar con <code>abs()</code> 19 veces copia el dibujo dentro de sí mismo, cada vez más pequeño.</li>
+            <li><strong>Raymarching</strong>: avanzar por el rayo a pasos (98 aquí) en vez de calcular el choque exacto. Una estimación aproximada da el aire de niebla.</li>
+            <li><strong>Color por capas</strong>: sumar un poco de color en cada paso, como hojas de papel de calco.</li>
+            <li><strong>Dos idiomas, mismas cuentas</strong>: la versión en WGSL (WebGPU) y la de GLSL (WebGL2) dan la misma imagen; en 17 casos la diferencia media queda por debajo de 0,001 sobre 255.</li>
+            <li><strong>Pintar solo cuando cambia algo</strong>: cada píxel da unas 1.862 vueltas (98 pasos por 19 pliegues). Por eso la página no pinta 60 veces por segundo.</li>
+          </ul></dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Licencia</strong>: MIT. El autor la declara para todo el código que comparte en X. Se cita como «Yohei Nishitsuji», con el enlace al post. Las funciones <code>hsv</code> y <code>rotate3D</code> son de <a href="https://github.com/doxas/twigl">twigl</a> (doxas, MIT).</li>
+            <li><strong>Coste</strong>: ninguno, no usa servicios.</li>
+            <li><strong>Sin medir</strong>: los milisegundos por cuadro en un iPhone de verdad.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="/lab/innovacion/shader/">Verlo desmontado</a>
+          <a class="boton" href="https://x.com/YoheiNishitsuji/status/1999814369925046474">El post original</a>
         </div>
       </article>
       <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>
