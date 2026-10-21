@@ -1,0 +1,48 @@
+/* Lente gravitacional (Charlie). Sin fuentes ni recursos de fuera; los mismos tokens que el visor. */
+:root {
+  --c-charlie: #47d6cf;
+  --fondo: #000;
+  --texto: #f3ece2;
+  --tenue: #bdb4a7;
+  --linea: #3a3631;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--fondo); color: var(--texto); -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-height: 100vh; min-height: 100svh; overflow: hidden; font: 400 1rem/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+
+.lienzo { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.cartel { position: fixed; left: 1rem; right: 1rem; top: 30%; z-index: 1; margin: 0; text-align: center; color: var(--tenue); }
+.cartel[hidden] { display: none; }
+
+.panel {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 2;
+  max-width: 40rem; margin: 0 auto;
+  padding: 0.75rem max(1rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  background: rgba(0, 0, 0, 0.86);
+  border-top: 1px solid var(--linea);
+  border-radius: 14px 14px 0 0;
+}
+.panel[hidden] { display: none; }
+.titulo { margin: 0 0 0.35rem; font-size: 1rem; font-weight: 600; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.titulo a { font-weight: 400; font-size: 0.9375rem; }
+a { color: var(--c-charlie); }
+
+.fila { display: grid; grid-template-columns: 6.25rem 1fr; align-items: center; gap: 0.5rem; margin: 0 0 0.35rem; }
+.fila label { display: flex; flex-direction: column; font-size: 0.875rem; line-height: 1.25; color: var(--tenue); }
+output { color: var(--texto); font-variant-numeric: tabular-nums; }
+select, button { font: inherit; color: var(--texto); background: #111; border: 1px solid #6b655d; border-radius: 10px; min-height: 44px; }
+select { width: 100%; padding: 0 0.6rem; }
+input[type=range] { width: 100%; min-height: 44px; margin: 0; accent-color: var(--c-charlie); }
+.botones { display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; align-items: center; }
+.botones button { padding: 0 0.75rem; }
+button[aria-pressed=true] { border-color: var(--c-charlie); color: var(--c-charlie); }
+.casilla { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; padding: 0 0.3rem; }
+.casilla input { width: 22px; height: 22px; accent-color: var(--c-charlie); }
+.estado { margin: 0.35rem 0 0; min-height: 1.3em; font-size: 0.875rem; line-height: 1.3; color: var(--tenue); }
+.credito { margin: 0.2rem 0 0; font-size: 0.8125rem; line-height: 1.3; color: var(--tenue); }
+.credito a { display: inline-block; padding: 0.35rem 0; }
+:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.mostrar { position: fixed; right: max(0.75rem, env(safe-area-inset-right)); bottom: max(0.75rem, env(safe-area-inset-bottom)); z-index: 2; padding: 0 0.9rem; background: rgba(0, 0, 0, 0.7); }
+.mostrar[hidden] { display: none; }

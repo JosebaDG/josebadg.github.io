@@ -1,0 +1,34 @@
+/* Lo que añade la comparación a lente.css de ../charlie-lente/ (Charlie). */
+.lienzo[hidden] { display: none; }
+.cifras { margin: 0.4rem 0 0; font-size: 0.9375rem; line-height: 1.35; font-variant-numeric: tabular-nums; }
+.cifras p { margin: 0 0 0.35rem; }
+.cifras strong { color: var(--c-charlie); font-weight: 600; }
+.cifras .tecnico { font-size: 0.8125rem; color: var(--tenue); }
+.botones .principal, .medir .principal { border-color: var(--c-charlie); }
+
+/* Que se entienda (Miles): cada mando con su frase y lo que se ve ahora.
+   El panel ocupa como mucho la mitad de abajo y se desplaza por dentro; la lente se recoloca
+   en la parte que queda libre (pagina.js, zona()), así que la imagen no queda tapada. */
+.panel { max-height: 50vh; max-height: 50svh; overflow-y: auto; overscroll-behavior: contain; }
+.ahora { margin: 0 0 0.5rem; font-size: 0.9375rem; line-height: 1.35; color: var(--texto); }
+.ahora strong { color: var(--c-charlie); font-weight: 600; }
+.guia { margin: 0 0 0.6rem; border: 1px solid var(--linea); border-radius: 10px; }
+.guia summary { min-height: 44px; display: flex; align-items: center; padding: 0 0.75rem; cursor: pointer; color: var(--c-charlie); font-weight: 600; }
+.guia ol { margin: 0; padding: 0 0.9rem 0.6rem 2rem; font-size: 0.875rem; line-height: 1.4; }
+.guia li { margin: 0 0 0.3rem; }
+.fila { margin: 0 0 0.6rem; }
+.fila .nombre { font-size: 0.875rem; line-height: 1.25; color: var(--tenue); }
+.fila button { justify-self: start; padding: 0 0.9rem; }
+.ayuda { grid-column: 1 / -1; margin: -0.15rem 0 0; font-size: 0.8125rem; line-height: 1.35; color: var(--tenue); }
+.medir { margin: 0.2rem 0 0.6rem; padding: 0.6rem 0 0; border-top: 1px solid var(--linea); }
+.medir .principal { padding: 0 1rem; }
+
+/* Pantallas anchas: el panel va a la derecha, de arriba abajo, y la lente queda a su izquierda */
+@media (min-width: 900px) {
+  .panel {
+    left: auto; right: 0; top: 0; bottom: 0; margin: 0;
+    width: 24rem; max-width: 40vw; max-height: none;
+    border-top: 0; border-left: 1px solid var(--linea); border-radius: 0;
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+}
