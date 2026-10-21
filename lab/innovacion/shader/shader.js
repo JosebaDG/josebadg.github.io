@@ -1,8 +1,8 @@
 // Desmontar un shader (Miles, apartado de innovación del laboratorio; MVP 1).
 //
 // El shader original es de una sola línea, escrito para twigl en modo «geekest» (FC, r, t, o).
-// Por el estilo, casi seguro de Yohei Nishitsuji (#つぶやきGLSL); no encontramos la publicación
-// exacta ni licencia, así que se cita con su nombre y solo para enseñar.
+// Autor: Yohei Nishitsuji (#つぶやきGLSL), publicado el 13/12/2025 en
+// x.com/YoheiNishitsuji/status/1999814369925046474. Licencia MIT (la declara para su código en X).
 // hsv() y rotate3D() son las de twigl (github.com/doxas/twigl, src/shader_snippet/noise.glsl, MIT).
 //
 // Aquí el mismo cálculo va en dos idiomas, WGSL (WebGPU) y GLSL (WebGL2), con un mando más:

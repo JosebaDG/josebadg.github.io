@@ -27,5 +27,5 @@ Norte (visión, sin fecha): un solo viaje con zoom, como *Potencias de diez*: im
 - `app.js`: estado, mandos y pasos. El paso que cruza el centro de la pantalla elige la etapa. Solo pinta cuando algo cambia, o mientras el reloj se mueve (nunca con «reducir movimiento»).
 - Enlace exacto: `?etapa=1..6&pasos=1..98&pliegues=0..19&k=2..12&t=0..62.8&motor=gpu|gl&nivel=0|1|2&ui=0`.
 - `prueba.py`: compara WGSL y GLSL píxel a píxel en 17 casos y comprueba que el mismo enlace da la misma imagen. Con `--poster` rehace `poster.jpg`.
-- Origen: shader de una línea para twigl (modo «geekest»). Por el estilo, casi seguro de Yohei Nishitsuji (#つぶやきGLSL); no encontramos la publicación exacta ni licencia, así que se cita con su nombre y solo para enseñar; si el autor lo pide, se quita. `hsv` y `rotate3D` son las de twigl (doxas, MIT).
+- Origen: shader de una línea para twigl (modo «geekest») de Yohei Nishitsuji (#つぶやきGLSL), publicado el 13 de diciembre de 2025: https://x.com/YoheiNishitsuji/status/1999814369925046474. Licencia MIT (su perfil de X: «My code shared @x is MIT Licensed»). `hsv` y `rotate3D` son las de twigl (doxas, MIT).
 - Comprobado: el color final coincide con una versión independiente en Python (numpy) del original (correlación 0,9999).
