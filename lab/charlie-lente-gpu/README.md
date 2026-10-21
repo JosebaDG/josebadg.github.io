@@ -20,9 +20,9 @@ Si el navegador no tiene WebGPU (o no da adaptador), lo dice y mide solo WebGL2.
 - `hoja.jpg`: la hoja de contacto, 12 momentos pintados en WebGPU con los mismos t y reloj que la de `../charlie-lente/` (las dos difieren de media 0,6 de 255).
 - `comparacion.jpg`: WebGL2 a la izquierda, WebGPU a la derecha, en t 0,85.
 
-## Que se entienda (Miles, a petición de Joseba)
+## Que se entienda (Miles)
 
-Joseba la probó en su iPhone 17 Pro Max: la imagen le pareció espectacular, pero no sabía qué tenía que mirar ni qué hacía cada mando. Con la regla del laboratorio (cada mando con una frase y lo que se aprende, visible):
+Probada en un móvil, la imagen gustó mucho, pero no se entendía qué había que mirar ni qué hacía cada mando. Con la regla del laboratorio (cada mando con una frase y lo que se aprende, visible):
 
 - Una línea «Qué ves» cambia con la masa, con los mismos tramos que `parametros()`: espacio plano (menos de 0,1), la masa curva el espacio (hasta 0,4), anillo de Einstein (hasta 0,65) y agujero negro.
 - Cada mando lleva debajo qué cambia y qué hay que mirar. «Pinta con» dice que las dos pintan la misma imagen a propósito.
@@ -30,7 +30,7 @@ Joseba la probó en su iPhone 17 Pro Max: la imagen le pareció espectacular, pe
 - El resultado sale también en llano: cuánto tarda cada una por cuadro, qué parte usa de los 8,3 ms que da una pantalla de 120 Hz (16,7 a 60 Hz) y por qué aquí WebGPU no gana. Las cifras de antes siguen debajo.
 - El panel ocupa como mucho la mitad de abajo y se desplaza por dentro; en pantallas de 900 px o más va a la derecha. La lente se coloca en la parte libre. Con el panel oculto, o con `ui=0`, vuelve al sitio de siempre (0,42 del alto), así que las hojas y las capturas no cambian.
 
-La cifra del iPhone de Joseba (nivel 1, 660 × 1146 px): WebGL2 1,68 ms y WebGPU 2,30 ms en la primera medida; 2,08 y 2,67 en la segunda. WebGL2 sale entre 1,3 y 1,4 veces más rápida y las dos usan menos de un tercio del margen a 120 Hz.
+La cifra en un móvil con WebGPU (nivel 1, 660 × 1146 px): WebGL2 1,68 ms y WebGPU 2,30 ms en la primera medida; 2,08 y 2,67 en la segunda. WebGL2 sale entre 1,3 y 1,4 veces más rápida y las dos usan menos de un tercio del margen a 120 Hz.
 
 ## Lo que cambia al pasar de GLSL a WGSL
 
