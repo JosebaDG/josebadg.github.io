@@ -130,7 +130,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 21 de octubre de 2026. Publicado el apartado <a href="/lab/innovacion/">Innovación</a>, con tu sí, el de Charlie y el de Miles: tecnologías desmontadas hasta que se entienden. El primero, <a href="/lab/innovacion/shader/">un shader de una línea, paso a paso</a>. No hay nada pendiente.</p>
+    <p class="fecha">Al día: 21 de octubre de 2026. Publicado el apartado <a href="/lab/innovacion/">Innovación</a>, con tu sí, el de Charlie y el de Miles: tecnologías desmontadas hasta que se entienden. El primero, <a href="/lab/innovacion/shader/">un shader de una línea, paso a paso</a>. Nueva en la Biblioteca: <a href="#f-phonon">texto a voz en castellano dentro del móvil</a>. No hay nada pendiente.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -431,7 +431,7 @@
           <p class="ojo">Ojo: cualquier app de iPhone pasa por Apple. Para publicar hace falta su programa de desarrollador, que es de pago, y eso lo decide Joseba.</p>
         </article>
 
-        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen parakeet core ai coreai aimodel core ml foundation models instruments wwdc llama gguf pocketpal neural engine swiftui natacion">
+        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen parakeet core ai coreai aimodel core ml foundation models instruments wwdc llama gguf pocketpal neural engine swiftui natacion phonon gradium pocket tts kyutai voz castellano espanol leer en voz alta sintesis de voz voces">
           <h3>IA dentro del móvil, sin nube</h3>
           <p class="para">Para que un modelo de lenguaje o de voz funcione en el propio teléfono, sin conexión y sin mandar datos fuera. Importa sobre todo cuando hay datos personales, como los de menores.</p>
           <ul class="recursos">
@@ -439,6 +439,7 @@
             <li><a href="https://github.com/apple/coreai-models">Modelos oficiales de Core AI</a> (BSD-3): recetas para convertir modelos y piezas en Swift ya hechas, con voz a texto (Parakeet, Whisper) y modelos de lenguaje (Qwen, Gemma). <a class="aficha" href="#f-coreai">Ficha</a></li>
             <li><a href="https://developer.apple.com/videos/play/wwdc2026/324/">Sesiones de la WWDC 2026</a>: presentación de Core AI, integración en la app y optimización, con transcripción y código. <a class="aficha" href="#f-coreai">Ficha</a></li>
             <li><a href="https://github.com/john-rocky/coreai-model-zoo">Core AI Model Zoo</a> (BSD-3): colección de un desarrollador independiente, no de Apple, con muchos más modelos ya convertidos, texto a voz incluido. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://huggingface.co/gradium/phonon-40m-es">phonon-40m-es de Gradium</a> (pesos CC BY-NC 4.0, no comercial): texto a voz en castellano de 75 MB, con voces de España y de México, que suena mientras genera y trae paquete Swift. Candidato para cuando el asistente de natación hable. <a class="aficha" href="#f-phonon">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: cada modelo trae su propia licencia, distinta de la del código. Que todo sea local no quiere decir que esté cifrado: los datos pueden acabar en la copia de seguridad del teléfono.</p>
         </article>
@@ -729,6 +730,39 @@
           <a class="boton principal" href="https://developer.apple.com/documentation/coreai">Core AI en Apple</a>
           <a class="boton" href="https://github.com/apple/coreai-models">Repo oficial</a>
           <a class="boton" href="https://developer.apple.com/videos/play/wwdc2026/324/">Meet Core AI</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-phonon">
+        <h4 id="f-phonon">Texto a voz en castellano en el propio dispositivo: phonon-40m-es</h4>
+        <ul class="etiquetas"><li>Modelo</li><li>Nivel avanzado</li><li>Leídas la ficha, el código y las licencias; probados el motor y el normalizador en la máquina de Miles</li><li>Sin oír en castellano ni probar en un iPhone</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-local">IA dentro del móvil, sin nube</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un modelo de Gradium, empresa de voz salida del laboratorio Kyutai, que convierte texto en voz a 24 kHz y empieza a sonar antes de terminar, cada 80 ms. Pesa 75 MB (60 MB en la versión más comprimida). Tiene 25 voces en español: 13 de España y 12 de México. Funciona con un motor propio en Rust que sale para Python, para el navegador y para Swift.</dd>
+          <dt>Comprobado y no comprobado</dt>
+          <dd><ul>
+            <li><strong>Comprobado</strong>: licencias, tamaños, voces, que el paquete Swift existe y pide iOS 18, y que el motor, con el modelo inglés, va unas 5 veces más rápido que el tiempo real en un procesador de servidor compartido.</li>
+            <li><strong>Solo lo dice Gradium</strong>: que suena mejor que Kokoro y que en un iPhone 16 Pro va 40 veces más rápido que el tiempo real con unos 95 MB de memoria. Las evaluaciones son suyas.</li>
+            <li><strong>No publican</strong> con qué datos lo entrenaron.</li>
+          </ul></dd>
+          <dt>Frente a Kokoro-82M</dt>
+          <dd>Phonon pesa menos de la mitad, tiene muchas más voces de España, suena al momento y no necesita espeak-ng, que es GPL-3.0. Kokoro tiene licencia Apache 2.0, se puede usar para negocio y lleva casi dos años en uso. Phonon salió el 19 de octubre de 2026.</dd>
+          <dt>Para el asistente de natación</dt>
+          <dd>El primer MVP no habla: es nota de voz, transcripción y resumen. Phonon es candidato para el segundo, junto a la lista de Joseba. En el iPhone usaría Core ML junto a Core AI. El paquete Core ML ya hecho solo existe en inglés; el español hay que exportarlo en el Mac.</dd>
+          <dt>Para WebAssembly</dt>
+          <dd>En el navegador es Wasm con su JavaScript de pegamento y WebGPU opcional. Como componente WASI todavía no sale: la biblioteca compila, pero deja fuera la carga del modelo y la síntesis.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Licencia</strong>: los pesos en español son CC BY-NC 4.0, sin uso comercial y citando a Gradium. Choca con liberar el asistente para que cualquiera lo use. El código es MIT o Apache 2.0. Alternativa por probar: Pocket TTS de Kyutai, CC-BY-4.0, que también habla español.</li>
+            <li><strong>Descarga</strong>: pide una cuenta de Hugging Face y aceptar condiciones.</li>
+            <li><strong>Números</strong>: deja fechas, horas y distancias en cifras para que las lea el modelo, y convierte «1.500 metros» en «mil 500 metros». Hay que oírlo antes de fiarse.</li>
+            <li><strong>Privacidad</strong>: leer en voz alta no saca nada del teléfono. Clonar voces es un servicio en la nube de Gradium: con datos de menores, nunca.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://huggingface.co/gradium/phonon-40m-es">Ficha del modelo</a>
+          <a class="boton" href="https://github.com/gradium-ai/xn-ptts">Motor y paquetes</a>
+          <a class="boton" href="https://github.com/kyutai-labs/pocket-tts">Pocket TTS</a>
         </div>
       </article>
       <article class="ficha" aria-labelledby="f-wasm">
