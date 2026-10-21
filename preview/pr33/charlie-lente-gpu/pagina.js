@@ -207,7 +207,7 @@ async function medirLasDos(n = CUADROS) {
 }
 
 // En llano: cuánto tarda cada una por cuadro y cuánto del margen usa. Una pantalla de 120 Hz
-// (iPhone Pro) da 8,3 ms por cuadro y una de 60 Hz, 16,7. Se mide esperando a la GPU en cada
+// da 8,3 ms por cuadro y una de 60 Hz, 16,7. Se mide esperando a la GPU en cada
 // cuadro, así que es el caso más justo, no el más cómodo.
 const MARGEN = 1000 / 120, MARGEN60 = 1000 / 60;
 function textoLlano(r) {
