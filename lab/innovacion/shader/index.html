@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Desmontar un shader · Innovación · Laboratorio</title>
+  <meta name="description" content="Un shader de una línea, desmontado en seis pasos que se pueden tocar. WebGPU con alternativa WebGL2.">
+  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
+  <link rel="stylesheet" href="../innovacion.css">
+  <link rel="stylesheet" href="shader.css">
+</head>
+<body>
+  <!--
+    Desmontar un shader (Miles, apartado de innovación; MVP 1). Ver la cabecera de shader.js.
+    Un fotograma por enlace: ?etapa=1..6&pasos=1..98&pliegues=0..19&k=2..12&t=0..62.8&motor=gpu|gl&nivel=0|1|2&ui=0
+    No toca /motor/ ni la portada.
+  -->
+  <a class="saltar" href="#paso-1">Ir al primer paso</a>
+
+  <div class="pagina">
+    <div class="escenario" aria-hidden="true">
+      <canvas class="lienzo" id="lienzoGPU"></canvas>
+      <canvas class="lienzo" id="lienzoGL" hidden></canvas>
+      <img class="poster" src="poster.jpg" alt="" width="1200" height="900">
+      <p class="rotulo"><span id="etapaSale"></span> <span class="motor-sale" id="motorSale"></span></p>
+    </div>
+
+    <main class="texto" id="texto">
+      <nav class="migas" aria-label="Ruta"><a href="/lab/">Laboratorio</a> › <a href="../">Innovación</a> › Desmontar un shader</nav>
+
+      <header class="intro" data-etapa="6" data-nombre="El dibujo completo">
+        <h1>Desmontar un shader</h1>
+        <p class="entrada">Este dibujo sale de 300 letras de código. Tu tarjeta gráfica ejecuta esas 300 letras en cada píxel, todos a la vez. Aquí las desmontamos en seis pasos, y en cada paso puedes tocar los números.</p>
+        <p class="cartel" id="cartel" hidden></p>
+        <noscript><p class="cartel">Sin JavaScript no se puede pintar: el dibujo de arriba es una foto. El texto se entiende igual.</p></noscript>
+        <figure class="codigo-original">
+          <figcaption>El código entero, tal cual se publicó en <a href="https://twigl.app/">twigl</a>:</figcaption>
+          <pre><code id="original">for(float i,g,e,s;++i&lt;99.;o.rgb+=.01-hsv(.1,g*.016-e*.3,s/2e2)){vec3 p=vec3((FC.xy-.5*r)/r.y*5.+vec2(0,9),g)*rotate3D(-1.1-cos(t*.15)*.1,vec3(1,11.+sin(t)*.15,-1.5));s=2.;for(int i;i++&lt;19;p=vec3(.08,4,-1)-abs(abs(p)*e-vec3(3,4,3)))s*=e=7.1/dot(p,p*.51);g+=p.y/s;s=log2(s)/exp(e);}</code></pre>
+        </figure>
+        <p class="credito">Autoría: <a href="https://x.com/YoheiNishitsuji">Yohei Nishitsuji</a>, que publica shaders de una línea con #つぶやきGLSL. Lo publicó el 13 de diciembre de 2025 en <a href="https://x.com/YoheiNishitsuji/status/1999814369925046474">este post</a> (<a href="https://twigl.app?ol=true&amp;ss=-OgMbTexmkAwvg_2mnM_">el código en twigl</a>). Licencia MIT: el autor la declara para todo el código que comparte en X.</p>
+      </header>
+
+      <section class="bloque" aria-labelledby="h-antes">
+        <h2 id="h-antes">Antes de empezar: qué es un shader</h2>
+        <p>Un shader es un programa pequeño que corre en la tarjeta gráfica, la GPU. La GPU tiene miles de núcleos sencillos. Cada núcleo calcula el color de un píxel, con el mismo programa que los demás y al mismo tiempo.</p>
+        <p>El programa no ve el dibujo entero. Solo sabe en qué píxel está, y con eso tiene que decidir su color. twigl le da cuatro nombres cortos:</p>
+        <dl class="glosario">
+          <div><dt><code>FC</code></dt><dd>la posición del píxel, en píxeles</dd></div>
+          <div><dt><code>r</code></dt><dd>el tamaño del lienzo</dd></div>
+          <div><dt><code>t</code></dt><dd>el tiempo, en segundos</dd></div>
+          <div><dt><code>o</code></dt><dd>el color que sale</dd></div>
+        </dl>
+      </section>
+
+      <figure class="codigo-ordenado" id="codigo" aria-label="El mismo código, ordenado; se ilumina la parte del paso que estás leyendo">
+        <figcaption>El mismo código, ordenado. Se ilumina la parte del paso que estás leyendo.</figcaption>
+<pre tabindex="0"><code><span data-p="5 6">for(float i,g,e,s; ++i&lt;99.; </span><span data-p="6">o.rgb += .01-hsv(.1, g*.016-e*.3, s/2e2)</span><span data-p="5 6">) {</span>
+  vec3 p = vec3(<span data-p="1">(FC.xy-.5*r)/r.y</span><span data-p="2">*5.+vec2(0,9)</span><span data-p="3">, g)</span>
+         <span data-p="3">* rotate3D(-1.1-cos(t*.15)*.1,
+                    vec3(1, 11.+sin(t)*.15, -1.5));</span>
+  <span data-p="4">s = 2.;
+  for(int i; i++&lt;19; p = vec3(.08,4,-1)-abs(abs(p)*e-vec3(3,4,3)))
+    s *= e = 7.1/dot(p, p*.51);</span>
+  <span data-p="5">g += p.y/s;</span>
+  <span data-p="6">s = log2(s)/exp(e);</span>
+<span data-p="5 6">}</span></code></pre>
+      </figure>
+
+      <section class="paso" id="paso-1" data-etapa="1" data-nombre="1 · Dónde está cada píxel" aria-labelledby="h1p">
+        <p class="num">Paso 1</p>
+        <h2 id="h1p">Cada píxel sabe dónde está</h2>
+        <pre class="trozo" tabindex="0"><code>(FC.xy-.5*r)/r.y</code></pre>
+        <p>Restar la mitad del lienzo pone el centro de la pantalla en (0, 0). Dividir por la altura hace que la vertical vaya de −0,5 a 0,5 en cualquier pantalla, sea un móvil o un monitor.</p>
+        <p>En el lienzo: cuanto más rojo, más a la derecha; cuanto más verde, más arriba. Las líneas finas van cada 0,1 y las dos claras son los ejes.</p>
+      </section>
+
+      <section class="paso" id="paso-2" data-etapa="2" data-nombre="2 · Zoom y desplazamiento" aria-labelledby="h2p">
+        <p class="num">Paso 2</p>
+        <h2 id="h2p">Alejar la cámara y subirla</h2>
+        <pre class="trozo" tabindex="0"><code>*5.+vec2(0,9)</code></pre>
+        <p>Multiplicar por 5 aleja la cámara: ahora caben 5 unidades de alto. Sumar (0, 9) sube la vista 9 unidades, hasta donde el fractal tiene la parte que el autor quería enseñar.</p>
+        <p>En el lienzo, cada cuadro mide 1 unidad. La línea dorada es y = 9: está justo en el centro.</p>
+      </section>
+
+      <section class="paso" id="paso-3" data-etapa="3" data-nombre="3 · Un punto en 3D, girado" aria-labelledby="h3p">
+        <p class="num">Paso 3</p>
+        <h2 id="h3p">El píxel se convierte en un punto en 3D</h2>
+        <pre class="trozo" tabindex="0"><code>vec3(…, g) * rotate3D(-1.1-cos(t*.15)*.1, vec3(1, 11.+sin(t)*.15, -1.5))</code></pre>
+        <p>Al punto del paso 2 se le añade una tercera coordenada, <code>g</code>: la profundidad, que al principio vale 0. Después se gira unos 63 grados (−1,1 radianes) alrededor de un eje casi vertical.</p>
+        <p>El tiempo <code>t</code> solo balancea un poco ese giro. Es lo único que se mueve en todo el dibujo.</p>
+        <p>En el lienzo ves un tablero de cubos de 1 unidad, cortado por la pantalla en diagonal.</p>
+        <div class="mando">
+          <label for="t3">Tiempo <code>t</code> <output data-sale="t" for="t3">0,00 s</output></label>
+          <input id="t3" data-mando="t" type="range" min="0" max="62.8" step="0.01" value="0">
+          <button type="button" class="boton" data-reloj aria-pressed="false">Mover el reloj</button>
+        </div>
+      </section>
+
+      <section class="paso" id="paso-4" data-etapa="4" data-nombre="4 · El pliegue" aria-labelledby="h4p">
+        <p class="num">Paso 4</p>
+        <h2 id="h4p">El pliegue: aquí nace el fractal</h2>
+        <pre class="trozo" tabindex="0"><code>s = 2.;
+for(int i; i++&lt;19; p = vec3(.08,4,-1)-abs(abs(p)*e-vec3(3,4,3)))
+  s *= e = 7.1/dot(p, p*.51);</code></pre>
+        <p>Se repiten dos operaciones 19 veces:</p>
+        <ol class="lista">
+          <li><strong>Estirar.</strong> <code>e = 7.1 / dot(p, p*.51)</code> depende de lo lejos que esté el punto del centro: cerca, estira mucho; lejos, encoge.</li>
+          <li><strong>Doblar.</strong> <code>abs()</code> actúa como un espejo: lo negativo pasa a positivo, como cuando doblas un papel. Restar y volver a doblar mueve el pliegue de sitio.</li>
+        </ol>
+        <p>En cada vuelta, el dibujo se copia dentro de sí mismo, más pequeño: eso es un fractal. <code>s</code> va apuntando cuánto se ha estirado en total.</p>
+        <p>En el lienzo ves el corte plano del paso 3 después de los pliegues. El color dice cuánto se estiró cada punto. Con 0 pliegues el corte sale liso. Sube de uno en uno y mira cómo aparece.</p>
+        <div class="mando">
+          <label for="pl4">Pliegues <output data-sale="pliegues" for="pl4">19</output></label>
+          <input id="pl4" data-mando="pliegues" type="range" min="0" max="19" step="1" value="19">
+        </div>
+        <div class="mando">
+          <label for="k4">El número 7,1 <output data-sale="k" for="k4">7,1</output></label>
+          <input id="k4" data-mando="k" type="range" min="2" max="12" step="0.1" value="7.1">
+        </div>
+      </section>
+
+      <section class="paso" id="paso-5" data-etapa="5" data-nombre="5 · Avanzar por el rayo" aria-labelledby="h5p">
+        <p class="num">Paso 5</p>
+        <h2 id="h5p">Avanzar por el rayo, 98 veces</h2>
+        <pre class="trozo" tabindex="0"><code>for(float i,g,e,s; ++i&lt;99.; …) {
+  …
+  g += p.y/s;
+}</code></pre>
+        <p>Después de doblar, <code>p.y/s</code> da una idea de cuánto se puede avanzar hacia dentro de la pantalla. La profundidad <code>g</code> crece eso, y todo vuelve a empezar desde el paso 3, un poco más al fondo. Así 98 veces.</p>
+        <p>Esta técnica se llama <em>raymarching</em>: avanzar a pasos en vez de calcular el choque exacto. Aquí la estimación es aproximada a propósito, y eso da al dibujo su aire de niebla.</p>
+        <p>En el lienzo: claro es que el rayo se quedó cerca; oscuro, que llegó lejos. Las líneas doradas marcan cada 5 unidades de profundidad, como las curvas de nivel de un mapa.</p>
+        <div class="mando">
+          <label for="pa5">Pasos del rayo <output data-sale="pasos" for="pa5">98</output></label>
+          <input id="pa5" data-mando="pasos" type="range" min="1" max="98" step="1" value="98">
+        </div>
+      </section>
+
+      <section class="paso" id="paso-6" data-etapa="6" data-nombre="6 · Pintar con luz" aria-labelledby="h6p">
+        <p class="num">Paso 6</p>
+        <h2 id="h6p">Pintar con capas finas de luz</h2>
+        <pre class="trozo" tabindex="0"><code>s = log2(s)/exp(e);
+o.rgb += .01-hsv(.1, g*.016-e*.3, s/2e2)</code></pre>
+        <p>En cada uno de los 98 pasos se suma un poco de color, como 98 hojas de papel de calco una encima de otra.</p>
+        <p><code>hsv(tono, saturación, brillo)</code> crea un color. El tono 0,1 es naranja. La saturación depende de la profundidad y del último estirón; el brillo, de cuánto se estiró el espacio. Como el color se resta de 0,01, sale el contrario del naranja: azules y blancos. Donde se suma mucho naranja queda azul oscuro; donde se suma poco, casi blanco.</p>
+        <p>Prueba a bajar los pasos: con pocos, el dibujo se queda oscuro y plano, porque faltan capas.</p>
+        <div class="mando">
+          <label for="pa6">Pasos del rayo <output data-sale="pasos" for="pa6">98</output></label>
+          <input id="pa6" data-mando="pasos" type="range" min="1" max="98" step="1" value="98">
+        </div>
+        <div class="mando">
+          <label for="pl6">Pliegues <output data-sale="pliegues" for="pl6">19</output></label>
+          <input id="pl6" data-mando="pliegues" type="range" min="0" max="19" step="1" value="19">
+        </div>
+        <div class="mando">
+          <label for="t6">Tiempo <code>t</code> <output data-sale="t" for="t6">0,00 s</output></label>
+          <input id="t6" data-mando="t" type="range" min="0" max="62.8" step="0.01" value="0">
+          <button type="button" class="boton" data-reloj aria-pressed="false">Mover el reloj</button>
+        </div>
+        <p class="estado-original"><span id="esOriginal">Con estos valores ves el original, sin cambios.</span> <button type="button" class="boton" id="volver">Volver al original</button></p>
+      </section>
+
+      <section class="bloque" aria-labelledby="h-trabajo">
+        <h2 id="h-trabajo">Cuánto trabajo es</h2>
+        <p>Tu lienzo tiene ahora <strong id="trabajoPx">—</strong> píxeles. Cada uno da <strong id="trabajoVueltas">—</strong> vueltas (pasos × pliegues). En total son unos <strong id="trabajoTotal">—</strong> millones de vueltas por imagen.</p>
+        <p>Por eso esta página solo pinta cuando cambias algo, y no 60 veces por segundo. Si el móvil va justo, baja la nitidez: se calculan menos píxeles y el navegador los estira.</p>
+        <div class="mando">
+          <label for="nivel">Nitidez</label>
+          <select id="nivel">
+            <option value="0">Baja (la mitad de píxeles en cada lado)</option>
+            <option value="1">Media</option>
+            <option value="2">Alta (todos)</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="bloque" aria-labelledby="h-idiomas">
+        <h2 id="h-idiomas">El mismo cálculo, en dos idiomas</h2>
+        <p>El navegador puede hablar con la GPU de dos formas. WebGL2 es la de siempre y su idioma es GLSL. WebGPU es la nueva, más cercana a cómo funcionan las GPU de hoy, y su idioma es WGSL. Esta página lleva las dos versiones del shader, con las mismas cuentas, y usa WebGPU si tu navegador lo tiene.</p>
+        <div class="mando">
+          <label for="motor">Pinta con <output id="motorSale2" for="motor"></output></label>
+          <select id="motor">
+            <option value="gpu">WebGPU</option>
+            <option value="gl">WebGL2</option>
+          </select>
+        </div>
+        <details class="fuente">
+          <summary>Ver el shader que se está ejecutando ahora (<span id="fuenteIdioma">WGSL</span>)</summary>
+          <pre tabindex="0"><code id="fuente"></code></pre>
+        </details>
+        <h3>Lo que no hace aquí WebAssembly, y por qué</h3>
+        <ul class="lista">
+          <li>Las dos formas las pone en marcha JavaScript: es quien pide la GPU y le pasa los números, 32 bytes en cada imagen.</li>
+          <li>WebAssembly corre en el procesador, no en la GPU. Trabaja con vectores de 128 bits, y para tocar la página o WebGPU también tiene que pasar por JavaScript.</li>
+          <li>Para este dibujo, millones de píxeles con la misma cuenta, la herramienta justa es la GPU. WebAssembly brilla en otras cosas, y tendrá su propio paso en este apartado.</li>
+        </ul>
+      </section>
+
+      <footer class="pie">
+        <p>Las funciones <code>hsv</code> y <code>rotate3D</code> son las de <a href="https://github.com/doxas/twigl">twigl</a>, de doxas (licencia MIT). El shader original es de <a href="https://x.com/YoheiNishitsuji/status/1999814369925046474">Yohei Nishitsuji</a> (licencia MIT); las explicaciones y la versión por pasos, del equipo del laboratorio.</p>
+        <p><a href="../">← Volver a Innovación</a> · <a href="/lab/">Laboratorio</a></p>
+      </footer>
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
