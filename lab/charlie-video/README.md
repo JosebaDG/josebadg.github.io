@@ -81,7 +81,7 @@ Los vídeos llevan `preload="none"` y póster: en el móvil no se baja nada hast
 - **La intro, sin visor:** sus momentos van en segundos y no se abren en el visor, porque no tiene t. Si cambian sus tiempos en `intro.js`, hay que poner al día `INTRO_DURA`, `INTRO_LENTA` e `INTRO_POSTER` en `exportar.py`.
 - **Solo la capa de la escena,** como en el visor: sin el texto de las secciones.
 - **Las escenas están pensadas en vertical:** en `horizontal` y `4k` lo que pasa queda en el centro y los lados salen casi negros. Para un vídeo apaisado bueno, la escena tendría que componer para ese formato.
-- **4K tarda:** cada foto es de 3840 × 2160, y 30 fotogramas tardan unos 20 s en la VM.
+- **4K tarda:** cada foto es de 3840 × 2160, y 30 fotogramas tardan unos 20 s en un equipo de pruebas.
 - **Para un PR visual,** se vuelve a lanzar `exportar.py` en su rama y la hoja nueva va en el PR. Por ahora solo recorre escenas del motor; una página sin t, como la portada, necesitaría otro modo que recorra el desplazamiento.
 
 Basado en [pdoom-video](https://github.com/mexicat/pdoom-video), de Giacomo Magnanini (MIT), como el motor.
