@@ -246,7 +246,7 @@ export async function iniciar(ctx) {
 
   // Espera a que la GPU acabe lo enviado: para medir milisegundos por fotograma.
   // Con tiempo máximo: si el dispositivo se pierde a mitad, onSubmittedWorkDone() puede no volver
-  // nunca (en la VM, con WebGPU por software, se cae el proceso de la GPU y «Medir las dos» se
+  // nunca (con WebGPU por software, en un equipo de pruebas, se cae el proceso de la GPU y «Medir las dos» se
   // quedaba colgado). Se rechaza si se pierde el dispositivo o si pasan ms milisegundos sin respuesta,
   // y quien mide lo da por «sin dato».
   function sincronizar(ms = ESPERA_MAX) {
