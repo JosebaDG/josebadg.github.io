@@ -14,7 +14,8 @@ Si el navegador no tiene WebGPU (o no da adaptador), lo dice y mide solo WebGL2.
 
 - `lente-gpu.js`: la escena en WebGPU, con el mismo contrato que la de WebGL2 (`tramo`, `late`, `iniciar(ctx)` → `pintar`, `medir`, `bajar`, `retirar`, `sincronizar`, `ponerNivel`). El shader es el GLSL portado a WGSL línea a línea; lo que se manda al shader en cada fotograma sale de `parametros()` de `../charlie-lente/lente.js`, que comparten las dos, para que pinten exactamente la misma escena.
 - `pagina.js`, `index.html` y `gpu.css`: la página, con un lienzo para cada una (un lienzo no puede tener las dos), el selector «Pinta con», la medición y los controles de la lente de WebGL2. Usa `../charlie-lente/lente.css`.
-- `prueba_shader.py`: compara los dos shaders píxel a píxel en siete fotogramas.
+- `prueba_shader.py`: compara los dos shaders píxel a píxel en siete fotogramas. Con `--hoja` saca además `hoja.jpg`.
+- `hoja.jpg`: la hoja de contacto, 12 momentos pintados en WebGPU con los mismos t y reloj que la de `../charlie-lente/` (las dos difieren de media 0,6 de 255).
 - `comparacion.jpg`: WebGL2 a la izquierda, WebGPU a la derecha, en t 0,85.
 
 ## Lo que cambia al pasar de GLSL a WGSL

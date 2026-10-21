@@ -8,6 +8,9 @@ de 255 en algún canal (el ruido de 1/255 contra escalones es distinto en cada u
 Necesita Playwright, numpy y Pillow. Sirve la raíz del repo en local: no sale nada a internet.
 
   python3 lab/charlie-lente-gpu/prueba_shader.py [--imagenes carpeta]
+  python3 lab/charlie-lente-gpu/prueba_shader.py --hoja   # además, hoja.jpg: 12 momentos pintados en WebGPU
+
+La hoja usa los mismos t y reloj que lab/charlie-lente/hoja.py, para poder ponerlas una al lado de otra.
 """
 import argparse, asyncio, json, os, sys
 import numpy as np
@@ -15,7 +18,7 @@ from PIL import Image
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(AQUI), 'charlie-video'))
-from exportar import servir  # noqa: E402
+from exportar import servir, hoja  # noqa: E402
 
 JS = r"""
 async ({t, r, nivel}) => {
@@ -89,6 +92,19 @@ async def main(a):
                               'brillo_gl': round(gl.mean(), 2), 'brillo_gpu': round(gp.mean(), 2),
                               'dif_media': round(dif.mean(), 3), 'px_dif_mas_3': round((dif > 3).mean() * 100, 3),
                               'px_dif_mas_16': round((dif > 16).mean() * 100, 3), 'dif_max': int(dif.max())}, ensure_ascii=False), flush=True)
+        if a.hoja:
+            import tempfile
+            tmp = tempfile.mkdtemp(prefix='lente-gpu-')
+            fotos, momentos = [], []
+            for i in range(12):
+                t, r = round(i / 11, 3), round(i * 0.6, 2)
+                res = await p.evaluate(JS, {'t': t, 'r': r, 'nivel': 1})
+                W, H = res['W'], res['H']
+                gp = np.frombuffer(base64.b64decode(res['gpu']), np.uint8).reshape(H, W, 4)[:, :, :3]
+                ruta = os.path.join(tmp, f'{i:02d}.png')
+                Image.fromarray(gp).save(ruta)
+                fotos.append(ruta); momentos.append({'t': t, 'r': r})
+            print(json.dumps({'hoja_px': hoja(fotos, momentos, 240, os.path.join(AQUI, 'hoja.jpg'))}))
         await b.close()
     srv.shutdown()
     print('igual' if not malos else f'{malos} fotogramas distintos')
@@ -98,4 +114,5 @@ async def main(a):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--imagenes', help='guarda cada par (WebGL2 | WebGPU) en esta carpeta')
+    ap.add_argument('--hoja', action='store_true', help='saca hoja.jpg con 12 momentos pintados en WebGPU')
     sys.exit(asyncio.run(main(ap.parse_args())))
