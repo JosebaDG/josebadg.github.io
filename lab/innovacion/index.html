@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Innovación: la tecnología, por dentro · Laboratorio</title>
+  <meta name="description" content="Tecnologías desmontadas hasta que se entienden: el código de verdad funcionando, con un mando para cada pieza.">
+  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
+  <link rel="stylesheet" href="innovacion.css">
+  <style>
+    .hub { max-width: 46rem; margin: 0 auto; padding: 1.4rem 1.1rem 4rem; }
+    .hub section { border-top: 1px solid var(--linea); padding: 2rem 0 1rem; }
+    .tarjeta {
+      display: grid; grid-template-columns: 1fr; gap: 0; margin: 0.4rem 0 1rem; text-decoration: none; color: inherit;
+      border: 1px solid var(--linea); border-radius: 14px; overflow: hidden; background: var(--panel);
+    }
+    .tarjeta:hover { border-color: var(--oro); color: inherit; }
+    .tarjeta img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+    .tarjeta div { padding: 0.9rem 1rem 1rem; }
+    .tarjeta h3 { margin: 0 0 0.3rem; color: var(--oro); }
+    .tarjeta p { margin: 0; color: var(--tinta-2); }
+    .ruta { list-style: none; padding: 0; margin: 0; counter-reset: mvp; }
+    .ruta li { position: relative; padding: 0.9rem 0 0.9rem 3.1rem; border-bottom: 1px solid var(--linea); }
+    .ruta li::before {
+      counter-increment: mvp; content: counter(mvp); position: absolute; left: 0; top: 0.85rem;
+      width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 1px solid var(--linea);
+      display: grid; place-items: center; color: var(--tinta-2); font-variant-numeric: tabular-nums;
+    }
+    .ruta li.hecho::before { background: var(--oro); border-color: var(--oro); color: var(--negro); }
+    .ruta h3 { margin: 0 0 0.2rem; font-size: 1.05rem; }
+    .ruta p { margin: 0 0 0.3rem; color: var(--tinta-2); }
+    .estado { font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--oro); }
+    .principios { padding-left: 1.2em; }
+    .principios li { margin-bottom: 0.5em; }
+    .viaje { font-family: var(--mono); font-size: 0.9rem; color: var(--oro); background: var(--panel); border-radius: 10px; padding: 0.8rem 0.9rem; overflow-x: auto; }
+    @media (min-width: 720px) {
+      .tarjeta { grid-template-columns: 1fr 1.2fr; }
+      .tarjeta img { height: 100%; }
+      .tarjeta div { align-self: center; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Apartado de innovación del laboratorio (Miles). Visión y hoja de ruta por MVP. No toca /motor/ ni la portada. -->
+  <a class="saltar" href="#disponible">Ir a lo que ya funciona</a>
+  <main class="hub">
+    <nav class="migas" aria-label="Ruta"><a href="/lab/">Laboratorio</a> › Innovación</nav>
+    <h1>La tecnología, por dentro</h1>
+    <p class="entrada">Aquí desmontamos tecnologías hasta que se entienden. Lo que ves es el código de verdad funcionando, no un vídeo, y cada pieza tiene un mando para tocarla.</p>
+    <p>Está pensado para quien no tiene base: primero ver, después tocar y al final cambiar. Y para quien lo explica a otros: cada estado tiene su enlace, así que se puede enseñar justo lo que se quiere.</p>
+
+    <section id="disponible" aria-labelledby="h-disp">
+      <h2 id="h-disp">Ya funciona</h2>
+      <a class="tarjeta" href="shader/">
+        <img src="shader/poster.jpg" alt="Un fractal azul y blanco, como una niebla con relieve" width="1200" height="900" loading="lazy">
+        <div>
+          <h3>Desmontar un shader</h3>
+          <p>Un dibujo hecho con 300 letras de código, desmontado en seis pasos. Puedes cambiar los pliegues, los pasos del rayo y el tiempo, y ver qué hace cada pieza. Pinta con WebGPU, o con WebGL2 si tu navegador no lo tiene.</p>
+        </div>
+      </a>
+    </section>
+
+    <section aria-labelledby="h-vision">
+      <h2 id="h-vision">Hacia dónde va</h2>
+      <p>La idea grande es un solo viaje con zoom, como el vídeo <em>Potencias de diez</em> pero con un ordenador: empiezas en una imagen y vas bajando de capa hasta llegar a los bytes.</p>
+      <p class="viaje">imagen → shader → GPU → memoria → bytes → el programa que los pidió</p>
+      <p>Cada parada del viaje es una pieza que se desmonta por separado, y cada MVP construye una. Cuando haya varias, se unen en un mapa: el punto central del laboratorio, del que salen todas.</p>
+      <h3>Las reglas del apartado</h3>
+      <ul class="principios">
+        <li><strong>Lo que ves es lo que corre.</strong> Nada de animaciones que finjan: si se enseña un shader, es ese shader el que pinta.</li>
+        <li><strong>Cada pieza, un mando y una frase.</strong> Si no se puede tocar o no se puede explicar en una frase, todavía no está desmontada.</li>
+        <li><strong>Los límites, a la vista.</strong> Lo que una tecnología no hace se dice en la misma página, por ejemplo que en el navegador WebAssembly tiene que pasar por JavaScript.</li>
+        <li><strong>Un enlace, un estado exacto.</strong> Sin azar: quien abre tu enlace ve lo mismo que tú.</li>
+        <li><strong>Primero el móvil.</strong> Todo se prueba en iPhone, en un móvil pequeño y en escritorio.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="h-ruta">
+      <h2 id="h-ruta">Hoja de ruta, de MVP en MVP</h2>
+      <p>Cada uno se publica solo cuando funciona entero. El siguiente se elige con lo que enseñe el anterior, así que el orden puede cambiar.</p>
+      <ol class="ruta">
+        <li class="hecho">
+          <h3>Desmontar un shader</h3>
+          <p>Qué es un shader, cómo un fractal sale de doblar el espacio y por qué la GPU lo pinta tan rápido.</p>
+          <span class="estado">Publicado</span>
+        </li>
+        <li>
+          <h3>El viaje de un fotograma</h3>
+          <p>De JavaScript a la pantalla, sobre la lente de Charlie: qué bytes se mandan a la GPU, dónde se copian y cuánto tarda cada parte. Primera parada del viaje con zoom.</p>
+          <span class="estado">Siguiente</span>
+        </li>
+        <li>
+          <h3>three.js por capas</h3>
+          <p>Una escena 3D desmontada: los objetos, sus formas, sus materiales (que son shaders) y los píxeles. Cada capa se enciende y se apaga.</p>
+          <span class="estado">Idea</span>
+        </li>
+        <li>
+          <h3>WebAssembly sin magia</h3>
+          <p>La misma cuenta en JavaScript, en WebAssembly y en la GPU, con el tiempo de cada una y la memoria de WebAssembly a la vista, byte a byte. Con sus límites: vectores de 128 bits y JavaScript de por medio.</p>
+          <span class="estado">Idea</span>
+        </li>
+        <li>
+          <h3>Programas con permisos mínimos</h3>
+          <p>Un componente de WebAssembly que pide leer un archivo o usar la red, y un anfitrión que se lo da o se lo niega. Así se ve qué significa «seguridad por capacidades».</p>
+          <span class="estado">Idea</span>
+        </li>
+        <li>
+          <h3>Modo explicar</h3>
+          <p>Para enseñarlo en una charla o en la comunidad: letra grande, un paso por pantalla y avance con un toque. Y un editor para cambiar el código y ver el resultado al momento.</p>
+          <span class="estado">Idea</span>
+        </li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="h-no">
+      <h2 id="h-no">Lo que no prometemos</h2>
+      <ul class="lista">
+        <li>No todo funciona en todos los navegadores. WebGPU todavía falta en algunos, y por eso cada página lleva otra forma de pintar.</li>
+        <li>Las cifras de velocidad dependen del aparato. Las que salen son las de tu móvil o tu ordenador, no las de un laboratorio.</li>
+        <li>Las ideas de la hoja de ruta son eso, ideas. Ninguna tiene fecha.</li>
+      </ul>
+    </section>
+
+    <footer class="pie">
+      <p><a href="/lab/">← Volver al laboratorio</a></p>
+    </footer>
+  </main>
+</body>
+</html>
