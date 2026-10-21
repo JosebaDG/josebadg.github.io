@@ -36,6 +36,36 @@ export function latido(reloj) {
   return Math.exp(-(((f - 0.03) / 0.05) ** 2)) + 0.55 * Math.exp(-(((f - 0.2) / 0.06) ** 2));
 }
 
+// t de 0 a 1: el punto dorado se alinea con la masa, la masa crece y dobla la luz (anillo de
+// Einstein), aparece la sombra con su anillo de fotones y, al final, el espacio se retuerce.
+// Lo que se manda al shader en cada fotograma. Lo comparten esta versión y la de WebGPU
+// (../charlie-lente-gpu/lente-gpu.js), para que las dos pinten exactamente la misma escena.
+export function parametros(t, reloj, ctx, nivel) {
+  const mm = ctx.menosMovimiento;
+  const rl = mm ? 0 : reloj;
+  const R = ctx.radio();
+  const c = ctx.centro();
+  const masa = suave((t - 0.1) / 0.5);
+  const sombra = suave((t - 0.4) / 0.35);
+  const alinea = suave((t - 0.05) / 0.6);
+  const n = NIVELES[nivel];
+  const thE = R * 0.8 * masa;
+  return {
+    c, thE,
+    rs: thE * 0.42 * sombra,
+    swirl: 0.55 * suave((t - 0.6) / 0.4),
+    ring: sombra,
+    ringPh: -0.6 + (rl / GIRO) * Math.PI * 2,
+    heat: 0.8 * suave((t - 0.55) / 0.45),
+    kick: mm ? 0 : 0.25 * latido(rl) * sombra,
+    time: rl,
+    paso: Math.max(28, R * 0.42),
+    menor: n.menor,
+    estrellas: n.estrellas,
+    fuente: [(1 - alinea) * R * 0.85, (1 - alinea) * -R * 0.4, Math.max(5, R * 0.07)],
+  };
+}
+
 const VS = `#version 300 es
 in vec2 aP;
 void main() { gl_Position = vec4(aP, 0.0, 1.0); }`;
@@ -201,36 +231,26 @@ export async function iniciar(ctx) {
     lienzo.height = Math.round(alto * dpr);
   }
 
-  // t de 0 a 1: el punto dorado se alinea con la masa, la masa crece y dobla la luz (anillo de
-  // Einstein), aparece la sombra con su anillo de fotones y, al final, el espacio se retuerce.
   function pintar(t, reloj) {
-    const mm = ctx.menosMovimiento;
-    const rl = mm ? 0 : reloj;
-    const R = ctx.radio();
-    const c = ctx.centro();
-    const masa = suave((t - 0.1) / 0.5);
-    const sombra = suave((t - 0.4) / 0.35);
-    const alinea = suave((t - 0.05) / 0.6);
-    const n = NIVELES[nivel];
+    const P = parametros(t, reloj, ctx, nivel);
     gl.viewport(0, 0, lienzo.width, lienzo.height);
     gl.useProgram(prog);
     gl.bindVertexArray(vao);
     gl.uniform2f(u.uRes, ancho, alto);
     gl.uniform1f(u.uDpr, lienzo.width / ancho);
-    gl.uniform2f(u.uC, c.x, c.y);
-    const thE = R * 0.8 * masa;
-    gl.uniform1f(u.uThE, thE);
-    gl.uniform1f(u.uRs, thE * 0.42 * sombra);
-    gl.uniform1f(u.uSwirl, 0.55 * suave((t - 0.6) / 0.4));
-    gl.uniform1f(u.uRing, sombra);
-    gl.uniform1f(u.uRingPh, -0.6 + (rl / GIRO) * Math.PI * 2);
-    gl.uniform1f(u.uHeat, 0.8 * suave((t - 0.55) / 0.45));
-    gl.uniform1f(u.uKick, mm ? 0 : 0.25 * latido(rl) * sombra);
-    gl.uniform1f(u.uTime, rl);
-    gl.uniform1f(u.uPaso, Math.max(28, R * 0.42));
-    gl.uniform1f(u.uMenor, n.menor);
-    gl.uniform1f(u.uEstrellas, n.estrellas);
-    gl.uniform3f(u.uFuente, (1 - alinea) * R * 0.85, (1 - alinea) * -R * 0.4, Math.max(5, R * 0.07));
+    gl.uniform2f(u.uC, P.c.x, P.c.y);
+    gl.uniform1f(u.uThE, P.thE);
+    gl.uniform1f(u.uRs, P.rs);
+    gl.uniform1f(u.uSwirl, P.swirl);
+    gl.uniform1f(u.uRing, P.ring);
+    gl.uniform1f(u.uRingPh, P.ringPh);
+    gl.uniform1f(u.uHeat, P.heat);
+    gl.uniform1f(u.uKick, P.kick);
+    gl.uniform1f(u.uTime, P.time);
+    gl.uniform1f(u.uPaso, P.paso);
+    gl.uniform1f(u.uMenor, P.menor);
+    gl.uniform1f(u.uEstrellas, P.estrellas);
+    gl.uniform3f(u.uFuente, P.fuente[0], P.fuente[1], P.fuente[2]);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 

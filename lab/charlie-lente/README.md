@@ -19,7 +19,7 @@ El reloj gira despacio el lado brillante del anillo (una vuelta cada 14 s), muev
 
 ## Archivos
 
-- `lente.js`: la escena, con el mismo contrato que las de `/motor/` (`tramo`, `late`, `iniciar(ctx)` → `pintar`, `medir`, `bajar`, `retirar`), más `sincronizar()` y `ponerNivel()` para medir. WebGL2 sin dependencias, unos 12 KB sin comprimir.
+- `lente.js`: la escena, con el mismo contrato que las de `/motor/` (`tramo`, `late`, `iniciar(ctx)` → `pintar`, `medir`, `bajar`, `retirar`), más `sincronizar()` y `ponerNivel()` para medir, y `parametros()`, lo que va al shader en cada fotograma, que comparte con la versión de WebGPU (`../charlie-lente-gpu/`). WebGL2 sin dependencias, unos 12 KB sin comprimir.
 - `pagina.js`, `index.html` y `lente.css`: la página, con su bucle, el vigilante de fps y los controles.
 - `hoja.py`: saca `hoja.jpg` (12 momentos) y `poster.jpg`.
 

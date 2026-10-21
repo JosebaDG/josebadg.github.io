@@ -1,0 +1,5 @@
+/* Lo que añade la comparación a lente.css de ../charlie-lente/ (Charlie). */
+.lienzo[hidden] { display: none; }
+.cifras { margin: 0 0 0.5rem; font-size: 0.9375rem; line-height: 1.35; font-variant-numeric: tabular-nums; }
+.cifras strong { color: var(--c-charlie); font-weight: 600; }
+.botones .principal { border-color: var(--c-charlie); }
