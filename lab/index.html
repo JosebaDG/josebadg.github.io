@@ -431,7 +431,7 @@
           <p class="ojo">Ojo: cualquier app de iPhone pasa por Apple. Para publicar hace falta su programa de desarrollador, que es de pago, y eso lo decide Joseba.</p>
         </article>
 
-        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen parakeet core ai coreai aimodel core ml foundation models instruments wwdc llama gguf pocketpal neural engine swiftui natacion phonon gradium pocket tts kyutai voz castellano espanol leer en voz alta sintesis de voz voces">
+        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen parakeet core ai coreai aimodel core ml foundation models instruments wwdc llama gguf pocketpal neural engine swiftui natacion phonon gradium pocket tts kyutai voz castellano espanol leer en voz alta sintesis de voz voces lector web lector de voz kokoro-82m">
           <h3>IA dentro del móvil, sin nube</h3>
           <p class="para">Para que un modelo de lenguaje o de voz funcione en el propio teléfono, sin conexión y sin mandar datos fuera. Importa sobre todo cuando hay datos personales, como los de menores.</p>
           <ul class="recursos">
@@ -439,7 +439,7 @@
             <li><a href="https://github.com/apple/coreai-models">Modelos oficiales de Core AI</a> (BSD-3): recetas para convertir modelos y piezas en Swift ya hechas, con voz a texto (Parakeet, Whisper) y modelos de lenguaje (Qwen, Gemma). <a class="aficha" href="#f-coreai">Ficha</a></li>
             <li><a href="https://developer.apple.com/videos/play/wwdc2026/324/">Sesiones de la WWDC 2026</a>: presentación de Core AI, integración en la app y optimización, con transcripción y código. <a class="aficha" href="#f-coreai">Ficha</a></li>
             <li><a href="https://github.com/john-rocky/coreai-model-zoo">Core AI Model Zoo</a> (BSD-3): colección de un desarrollador independiente, no de Apple, con muchos más modelos ya convertidos, texto a voz incluido. <a class="aficha" href="#f-coreai">Ficha</a></li>
-            <li><a href="https://huggingface.co/gradium/phonon-40m-es">phonon-40m-es de Gradium</a> (pesos CC BY-NC 4.0, no comercial): texto a voz en castellano de 75 MB, con voces de España y de México, que suena mientras genera y trae paquete Swift. Candidato para cuando el asistente de natación hable. <a class="aficha" href="#f-phonon">Ficha</a></li>
+            <li><a href="https://huggingface.co/gradium/phonon-40m-es">phonon-40m-es de Gradium</a> (pesos CC BY-NC 4.0, no comercial): texto a voz en castellano de 75 MB, con voces de España y de México, que suena mientras genera y trae paquete Swift. Permitido para uso no comercial y candidato, con Kokoro-82M, para un lector web. <a class="aficha" href="#f-phonon">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: cada modelo trae su propia licencia, distinta de la del código. Que todo sea local no quiere decir que esté cifrado: los datos pueden acabar en la copia de seguridad del teléfono.</p>
         </article>
@@ -734,7 +734,7 @@
       </article>
       <article class="ficha" aria-labelledby="f-phonon">
         <h4 id="f-phonon">Texto a voz en castellano en el propio dispositivo: phonon-40m-es</h4>
-        <ul class="etiquetas"><li>Modelo</li><li>Nivel avanzado</li><li>Leídas la ficha, el código y las licencias; probados el motor y el normalizador en la máquina de Miles</li><li>Sin oír en castellano ni probar en un iPhone</li></ul>
+        <ul class="etiquetas"><li>Modelo</li><li>Nivel avanzado</li><li>Leídas la ficha, el código y las licencias; probados el motor y el normalizador en la máquina de Miles</li><li>Sin oír en castellano ni probar en un iPhone</li><li>Permitido sin fines comerciales</li></ul>
         <p class="resuelve">Resuelve: <a href="#n-local">IA dentro del móvil, sin nube</a>.</p>
         <dl>
           <dt>Qué es</dt>
@@ -747,14 +747,21 @@
           </ul></dd>
           <dt>Frente a Kokoro-82M</dt>
           <dd>Phonon pesa menos de la mitad, tiene muchas más voces de España, suena al momento y no necesita espeak-ng, que es GPL-3.0. Kokoro tiene licencia Apache 2.0, se puede usar para negocio y lleva casi dos años en uso. Phonon salió el 19 de octubre de 2026.</dd>
+          <dt>Decisión de Joseba (21 de octubre)</dt>
+          <dd><ul>
+            <li><strong>Uso</strong>: permitido solo sin fines comerciales, para uso propio y para liberarlo a la comunidad, respetando la licencia.</li>
+            <li><strong>Pesos aparte</strong>: se descargan desde Hugging Face y no van dentro de la app ni del repo.</li>
+            <li><strong>Se cita, se dan las gracias y se avisa</strong>: el README o los créditos nombran a Gradium y dicen que los pesos son CC BY-NC 4.0. El código propio mantiene su licencia.</li>
+            <li><strong>Dónde</strong>: con Kokoro-82M, candidato para un lector web y otras pruebas. En WebAssembly vale el JavaScript de pegamento.</li>
+          </ul></dd>
           <dt>Para el asistente de natación</dt>
-          <dd>El primer MVP no habla: es nota de voz, transcripción y resumen. Phonon es candidato para el segundo, junto a la lista de Joseba. En el iPhone usaría Core ML junto a Core AI. El paquete Core ML ya hecho solo existe en inglés; el español hay que exportarlo en el Mac.</dd>
+          <dd>No entra en el primer MVP, que no habla: es nota de voz, transcripción y resumen, es decir, voz a texto. Phonon y Kokoro hacen lo contrario, texto a voz. En la app sería candidato para el segundo MVP, junto a la lista de Joseba. En el iPhone usaría Core ML junto a Core AI. El paquete Core ML ya hecho solo existe en inglés; el español hay que exportarlo en el Mac.</dd>
           <dt>Para WebAssembly</dt>
           <dd>En el navegador es Wasm con su JavaScript de pegamento y WebGPU opcional. Como componente WASI todavía no sale: la biblioteca compila, pero deja fuera la carga del modelo y la síntesis.</dd>
           <dt>Ojo</dt>
           <dd><ul>
-            <li><strong>Licencia</strong>: los pesos en español son CC BY-NC 4.0, sin uso comercial y citando a Gradium. Choca con liberar el asistente para que cualquiera lo use. El código es MIT o Apache 2.0. Alternativa por probar: Pocket TTS de Kyutai, CC-BY-4.0, que también habla español.</li>
-            <li><strong>Descarga</strong>: pide una cuenta de Hugging Face y aceptar condiciones.</li>
+            <li><strong>Licencia</strong>: los pesos en español son CC BY-NC 4.0, sin uso comercial y citando a Gradium. Quien reutilice algo nuestro con estos pesos queda atado a lo mismo, así que el aviso tiene que verse. El código del motor es MIT o Apache 2.0. Alternativa por probar: Pocket TTS de Kyutai, CC-BY-4.0, que también habla español.</li>
+            <li><strong>Descarga</strong>: pide una cuenta de Hugging Face y aceptar condiciones. Por eso un lector web público no puede bajar los pesos por sí solo; con Kokoro o con el modelo inglés de Phonon no hace falta cuenta.</li>
             <li><strong>Números</strong>: deja fechas, horas y distancias en cifras para que las lea el modelo, y convierte «1.500 metros» en «mil 500 metros». Hay que oírlo antes de fiarse.</li>
             <li><strong>Privacidad</strong>: leer en voz alta no saca nada del teléfono. Clonar voces es un servicio en la nube de Gradium: con datos de menores, nunca.</li>
           </ul></dd>
