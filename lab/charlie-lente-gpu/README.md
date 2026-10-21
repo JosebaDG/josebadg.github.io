@@ -10,7 +10,9 @@ Toca «Medir las dos». Pone las dos al nivel y al tamaño de lienzo que tenga l
 
 **Por qué el bloque y no la mediana:** WebKit (y por tanto cualquier navegador del iPhone) redondea `performance.now()` al milisegundo, y GitHub Pages no puede mandar las cabeceras que darían más precisión. Si un cuadro tarda 3 o 4 ms, la mediana sale en números enteros y el umbral del 10 % lo decidiría el redondeo. El bloque se cronometra en tramos de 10 cuadros seguidos, sin contar la pausa de un `requestAnimationFrame` que suelta el hilo cada 10; son 12 tramos, así que el redondeo se queda por debajo de 0,1 ms por cuadro. En Chromium, que da fracciones de milisegundo, el bloque y la mediana salen parecidos.
 
-Si el navegador no tiene WebGPU (o no da adaptador), lo dice y mide solo WebGL2. Si una se cae a mitad, la página sigue con la otra. Si no hay ninguna, sale un cartel.
+Si el navegador no tiene WebGPU (o no da adaptador), lo dice y mide solo WebGL2. Si una se cae a mitad, la página sigue con la otra. Si no hay ninguna, sale un cartel y «Medir las dos» se apaga.
+
+**Tiempo máximo:** la espera de WebGPU (`sincronizar()`) se rinde si se pierde el dispositivo o si la GPU no contesta en 3 s; un cuadro tarda unos 2 ms en el móvil y unos 40 por software. WebGPU sale entonces «sin dato» con el motivo, se suelta y la página sigue con WebGL2. Antes, si el dispositivo se perdía a mitad, `onSubmittedWorkDone()` podía no volver y la medida se quedaba colgada.
 
 ## Archivos
 
@@ -45,6 +47,7 @@ La cifra en un móvil con WebGPU (nivel 1, 660 × 1146 px): WebGL2 1,68 ms y Web
 - La lente de WebGL2 sale igual que antes de sacar `parametros()`: cuatro capturas en WebKit, idénticas byte a byte con las de `main`.
 - La página, sin WebGPU (WebKit a 390 y 320 px, Chromium con WebGPU apagado): carga sin errores, dice que no hay WebGPU, mide solo WebGL2 y no se desborda.
 - La página, con WebGPU (Chromium a 1280 y a 390 px): la VM no puede presentar un lienzo WebGPU, así que en la prueba el contexto del lienzo se cambia por una textura del mismo tamaño. Carga, mide las dos, cambia de motor y guarda `motor=` en el enlace, sin errores. Lo único sin probar aquí es la presentación en pantalla: eso, y la cifra buena, salen del móvil.
+- Tiempo máximo (Chromium con WebGPU por software y el lienzo en una textura, a 1280 y a 390 px): si `onSubmittedWorkDone()` deja de volver a mitad, la medida acaba en unos 7 s con WebGPU «sin dato: la GPU no ha contestado en 3 s» y sigue con WebGL2; si el dispositivo se destruye a mitad, acaba con «sin dato: se ha perdido la GPU» y sigue con WebGL2. Sin fallo, las cifras salen como antes.
 - axe (WCAG 2.2 AA) sin fallos en WebKit a 390 y 320 px y en Chromium a 1280.
 
 ## Enlace a un fotograma

@@ -6,6 +6,8 @@
 // cuadros de calentamiento, pinta 120 esperando a la GPU en cada uno (WebGL2: lee un píxel;
 // WebGPU: onSubmittedWorkDone) y enseña, de cada una, el tiempo del bloque de 120 entre 120 (con
 // décimas) y al lado la mediana y el p90. Si no hay WebGPU, lo dice y mide solo WebGL2.
+// Si WebGPU se pierde a mitad o no contesta en 3 s (tiempo máximo de sincronizar()), esa sale
+// «sin dato» y la página sigue con WebGL2.
 // Por qué el bloque: WebKit e iOS redondean performance.now() al milisegundo, así que un cuadro de
 // 3 o 4 ms sale en enteros; el bloque se mide en tramos de 10 cuadros seguidos (sin contar la
 // pausa para soltar el hilo cada 10) y el redondeo queda por debajo de 0,1 ms por cuadro.
@@ -133,6 +135,7 @@ function fallo(cual, texto) {
   if (inst[otra]) { ensenar(otra); avisar(`${NOMBRE[cual]} se ha caído (${texto}): sigo con ${NOMBRE[otra]}.`); return; }
   activo = null;
   html.dataset.listo = 'fallo';
+  botonMedir.disabled = true;
   cartel.textContent = 'La lente no se puede pintar en este navegador: no hay ni WebGPU ni WebGL 2.';
   cartel.hidden = false;
   avisar(`La lente no se puede pintar: ${texto}.`);
@@ -197,7 +200,18 @@ async function medirLasDos(n = CUADROS) {
   try {
     for (const k of ['gl', 'gpu']) {
       if (!inst[k]) continue;
-      try { res[k] = await medirUna(k, nivel, n); } catch (e) { res[k] = null; motivo[k] = e && e.message ? e.message : 'fallo al medir'; }
+      try { res[k] = await medirUna(k, nivel, n); } catch (e) {
+        res[k] = null;
+        const texto = e && e.message ? e.message : 'fallo al medir';
+        // La GPU no contesta en el tiempo máximo de sincronizar(): sin dato y, como si se hubiera
+        // perdido, se suelta esa y se sigue con la otra (si se perdió, ya lo ha hecho fallo())
+        if (e && e.name === 'TimeoutError' && inst[k]) {
+          const caida = inst[k];
+          fallo(k, texto);
+          try { caida.retirar(); } catch { /* ya no estaba */ }
+        }
+        motivo[k] = texto;
+      }
     }
   } finally {
     midiendo = false;
@@ -329,7 +343,8 @@ botonMedir.addEventListener('click', async () => {
   botonMedir.disabled = true;
   avisar(`Midiendo ${CUADROS} cuadros con cada una…`);
   const r = await medirLasDos();
-  botonMedir.disabled = false;
+  botonMedir.disabled = !activo;
+  if (!r && !activo) avisar('No se puede medir: no queda ninguna forma de pintar la lente.');
   if (r) { cifras.innerHTML = textoCifras(r); avisar(textoNivel()); cifras.scrollIntoView({ block: 'nearest' }); }
 });
 botonCopiar.addEventListener('click', async () => {

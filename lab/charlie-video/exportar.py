@@ -204,10 +204,12 @@ async def exportar(pw, base, escena, a):
     await p.goto(f'{base}/lab/charlie-visor/?escena={escena}&ui=0&mm=0')
     await p.wait_for_function("['1', 'fallo'].includes(document.documentElement.dataset.listo)", timeout=90000)
     if await p.evaluate('document.documentElement.dataset.listo') == 'fallo':
+        # El texto de #estado se lee antes de cerrar: con el navegador cerrado, el error sería el de Playwright
+        motivo = await p.evaluate("document.getElementById('estado').textContent")
         await nav.close()
-        raise RuntimeError(f'{escena} no ha cargado en {a.navegador}: ' + await p.evaluate("document.getElementById('estado').textContent"))
+        raise RuntimeError(f'{escena} no ha cargado en {a.navegador}: {motivo}')
     tramo = await p.evaluate('visor.tramo()')
-    n = round(a.segundos * a.fps)
+    n = max(2, round(a.segundos * a.fps))   # al menos 2: el primero y el último del tramo (con 1, i / (n - 1) divide entre 0)
     # 12 momentos repartidos por todo el tramo, del primer fotograma al último: solo esos se guardan
     idx = [round(k * (n - 1) / (MOMENTOS - 1)) for k in range(MOMENTOS)]
     tmp = tempfile.mkdtemp(prefix=f'video-{escena}-')
