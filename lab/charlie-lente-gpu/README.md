@@ -6,7 +6,9 @@ Basado en [pdoom-video](https://github.com/mexicat/pdoom-video), de Giacomo Magn
 
 ## Cómo se mide
 
-Toca «Medir las dos». Pone las dos al nivel y al tamaño de lienzo que tenga la que se ve, tira 10 cuadros de calentamiento y pinta 120 con cada una, primero WebGL2 y luego WebGPU. En cada cuadro espera a que la GPU acabe (WebGL2 lee un píxel; WebGPU espera a `onSubmittedWorkDone`), así que la cifra es lo que tarda la GPU en pintar un cuadro, no lo que tarda JS en mandarlo. Enseña la mediana y el p90 de cada una, juntas, y cuántas veces va más rápida una que otra (por debajo del 10 % lo da por empate).
+Toca «Medir las dos». Pone las dos al nivel y al tamaño de lienzo que tenga la que se ve, tira 10 cuadros de calentamiento y pinta 120 con cada una, primero WebGL2 y luego WebGPU. En cada cuadro espera a que la GPU acabe (WebGL2 lee un píxel; WebGPU espera a `onSubmittedWorkDone`), así que la cifra es lo que tarda la GPU en pintar un cuadro, no lo que tarda JS en mandarlo. La cifra principal de cada una es el tiempo del bloque de 120 cuadros dividido entre 120, con décimas; al lado van la mediana y el p90 por cuadro. Con la cifra principal dice cuántas veces va más rápida una que otra (por debajo del 10 % lo da por empate).
+
+**Por qué el bloque y no la mediana:** WebKit (y por tanto cualquier navegador del iPhone) redondea `performance.now()` al milisegundo, y GitHub Pages no puede mandar las cabeceras que darían más precisión. Si un cuadro tarda 3 o 4 ms, la mediana sale en números enteros y el umbral del 10 % lo decidiría el redondeo. El bloque se cronometra en tramos de 10 cuadros seguidos, sin contar la pausa de un `requestAnimationFrame` que suelta el hilo cada 10; son 12 tramos, así que el redondeo se queda por debajo de 0,1 ms por cuadro. En Chromium, que da fracciones de milisegundo, el bloque y la mediana salen parecidos.
 
 Si el navegador no tiene WebGPU (o no da adaptador), lo dice y mide solo WebGL2. Si una se cae a mitad, la página sigue con la otra. Si no hay ninguna, sale un cartel.
 
