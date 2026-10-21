@@ -11,6 +11,11 @@
 // pausa para soltar el hilo cada 10) y el redondeo queda por debajo de 0,1 ms por cuadro.
 // Para scripts: window.lente.fotograma(t, r), window.lente.medirLasDos(n), window.lente.motores,
 // y dataset.listo === '1' cuando el fotograma está asentado.
+//
+// Que se entienda (Miles): cada mando dice qué cambia, una línea dice qué se ve con la masa puesta,
+// el resultado de «Medir las dos» sale también en lenguaje llano (cuánto del margen por cuadro usa
+// cada una) y la lente se coloca en la parte de la pantalla que el panel deja libre. Con el panel
+// oculto (o ui=0) la lente vuelve al sitio de siempre, así que las capturas y la hoja no cambian.
 
 import * as gl2 from '../charlie-lente/lente.js';
 import * as gpu from './lente-gpu.js';
@@ -21,7 +26,7 @@ const NOMBRE = { gpu: 'WebGPU', gl: 'WebGL2' };
 const $ = (id) => document.getElementById(id);
 const html = document.documentElement;
 const lienzos = { gpu: $('lienzoGPU'), gl: $('lienzoGL') };
-const panel = $('panel'), mostrar = $('mostrar'), estado = $('estado'), cifras = $('cifras'), cartel = $('cartel');
+const panel = $('panel'), mostrar = $('mostrar'), estado = $('estado'), cifras = $('cifras'), cartel = $('cartel'), ahora = $('ahora');
 const rangoT = $('t'), salidaT = $('tSale'), selMotor = $('motor'), selNivel = $('nivel');
 const botonMarcha = $('marcha'), casillaMM = $('mm'), botonMedir = $('medirBoton'), botonCopiar = $('copiar'), botonOcultar = $('ocultar');
 
@@ -47,6 +52,39 @@ const ventana = { t0: 0, cuadros: 0, ultimo: 0 };
 let lentas = 0;
 
 const avisar = (texto) => { estado.textContent = texto; };
+
+// Qué se ve con cada masa: los mismos tramos que parametros() de ../charlie-lente/lente.js
+// (masa de 0,1 a 0,6; punto alineado a 0,65; sombra de 0,4 a 0,75; arrastre desde 0,6)
+const TRAMOS = [
+  [0.1, '<strong>Espacio plano.</strong> Sin masa no se curva nada: cuadrícula recta y el punto dorado a un lado.'],
+  [0.4, '<strong>La masa curva el espacio.</strong> La cuadrícula se dobla y el punto dorado se acerca al centro.'],
+  [0.65, '<strong>Anillo de Einstein.</strong> El punto se pone detrás de la masa y su luz se abre en arcos a su alrededor, hasta cerrar el anillo hacia 0,65. Empieza la sombra.'],
+  [1.01, '<strong>Agujero negro.</strong> Sombra negra, anillo de fotones más brillante por un lado y el espacio retorcido.'],
+];
+function contarAhora() {
+  const tramo = TRAMOS.find(([hasta]) => T < hasta) || TRAMOS[TRAMOS.length - 1];
+  const texto = `Qué ves: ${tramo[1]}`;
+  if (ahora.innerHTML !== texto) ahora.innerHTML = texto;
+}
+
+// La parte de la pantalla que el panel deja libre: abajo en el móvil, a la izquierda en escritorio.
+// Se calcula al cambiar de tamaño o de panel, no en cada cuadro, para no meter trabajo en la medida.
+let Z = null;
+function zona() {
+  const w = innerWidth, h = innerHeight;
+  const siempre = { x: w / 2, y: h * 0.42, r: Math.min(w, h) * 0.26 };
+  if (panel.hidden) return siempre;
+  const p = panel.getBoundingClientRect();
+  if (p.left > w * 0.3) { const a = p.left; return a < 160 ? siempre : { x: a / 2, y: h * 0.45, r: Math.min(a, h) * 0.26 }; }
+  const a = p.top;
+  return a < 160 ? siempre : { x: w / 2, y: a / 2, r: Math.min(w, a) * 0.26 };
+}
+function recolocar() {
+  Z = zona();
+  for (const k of ['gpu', 'gl']) if (inst[k]) inst[k].medir();
+  asentar = ASENTAR;
+  pedir();
+}
 function textoNivel() {
   const i = inst[activo], r = i.resolucion;
   return `${NOMBRE[activo]}, nivel ${i.nivel}${auto ? ' (automático)' : ''}: lienzo de ${r.ancho} × ${r.alto} px.`;
@@ -168,25 +206,51 @@ async function medirLasDos(n = CUADROS) {
   return res;
 }
 
+// En llano: cuánto tarda cada una por cuadro y cuánto del margen usa. Una pantalla de 120 Hz
+// da 8,3 ms por cuadro y una de 60 Hz, 16,7. Se mide esperando a la GPU en cada
+// cuadro, así que es el caso más justo, no el más cómodo.
+const MARGEN = 1000 / 120, MARGEN60 = 1000 / 60;
+function textoLlano(r) {
+  const parte = (ms) => `${Math.round((ms / MARGEN) * 100)} %`;
+  const cabe = (ms) => (ms <= MARGEN ? 'le sobra tiempo' : ms <= MARGEN60 ? 'a 120 Hz no le da, a 60 Hz sí' : 'no le da ni a 60 Hz');
+  if (!r.gl && !r.gpu) return 'No ha salido ninguna cifra.';
+  if (!r.gl || !r.gpu) {
+    const k = r.gl ? 'gl' : 'gpu', ms = r[k].porCuadro;
+    return `<strong>${NOMBRE[k]}</strong> tarda ${num(ms, 1)} ms por cuadro: usa el ${parte(ms)} de los 8,3 ms que da una pantalla de 120 Hz, así que ${cabe(ms)}. ${r.sinGPU ? 'Este navegador no tiene WebGPU, así que no hay con qué comparar.' : 'La otra no ha dado cifra.'}`;
+  }
+  const a = r.gl.porCuadro, b = r.gpu.porCuadro;
+  let t = `Por cuadro, <strong>WebGL2</strong> tarda ${num(a, 1)} ms y <strong>WebGPU</strong> ${num(b, 1)} ms. Una pantalla de 120 Hz da 8,3 ms por cuadro: WebGL2 usa el ${parte(a)} y WebGPU el ${parte(b)}.`;
+  t += Math.max(a, b) <= MARGEN ? ' A las dos les sobra tiempo.' : ` WebGL2: ${cabe(a)}. WebGPU: ${cabe(b)}.`;
+  const veces = Math.max(a, b) / Math.max(Math.min(a, b), 1e-3);
+  if (veces < 1.1) t += ' Empatan: es la misma imagen y el mismo trabajo por píxel.';
+  else if (a < b) t += ' Aquí WebGPU no gana: la escena es un solo dibujo a pantalla completa y cada píxel hace el mismo cálculo en las dos, así que lo que WebGPU ahorra (preparar muchos dibujos, cálculo aparte) no tiene dónde notarse. También cuenta cómo espera cada una a que la GPU acabe el cuadro: WebGL2 lee un píxel y se queda parada; WebGPU pide un aviso y sigue cuando llega.';
+  else t += ` Aquí WebGPU gana por ${num(veces, 1)} veces, con la misma imagen: el ahorro está en cómo manda el trabajo a la GPU, no en lo que pinta.`;
+  return t;
+}
+
 function textoCifras(r) {
-  const una = (k) => (r[k] ? `<strong>${NOMBRE[k]}</strong> ${num(r[k].porCuadro, 2)} ms (mediana ${num(r[k].mediana, 2)}, p90 ${num(r[k].p90, 2)})` : `<strong>${NOMBRE[k]}</strong> sin dato${motivo[k] ? `: ${escapar(motivo[k])}` : ''}`);
+  const una = (k) => (r[k] ? `${NOMBRE[k]} ${num(r[k].porCuadro, 2)} ms (mediana ${num(r[k].mediana, 2)}, p90 ${num(r[k].p90, 2)})` : `${NOMBRE[k]} sin dato${motivo[k] ? `: ${escapar(motivo[k])}` : ''}`);
   const base = r.gl || r.gpu;
   const donde = base ? ` · nivel ${base.nivel}, ${base.ancho} × ${base.alto} px` : '';
-  if (r.sinGPU) return `${una('gl')}${donde}. No hay WebGPU (${escapar(r.sinGPU)}), así que solo mido WebGL2. Tiempo del bloque de ${CUADROS} cuadros entre ${CUADROS}, esperando a la GPU en cada uno.`;
-  let fin = '';
-  if (r.gl && r.gpu) {
-    const a = r.gl.porCuadro, b = r.gpu.porCuadro;
-    const rapida = b < a ? 'WebGPU' : 'WebGL2';
-    const veces = Math.max(a, b) / Math.max(Math.min(a, b), 1e-3);
-    fin = veces < 1.1 ? ' Empate: menos de un 10 % de diferencia.' : ` ${rapida} va ${num(veces, 1)} veces más rápida.`;
+  let tecnico;
+  if (r.sinGPU) tecnico = `${una('gl')}${donde}. No hay WebGPU (${escapar(r.sinGPU)}), así que solo mido WebGL2.`;
+  else {
+    let fin = '';
+    if (r.gl && r.gpu) {
+      const a = r.gl.porCuadro, b = r.gpu.porCuadro;
+      const veces = Math.max(a, b) / Math.max(Math.min(a, b), 1e-3);
+      fin = veces < 1.1 ? ' Empate: menos de un 10 % de diferencia.' : ` ${b < a ? 'WebGPU' : 'WebGL2'} va ${num(veces, 1)} veces más rápida.`;
+    }
+    tecnico = `${una('gl')} · ${una('gpu')}${donde}.${fin}`;
   }
-  return `${una('gl')} · ${una('gpu')}${donde}.${fin} Tiempo del bloque de ${CUADROS} cuadros entre ${CUADROS}, esperando a la GPU en cada uno.`;
+  return `<p class="llano">${textoLlano(r)}</p><p class="tecnico">Cifras: ${tecnico} Bloque de ${CUADROS} cuadros entre ${CUADROS}, esperando a la GPU en cada uno.</p>`;
 }
 
 // Para capturas: pone t y reloj, repinta y espera a que el fotograma se asiente
 function fotograma(t, r = 0) {
   T = limitar(t, 0, 1); reloj = Math.max(0, r);
   rangoT.value = String(T);
+  contarAhora();
   html.dataset.listo = '0';
   asentar = ASENTAR;
   pedir();
@@ -202,10 +266,12 @@ async function arrancar() {
   casillaMM.checked = menosMovimiento;
   selNivel.value = auto ? 'auto' : String(nivelURL);
   if (!conControles) panel.hidden = true;
+  contarAhora();
+  Z = zona();
   const ctx = (cual) => ({
     lienzo: lienzos[cual],
-    centro: () => ({ x: innerWidth / 2, y: innerHeight * 0.42 }),
-    radio: () => Math.min(innerWidth, innerHeight) * 0.26,
+    centro: () => { const z = Z || (Z = zona()); return { x: z.x, y: z.y }; },
+    radio: () => (Z || (Z = zona())).r,
     get menosMovimiento() { return menosMovimiento; },
     get pausado() { return !enMarcha; },
     movil,
@@ -234,7 +300,7 @@ async function arrancar() {
   avisar(texto);
 }
 
-rangoT.addEventListener('input', () => { T = Number(rangoT.value); pedir(); });
+rangoT.addEventListener('input', () => { T = Number(rangoT.value); contarAhora(); pedir(); });
 selMotor.addEventListener('change', () => {
   const cual = selMotor.value;
   if (!inst[cual]) return;
@@ -264,16 +330,17 @@ botonMedir.addEventListener('click', async () => {
   avisar(`Midiendo ${CUADROS} cuadros con cada una…`);
   const r = await medirLasDos();
   botonMedir.disabled = false;
-  if (r) { cifras.innerHTML = textoCifras(r); avisar(textoNivel()); }
+  if (r) { cifras.innerHTML = textoCifras(r); avisar(textoNivel()); cifras.scrollIntoView({ block: 'nearest' }); }
 });
 botonCopiar.addEventListener('click', async () => {
   guardarURL();
   try { await navigator.clipboard.writeText(location.href); avisar('Enlace copiado: abre este mismo fotograma.'); }
   catch { avisar('No se ha podido copiar; el enlace está en la barra de direcciones.'); }
 });
-botonOcultar.addEventListener('click', () => { panel.hidden = true; mostrar.hidden = false; mostrar.focus(); });
-mostrar.addEventListener('click', () => { panel.hidden = false; mostrar.hidden = true; botonOcultar.focus(); });
-addEventListener('resize', () => { for (const k of ['gpu', 'gl']) if (inst[k]) inst[k].medir(); asentar = ASENTAR; pedir(); });
+botonOcultar.addEventListener('click', () => { panel.hidden = true; mostrar.hidden = false; mostrar.focus(); recolocar(); });
+mostrar.addEventListener('click', () => { panel.hidden = false; mostrar.hidden = true; botonOcultar.focus(); recolocar(); });
+addEventListener('resize', recolocar);
+if ('ResizeObserver' in window) new ResizeObserver(() => { const z = zona(); if (!Z || z.x !== Z.x || z.y !== Z.y || z.r !== Z.r) recolocar(); }).observe(panel);
 matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
   if (q.has('mm')) return;
   menosMovimiento = e.matches; casillaMM.checked = e.matches;

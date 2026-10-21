@@ -17,6 +17,7 @@
     Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT.
     «Medir las dos» pinta 120 cuadros con cada una, al mismo nivel y tamaño, y enseña las dos cifras juntas:
     el bloque de 120 entre 120 (con décimas, aunque el reloj redondee al milisegundo) y al lado la mediana y el p90.
+    Cada mando dice qué cambia y qué mirar; el resultado sale también en lenguaje llano (Miles).
     Un fotograma por enlace: ?t=0.85&r=3.2&motor=gpu|gl&mm=1&nivel=0|1|2&ui=0.
     No toca /motor/ ni la portada.
   -->
@@ -25,40 +26,65 @@
   <p class="cartel" id="cartel" hidden></p>
 
   <main class="panel" id="panel">
-    <h1 class="titulo">Lente: WebGPU frente a WebGL2 <a href="/lab/#experimentos">Laboratorio</a></h1>
+    <h1 class="titulo">Lente gravitacional <a href="/lab/#experimentos">Laboratorio</a></h1>
+    <p class="ahora" id="ahora">Qué ves: un agujero negro que dobla la luz de lo que hay detrás.</p>
 
-    <p class="cifras" id="cifras" aria-live="polite">Toca «Medir las dos»: pinta 120 cuadros con cada una y enseña los milisegundos juntos.</p>
+    <details class="guia" id="guia">
+      <summary>Qué probar primero</summary>
+      <ol>
+        <li>Pon la <strong>masa a 0</strong>: cuadrícula recta y un punto dorado a un lado. No hay agujero negro.</li>
+        <li>Súbela <strong>despacio hasta 1</strong> mirando el centro: la cuadrícula se curva, el punto se abre en anillo y sale la sombra negra.</li>
+        <li>Con la masa por encima de 0,75, toca <strong>«Mover reloj»</strong>: el lado brillante del anillo gira.</li>
+        <li>Cambia <strong>«Pinta con»</strong>: no verás ningún cambio, y eso es lo que se busca.</li>
+        <li>Toca <strong>«Medir las dos»</strong> y lee la frase que sale debajo.</li>
+      </ol>
+    </details>
 
     <div class="fila">
-      <label for="t">Masa (t) <output id="tSale" for="t">0,000</output></label>
-      <input id="t" type="range" min="0" max="1" step="0.001" value="0.85">
+      <label for="t">Masa <output id="tSale" for="t">0,000</output></label>
+      <input id="t" type="range" min="0" max="1" step="0.001" value="0.85" aria-describedby="tAyuda">
+      <p class="ayuda" id="tAyuda">Curva el espacio. A 0 no hay agujero negro; a 1, anillo y sombra. Muévela despacio y mira el centro.</p>
+    </div>
+
+    <div class="fila">
+      <span class="nombre" id="marchaNombre">Reloj</span>
+      <button type="button" id="marcha" aria-pressed="false" aria-describedby="marchaAyuda">Mover reloj</button>
+      <p class="ayuda" id="marchaAyuda">Gira el lado brillante del anillo (una vuelta cada 14 s) y hace latir la luz. Se nota desde 0,5 de masa y del todo desde 0,75. Con «Menos movimiento» no corre.</p>
     </div>
 
     <div class="fila">
       <label for="motor">Pinta con</label>
-      <select id="motor">
+      <select id="motor" aria-describedby="motorAyuda">
         <option value="gpu">WebGPU</option>
         <option value="gl">WebGL2</option>
       </select>
+      <p class="ayuda" id="motorAyuda">Dos formas de pintar la misma imagen, a propósito: si al cambiar no notas nada, va bien. La diferencia está en el tiempo, no en el dibujo.</p>
     </div>
 
     <div class="fila">
-      <label for="nivel">Nivel</label>
-      <select id="nivel">
+      <label for="nivel">Detalle</label>
+      <select id="nivel" aria-describedby="nivelAyuda">
         <option value="auto">Automático (baja si va lento)</option>
         <option value="2">2: escritorio</option>
         <option value="1">1: móvil</option>
         <option value="0">0: mínimo</option>
       </select>
+      <p class="ayuda" id="nivelAyuda">Cuánto trabajo hace por cuadro. 2: hasta 2 píxeles por punto de pantalla y rejilla fina. 1: hasta 1,5, sin rejilla fina. 0: un píxel por punto y sin estrellas. En una pantalla normal (no retina) solo cambian la rejilla y las estrellas. En la imagen se nota poco; en el tiempo, bastante.</p>
+    </div>
+
+    <div class="medir">
+      <button type="button" id="medirBoton" class="principal">Medir las dos</button>
+      <div class="cifras" id="cifras" aria-live="polite">
+        <p class="llano">Pinta 120 cuadros con cada forma y te dice cuánto tarda cada una y si le sobra tiempo. Mide con la masa que tengas puesta; la imagen se queda quieta un momento.</p>
+      </div>
     </div>
 
     <div class="botones">
-      <button type="button" id="medirBoton" class="principal">Medir las dos</button>
-      <button type="button" id="marcha" aria-pressed="false">Mover reloj</button>
       <label class="casilla"><input type="checkbox" id="mm"> Menos movimiento</label>
       <button type="button" id="copiar">Copiar enlace</button>
       <button type="button" id="ocultar" aria-label="Ocultar controles">Ocultar</button>
     </div>
+    <p class="ayuda">«Menos movimiento» quita el giro y el latido: la imagen queda como con el reloj a 0. «Copiar enlace» copia un enlace que abre esta misma imagen. «Ocultar» quita el panel y la lente vuelve a su sitio de siempre.</p>
 
     <p class="estado" id="estado" role="status" aria-live="polite"></p>
     <p class="credito">Basado en <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>, de Giacomo Magnanini (MIT). <a href="../charlie-lente/">Solo WebGL2</a>.</p>
