@@ -285,6 +285,7 @@
           <li><a href="#n-adaptar">Adaptar un texto a vídeo</a></li>
           <li><a href="#n-app">Hacer una app para el móvil</a></li>
           <li><a href="#n-local">IA dentro del móvil, sin nube</a></li>
+          <li><a href="#n-aislar">Ejecutar código ajeno con permisos mínimos</a></li>
         </ul>
       </nav>
 
@@ -422,6 +423,17 @@
             <li><a href="https://github.com/john-rocky/coreai-model-zoo">Core AI Model Zoo</a> (BSD-3): colección de un desarrollador independiente, no de Apple, con muchos más modelos ya convertidos, texto a voz incluido. <a class="aficha" href="#f-coreai">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: cada modelo trae su propia licencia, distinta de la del código. Que todo sea local no quiere decir que esté cifrado: los datos pueden acabar en la copia de seguridad del teléfono.</p>
+        </article>
+
+        <article class="necesidad" id="n-aislar" data-claves="webassembly wasm wasi wasip2 wasip3 preview 2 preview 3 componente componentes modelo de componentes component model wit wasmtime cranelift wasm-tools wit-bindgen jco wasmgc gc memory64 simd avx-512 avx512 capacidades capabilities sandbox aislar aislamiento plugin plugins rust c++ go tinygo servidor servidores bytecode alliance wasi-nn wasi-gfx wasi-webgpu nuclei windows xp emulador v86">
+          <h3>Ejecutar código ajeno con permisos mínimos</h3>
+          <p class="para">Para correr un plugin, una plantilla o una herramienta de un agente sin que pueda tocar nada más que lo que se le da, y para que el mismo binario funcione en el Mac y en un servidor.</p>
+          <ul class="recursos">
+            <li><a href="https://webassembly.github.io/spec/core/">WebAssembly 3.0</a>: el estándar, cerrado en septiembre de 2025. El código no tiene acceso a nada que el anfitrión no le dé. <a class="aficha" href="#f-wasm">Ficha</a></li>
+            <li><a href="https://github.com/WebAssembly/WASI">WASI 0.3</a> y el <a href="https://github.com/WebAssembly/component-model">Modelo de Componentes</a>: archivos, red o HTTP como permisos con nombre, e interfaces escritas en WIT. Funcionan, pero siguen en versión 0.x. <a class="aficha" href="#f-wasm">Ficha</a></li>
+            <li><a href="https://github.com/bytecodealliance/wasmtime">Wasmtime</a> (Apache-2.0): el anfitrión de referencia, versión 50 del 20 de octubre de 2026. <a class="aficha" href="#f-wasm">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: es especialización de referencia, sin compromiso. El MVP sigue siendo el asistente de natación, que no lo necesita.</p>
         </article>
 
         <article class="necesidad sin-material" id="n-pendiente" data-claves="webgpu three.js threejs 3d rendimiento sonido musica propia sin material buscar fuera">
@@ -699,6 +711,41 @@
           <a class="boton principal" href="https://developer.apple.com/documentation/coreai">Core AI en Apple</a>
           <a class="boton" href="https://github.com/apple/coreai-models">Repo oficial</a>
           <a class="boton" href="https://developer.apple.com/videos/play/wwdc2026/324/">Meet Core AI</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-wasm">
+        <h4 id="f-wasm">WebAssembly 3.0, WASI y Modelo de Componentes</h4>
+        <ul class="etiquetas"><li>Plataforma</li><li>Nivel avanzado</li><li>Leídas la especificación, las propuestas y el código de Wasmtime</li><li>Probado en la máquina de Miles, sin probar en tu Mac</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-aislar">ejecutar código ajeno con permisos mínimos</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un formato binario que se ejecuta igual en el navegador, en un Mac o en un servidor, aislado: solo puede usar lo que el anfitrión le deja. WASI convierte eso en permisos con nombre (una carpeta, la red, HTTP), y el Modelo de Componentes permite unir piezas en Rust, C, C++ o Go con interfaces escritas en WIT.</dd>
+          <dt>Qué es estándar y qué no</dt>
+          <dd><ul>
+            <li><strong>Estándar</strong>: Wasm 3.0, desde septiembre de 2025. Trae recolector de basura, memoria de 64 bits, varias memorias, excepciones, llamadas de cola, SIMD relajado y referencias a funciones con tipo.</li>
+            <li><strong>Versión 0.x</strong>: WASI 0.2 y 0.3 (0.3 desde el 11 de junio de 2026, con lo asíncrono nativo). El Modelo de Componentes está en fase 1 en el grupo de la comunidad, aunque Wasmtime 50 lo trae activado.</li>
+            <li><strong>Propuestas en fase 2</strong>: wasi-nn (IA) y wasi-webgpu (GPU).</li>
+          </ul></dd>
+          <dt>Lo que no es como se suele decir</dt>
+          <dd><ul>
+            <li><strong>AVX-512</strong>: el código Wasm solo ve vectores de 128 bits. Wasmtime usa algunas instrucciones AVX-512 por dentro en Intel y AMD, pero el código no las elige. El M2 y el iPhone son ARM.</li>
+            <li><strong>Cero copias</strong>: entre componentes siempre se copia, a propósito, para aislar. Con WASI 0.3 la copia es una sola. Para datos grandes, se dejan en el anfitrión y se pasa un mango.</li>
+            <li><strong>WasmGC</strong>: es para Kotlin, Java, Dart u OCaml. Rust y C++ no lo usan, y Go oficial solo compila a WASI 0.1.</li>
+            <li><strong>En el navegador</strong>: para tocar la página o WebGPU hay que pasar por JavaScript.</li>
+          </ul></dd>
+          <dt>Primer paso, si te apetece</dt>
+          <dd>Un componente Rust de diez líneas con su interfaz WIT, ejecutado con Wasmtime en tu Mac. En la máquina de Miles, sin permiso no lee la carpeta y con <code>--dir</code> sí. El componente de contar palabras no importa nada, así que no puede tocar ni archivos ni red. El código y los pasos están en el estudio del equipo.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Encaje</strong>: el mejor es aislar plantillas o plugins de terceros, por ejemplo en Nuclei, con la red limitada a los objetivos autorizados. Para el asistente de natación no aporta.</li>
+            <li><strong>Licencias</strong>: Wasmtime y sus herramientas son Apache-2.0.</li>
+            <li><strong>Madurez</strong>: lo que está en 0.x puede cambiar entre versiones.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://webassembly.github.io/spec/core/">Especificación</a>
+          <a class="boton" href="https://github.com/WebAssembly/WASI">WASI</a>
+          <a class="boton" href="https://github.com/bytecodealliance/wasmtime">Wasmtime</a>
         </div>
       </article>
       <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>
