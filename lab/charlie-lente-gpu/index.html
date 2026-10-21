@@ -17,6 +17,8 @@
     Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT.
     «Medir las dos» pinta 120 cuadros con cada una, al mismo nivel y tamaño, y enseña las dos cifras juntas:
     el bloque de 120 entre 120 (con décimas, aunque el reloj redondee al milisegundo) y al lado la mediana y el p90.
+    «Medir la espera» hace lo mismo en los niveles 0 y 2, con la lente y con cuadros vacíos (solo borrar),
+    para saber cuánto del cuadro es esperar a la GPU.
     Cada mando dice qué cambia y qué mirar; el resultado sale también en lenguaje llano (Miles).
     Un fotograma por enlace: ?t=0.85&r=3.2&motor=gpu|gl&mm=1&nivel=0|1|2&ui=0.
     No toca /motor/ ni la portada.
@@ -77,6 +79,8 @@
       <div class="cifras" id="cifras" aria-live="polite">
         <p class="llano">Pinta 120 cuadros con cada forma y te dice cuánto tarda cada una y si le sobra tiempo. Mide con la masa que tengas puesta; la imagen se queda quieta un momento.</p>
       </div>
+      <button type="button" id="esperaBoton" class="secundario" aria-describedby="esperaAyuda">Medir la espera</button>
+      <p class="ayuda" id="esperaAyuda">Para curiosos: pinta también cuadros vacíos (solo borrar), en los detalles 0 y 2, y te dice si lo que separa a las dos es el dibujo o esperar a que la GPU acabe. Tarda unos segundos más y la imagen parpadea.</p>
     </div>
 
     <div class="botones">

@@ -22,6 +22,7 @@
 .ayuda { grid-column: 1 / -1; margin: -0.15rem 0 0; font-size: 0.8125rem; line-height: 1.35; color: var(--tenue); }
 .medir { margin: 0.2rem 0 0.6rem; padding: 0.6rem 0 0; border-top: 1px solid var(--linea); }
 .medir .principal { padding: 0 1rem; }
+.medir .secundario { margin: 0.2rem 0 0.35rem; padding: 0 0.9rem; }
 
 /* Pantallas anchas: el panel va a la derecha, de arriba abajo, y la lente queda a su izquierda */
 @media (min-width: 900px) {

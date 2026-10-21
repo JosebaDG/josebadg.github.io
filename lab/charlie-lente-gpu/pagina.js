@@ -11,7 +11,9 @@
 // Por qué el bloque: WebKit e iOS redondean performance.now() al milisegundo, así que un cuadro de
 // 3 o 4 ms sale en enteros; el bloque se mide en tramos de 10 cuadros seguidos (sin contar la
 // pausa para soltar el hilo cada 10) y el redondeo queda por debajo de 0,1 ms por cuadro.
-// Para scripts: window.lente.fotograma(t, r), window.lente.medirLasDos(n), window.lente.motores,
+// «Medir la espera» hace lo mismo en los niveles 0 y 2, con la lente y con cuadros vacíos (solo
+// borrar), y dice si la diferencia entre las dos viene de la espera o del dibujo.
+// Para scripts: window.lente.fotograma(t, r), window.lente.medirLasDos(n), window.lente.medirEspera(n), window.lente.motores,
 // y dataset.listo === '1' cuando el fotograma está asentado.
 //
 // Que se entienda (Miles): cada mando dice qué cambia, una línea dice qué se ve con la masa puesta,
@@ -30,7 +32,7 @@ const html = document.documentElement;
 const lienzos = { gpu: $('lienzoGPU'), gl: $('lienzoGL') };
 const panel = $('panel'), mostrar = $('mostrar'), estado = $('estado'), cifras = $('cifras'), cartel = $('cartel'), ahora = $('ahora');
 const rangoT = $('t'), salidaT = $('tSale'), selMotor = $('motor'), selNivel = $('nivel');
-const botonMarcha = $('marcha'), casillaMM = $('mm'), botonMedir = $('medirBoton'), botonCopiar = $('copiar'), botonOcultar = $('ocultar');
+const botonMarcha = $('marcha'), casillaMM = $('mm'), botonMedir = $('medirBoton'), botonEspera = $('esperaBoton'), botonCopiar = $('copiar'), botonOcultar = $('ocultar');
 
 const limitar = (x, a, b) => Math.min(b, Math.max(a, x));
 const num = (x, d) => x.toFixed(d).replace('.', ',');
@@ -135,7 +137,7 @@ function fallo(cual, texto) {
   if (inst[otra]) { ensenar(otra); avisar(`${NOMBRE[cual]} se ha caído (${texto}): sigo con ${NOMBRE[otra]}.`); return; }
   activo = null;
   html.dataset.listo = 'fallo';
-  botonMedir.disabled = true;
+  botonMedir.disabled = true; botonEspera.disabled = true;
   cartel.textContent = 'La lente no se puede pintar en este navegador: no hay ni WebGPU ni WebGL 2.';
   cartel.hidden = false;
   avisar(`La lente no se puede pintar: ${texto}.`);
@@ -169,8 +171,9 @@ function marcha(si) {
 
 const esperaCuadro = () => new Promise((ok) => requestAnimationFrame(ok));
 
-// Pinta n cuadros con una, esperando a la GPU en cada uno; el lienzo de esa se ve mientras tanto
-async function medirUna(cual, nivel, n) {
+// Pinta n cuadros con una (con la lente, o vacíos: solo borrar), esperando a la GPU en cada uno;
+// el lienzo de esa se ve mientras tanto
+async function medirUna(cual, nivel, n, vacio = false) {
   const i = inst[cual];
   i.ponerNivel(nivel);
   for (const k of ['gpu', 'gl']) lienzos[k].hidden = k !== cual;
@@ -180,7 +183,7 @@ async function medirUna(cual, nivel, n) {
   for (let c = -CALENTAR; c < n; c++) {
     const t0 = performance.now();
     if (c >= 0 && c % 10 === 0) tramo = t0;
-    i.pintar(T, reloj + c / 60);
+    if (vacio) i.pintarVacio(); else i.pintar(T, reloj + c / 60);
     await i.sincronizar();
     const t1 = performance.now();
     if (c >= 0) tiempos.push(t1 - t0);
@@ -189,6 +192,22 @@ async function medirUna(cual, nivel, n) {
   }
   tiempos.sort((a, b) => a - b);
   return { porCuadro: bloque / n, mediana: tiempos[Math.floor(n / 2)], p90: tiempos[Math.floor(n * 0.9)], nivel: i.nivel, ...i.resolucion };
+}
+
+// Mide con una. Si falla, esa sale «sin dato» con el motivo (devuelve null). Si la GPU no contesta en
+// el tiempo máximo de sincronizar(), se suelta como si se hubiera perdido y se sigue con la otra
+// (si se perdió, ya lo ha hecho fallo()).
+async function intentar(k, medida) {
+  try { return await medida(); } catch (e) {
+    const texto = e && e.message ? e.message : 'fallo al medir';
+    if (e && e.name === 'TimeoutError' && inst[k]) {
+      const caida = inst[k];
+      fallo(k, texto);
+      try { caida.retirar(); } catch { /* ya no estaba */ }
+    }
+    motivo[k] = texto;
+    return null;
+  }
 }
 
 // Las dos al mismo nivel (el que tenga ahora la que se ve) y al mismo tamaño; primero WebGL2
@@ -200,24 +219,85 @@ async function medirLasDos(n = CUADROS) {
   try {
     for (const k of ['gl', 'gpu']) {
       if (!inst[k]) continue;
-      try { res[k] = await medirUna(k, nivel, n); } catch (e) {
-        res[k] = null;
-        const texto = e && e.message ? e.message : 'fallo al medir';
-        // La GPU no contesta en el tiempo máximo de sincronizar(): sin dato y, como si se hubiera
-        // perdido, se suelta esa y se sigue con la otra (si se perdió, ya lo ha hecho fallo())
-        if (e && e.name === 'TimeoutError' && inst[k]) {
-          const caida = inst[k];
-          fallo(k, texto);
-          try { caida.retirar(); } catch { /* ya no estaba */ }
-        }
-        motivo[k] = texto;
-      }
+      res[k] = await intentar(k, () => medirUna(k, nivel, n));
     }
   } finally {
     midiendo = false;
     if (activo) ensenar(activo);
   }
   return res;
+}
+
+// Cuánto pesa la espera: en los niveles 0 y 2, cada una pinta n cuadros con la lente y n cuadros
+// vacíos (solo borrar el lienzo), esperando a la GPU en cada uno igual que en «Medir las dos». El
+// cuadro vacío es casi solo mandar el pase y saber que ha acabado. Si la diferencia entre las dos es
+// la misma con la lente que en vacío y no cambia con el nivel, lo que las separa es la espera, no el
+// dibujo. Al acabar, las dos vuelven al nivel que tenían.
+const NIVELES_ESPERA = [0, 2];
+async function medirEspera(n = CUADROS) {
+  if (!activo || midiendo) return null;
+  midiendo = true;
+  const antes = inst[activo].nivel;
+  const res = { niveles: [], sinGPU: inst.gpu ? '' : (motivo.gpu || 'este navegador no tiene WebGPU') };
+  try {
+    for (const nivel of NIVELES_ESPERA) {
+      const fila = { nivel, gl: null, gpu: null };
+      for (const k of ['gl', 'gpu']) {
+        if (!inst[k]) continue;
+        const lente = await intentar(k, () => medirUna(k, nivel, n));
+        const vacio = lente && inst[k] ? await intentar(k, () => medirUna(k, nivel, n, true)) : null;
+        if (lente && vacio) fila[k] = { lente, vacio };
+      }
+      res.niveles.push(fila);
+    }
+  } finally {
+    for (const k of ['gpu', 'gl']) if (inst[k]) inst[k].ponerNivel(antes);
+    midiendo = false;
+    if (activo) ensenar(activo);
+  }
+  return res;
+}
+
+// En llano: qué parte del cuadro es la espera y si la diferencia entre las dos viene de ahí
+function textoEspera(r) {
+  const filas = r.niveles.filter((f) => f.gl || f.gpu);
+  if (!filas.length) return '<p class="llano">No ha salido ninguna cifra.</p>';
+  const parte = (v, l) => `${Math.round((v / Math.max(l, 1e-3)) * 100)} %`;
+  const llano = [];
+  const ambas = filas.filter((f) => f.gl && f.gpu);
+  for (const f of filas) {
+    const trozos = ['gl', 'gpu'].filter((k) => f[k]).map((k) => `${NOMBRE[k]} ${num(f[k].vacio.porCuadro, 1)} de ${num(f[k].lente.porCuadro, 1)} ms (el ${parte(f[k].vacio.porCuadro, f[k].lente.porCuadro)})`);
+    llano.push(`Nivel ${f.nivel}: el cuadro vacío tarda ${trozos.join('; ')}.`);
+  }
+  let t = `<strong>Cuadro vacío</strong> (solo borrar y esperar a la GPU) frente al cuadro con la lente. ${llano.join(' ')}`;
+  if (!ambas.length) {
+    t += r.sinGPU ? ' Este navegador no tiene WebGPU, así que no hay diferencia que explicar.' : ' La otra no ha dado cifra, así que no hay diferencia que explicar.';
+  } else {
+    const dif = ambas.map((f) => ({ nivel: f.nivel, lente: f.gpu.lente.porCuadro - f.gl.lente.porCuadro, vacio: f.gpu.vacio.porCuadro - f.gl.vacio.porCuadro }));
+    const signo = (x) => `${x >= 0 ? '+' : '−'}${num(Math.abs(x), 2)}`;
+    t += ` WebGPU menos WebGL2: ${dif.map((d) => `nivel ${d.nivel}, ${signo(d.lente)} ms con la lente y ${signo(d.vacio)} en vacío`).join('; ')}.`;
+    const L = dif.reduce((a, d) => a + d.lente, 0) / dif.length;
+    const V = dif.reduce((a, d) => a + d.vacio, 0) / dif.length;
+    if (Math.abs(L) < 0.1) t += ' Con la lente casi empatan, así que no hay diferencia que repartir.';
+    else {
+      const q = V / L;
+      if (q >= 0.75 && q <= 1.25) t += ' <strong>La diferencia es la espera:</strong> en vacío se separan casi lo mismo que con la lente, así que no viene del dibujo, sino de mandar el cuadro y saber que ha acabado.';
+      else if (q < 0.25) t += ' <strong>La diferencia es el dibujo:</strong> en vacío casi empatan, así que la espera no las separa.';
+      else if (q > 1.25) t += ' <strong>La espera explica más que toda la diferencia:</strong> en vacío se separan más que con la lente, así que en el dibujo la que espera más recupera parte.';
+      else t += ` <strong>Mitad y mitad:</strong> la espera explica un ${Math.round(q * 100)} % de la diferencia y el resto es el dibujo.`;
+    }
+  }
+  const res = filas.map((f) => (f.gl || f.gpu).lente).map((x) => `${x.ancho} × ${x.alto}`);
+  if (res.length === 2 && res[0] === res[1]) t += ' En esta pantalla los niveles 0 y 2 tienen el mismo lienzo: solo cambian la rejilla fina y las estrellas.';
+
+  const una = (f, k) => (f[k] ? `${NOMBRE[k]} lente ${num(f[k].lente.porCuadro, 2)} ms, vacío ${num(f[k].vacio.porCuadro, 2)} ms (mediana ${num(f[k].vacio.mediana, 2)}, p90 ${num(f[k].vacio.p90, 2)})` : `${NOMBRE[k]} sin dato${motivo[k] ? `: ${escapar(motivo[k])}` : ''}`);
+  const motores = r.sinGPU ? ['gl'] : ['gl', 'gpu'];
+  let tecnico = r.niveles.map((f) => {
+    const b = (f.gl || f.gpu);
+    return `Nivel ${f.nivel}${b ? `, ${b.lente.ancho} × ${b.lente.alto} px` : ''}: ${motores.map((k) => una(f, k)).join(' · ')}.`;
+  }).join(' ');
+  if (r.sinGPU) tecnico += ` No hay WebGPU (${escapar(r.sinGPU)}), así que solo mido WebGL2.`;
+  return `<p class="llano">${t}</p><p class="tecnico">Cifras: ${tecnico} Bloques de ${CUADROS} cuadros entre ${CUADROS}, esperando a la GPU en cada uno.</p>`;
 }
 
 // En llano: cuánto tarda cada una por cuadro y cuánto del margen usa. Una pantalla de 120 Hz
@@ -304,7 +384,7 @@ async function arrancar() {
     cartel.textContent = 'La lente no se puede pintar en este navegador: no hay ni WebGPU ni WebGL 2.';
     cartel.hidden = false;
     avisar(`WebGPU: ${motivo.gpu}. WebGL2: ${motivo.gl}.`);
-    botonMedir.disabled = true;
+    botonMedir.disabled = true; botonEspera.disabled = true;
     return;
   }
   ensenar(primero);
@@ -340,12 +420,20 @@ selNivel.addEventListener('change', () => {
   pedir();
 });
 botonMedir.addEventListener('click', async () => {
-  botonMedir.disabled = true;
+  botonMedir.disabled = true; botonEspera.disabled = true;
   avisar(`Midiendo ${CUADROS} cuadros con cada una…`);
   const r = await medirLasDos();
-  botonMedir.disabled = !activo;
+  botonMedir.disabled = !activo; botonEspera.disabled = !activo;
   if (!r && !activo) avisar('No se puede medir: no queda ninguna forma de pintar la lente.');
   if (r) { cifras.innerHTML = textoCifras(r); avisar(textoNivel()); cifras.scrollIntoView({ block: 'nearest' }); }
+});
+botonEspera.addEventListener('click', async () => {
+  botonMedir.disabled = true; botonEspera.disabled = true;
+  avisar(`Midiendo la espera: cuadros con la lente y vacíos, niveles 0 y 2, con cada una…`);
+  const r = await medirEspera();
+  botonMedir.disabled = !activo; botonEspera.disabled = !activo;
+  if (!r && !activo) avisar('No se puede medir: no queda ninguna forma de pintar la lente.');
+  if (r) { cifras.innerHTML = textoEspera(r); avisar(textoNivel()); cifras.scrollIntoView({ block: 'nearest' }); }
 });
 botonCopiar.addEventListener('click', async () => {
   guardarURL();
@@ -367,7 +455,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden && enM
 
 botonMarcha.disabled = menosMovimiento;
 window.lente = {
-  fotograma, medirLasDos,
+  fotograma, medirLasDos, medirEspera,
   get motores() { return { gpu: !!inst.gpu, gl: !!inst.gl, activo, motivoGPU: motivo.gpu }; },
   get nivel() { return activo ? inst[activo].nivel : null; },
 };

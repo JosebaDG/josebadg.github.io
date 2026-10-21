@@ -12,7 +12,7 @@
 // Cerca del agujero el plano de la fuente se retuerce (arrastre del espacio).
 //
 // Mismo contrato que las escenas de /motor/ (ver motor/README.md): tramo, late e iniciar(ctx) →
-// { pintar(t, reloj), medir(), bajar(), retirar() }, más sincronizar() y nivel para medir.
+// { pintar(t, reloj), medir(), bajar(), retirar() }, más sincronizar(), nivel y pintarVacio() para medir.
 // Lo que se ve depende solo de t y del reloj: sin azar, así que un enlace es un fotograma exacto.
 
 export const tramo = [0, 1];
@@ -267,6 +267,14 @@ export async function iniciar(ctx) {
   const px = new Uint8Array(4);
   function sincronizar() { gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); }
 
+  // Cuadro vacío: el mismo lienzo, solo borrado, sin dibujar. Con sincronizar() da lo que cuesta
+  // esperar a la GPU casi sin dibujo (lo usa la comparación de ../charlie-lente-gpu/).
+  function pintarVacio() {
+    gl.viewport(0, 0, lienzo.width, lienzo.height);
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+  }
+
   function perdido(e) { e.preventDefault(); ctx.fallo(); }
   lienzo.addEventListener('webglcontextlost', perdido);
   function retirar() {
@@ -277,7 +285,7 @@ export async function iniciar(ctx) {
 
   medir();
   return {
-    pintar, medir, bajar, retirar, sincronizar, ponerNivel,
+    pintar, pintarVacio, medir, bajar, retirar, sincronizar, ponerNivel,
     get nivel() { return nivel; },
     get resolucion() { return { ancho: lienzo.width, alto: lienzo.height, dpr }; },
   };
