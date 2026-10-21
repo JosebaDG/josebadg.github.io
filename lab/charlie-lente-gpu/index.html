@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Lente gravitacional: WebGPU frente a WebGL2 · Laboratorio</title>
+  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
+  <link rel="stylesheet" href="../charlie-lente/lente.css">
+  <link rel="stylesheet" href="gpu.css">
+</head>
+<body>
+  <!--
+    Lente gravitacional en WebGPU y en WebGL2, la misma escena (Charlie, laboratorio; paso 3 de la ruta).
+    Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT.
+    «Medir las dos» pinta 120 cuadros con cada una, al mismo nivel y tamaño, y enseña las dos cifras juntas.
+    Un fotograma por enlace: ?t=0.85&r=3.2&motor=gpu|gl&mm=1&nivel=0|1|2&ui=0.
+    No toca /motor/ ni la portada.
+  -->
+  <canvas class="lienzo" id="lienzoGPU" aria-hidden="true"></canvas>
+  <canvas class="lienzo" id="lienzoGL" aria-hidden="true" hidden></canvas>
+  <p class="cartel" id="cartel" hidden></p>
+
+  <main class="panel" id="panel">
+    <h1 class="titulo">Lente: WebGPU frente a WebGL2 <a href="/lab/#experimentos">Laboratorio</a></h1>
+
+    <p class="cifras" id="cifras" aria-live="polite">Toca «Medir las dos»: pinta 120 cuadros con cada una y enseña los milisegundos juntos.</p>
+
+    <div class="fila">
+      <label for="t">Masa (t) <output id="tSale" for="t">0,000</output></label>
+      <input id="t" type="range" min="0" max="1" step="0.001" value="0.85">
+    </div>
+
+    <div class="fila">
+      <label for="motor">Pinta con</label>
+      <select id="motor">
+        <option value="gpu">WebGPU</option>
+        <option value="gl">WebGL2</option>
+      </select>
+    </div>
+
+    <div class="fila">
+      <label for="nivel">Nivel</label>
+      <select id="nivel">
+        <option value="auto">Automático (baja si va lento)</option>
+        <option value="2">2: escritorio</option>
+        <option value="1">1: móvil</option>
+        <option value="0">0: mínimo</option>
+      </select>
+    </div>
+
+    <div class="botones">
+      <button type="button" id="medirBoton" class="principal">Medir las dos</button>
+      <button type="button" id="marcha" aria-pressed="false">Mover reloj</button>
+      <label class="casilla"><input type="checkbox" id="mm"> Menos movimiento</label>
+      <button type="button" id="copiar">Copiar enlace</button>
+      <button type="button" id="ocultar" aria-label="Ocultar controles">Ocultar</button>
+    </div>
+
+    <p class="estado" id="estado" role="status" aria-live="polite"></p>
+    <p class="credito">Basado en <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>, de Giacomo Magnanini (MIT). <a href="../charlie-lente/">Solo WebGL2</a>.</p>
+  </main>
+
+  <button type="button" class="mostrar" id="mostrar" hidden>Controles</button>
+
+  <script type="module" src="pagina.js"></script>
+</body>
+</html>
