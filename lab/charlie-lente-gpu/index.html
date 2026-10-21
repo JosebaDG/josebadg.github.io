@@ -34,7 +34,7 @@
       <ol>
         <li>Pon la <strong>masa a 0</strong>: cuadrícula recta y un punto dorado a un lado. No hay agujero negro.</li>
         <li>Súbela <strong>despacio hasta 1</strong> mirando el centro: la cuadrícula se curva, el punto se abre en anillo y sale la sombra negra.</li>
-        <li>Con la masa alta, toca <strong>«Mover reloj»</strong>: el lado brillante del anillo gira.</li>
+        <li>Con la masa por encima de 0,75, toca <strong>«Mover reloj»</strong>: el lado brillante del anillo gira.</li>
         <li>Cambia <strong>«Pinta con»</strong>: no verás ningún cambio, y eso es lo que se busca.</li>
         <li>Toca <strong>«Medir las dos»</strong> y lee la frase que sale debajo.</li>
       </ol>
@@ -49,7 +49,7 @@
     <div class="fila">
       <span class="nombre" id="marchaNombre">Reloj</span>
       <button type="button" id="marcha" aria-pressed="false" aria-describedby="marchaAyuda">Mover reloj</button>
-      <p class="ayuda" id="marchaAyuda">Gira el lado brillante del anillo (una vuelta cada 14 s) y hace latir la luz. Se ve con la masa por encima de 0,4.</p>
+      <p class="ayuda" id="marchaAyuda">Gira el lado brillante del anillo (una vuelta cada 14 s) y hace latir la luz. Se nota desde 0,5 de masa y del todo desde 0,75. Con «Menos movimiento» no corre.</p>
     </div>
 
     <div class="fila">
@@ -69,7 +69,7 @@
         <option value="1">1: móvil</option>
         <option value="0">0: mínimo</option>
       </select>
-      <p class="ayuda" id="nivelAyuda">Cuántos píxeles pinta: 2 es lo más nítido y con rejilla fina; 0 quita las estrellas. A simple vista cambia poco; el tiempo, bastante.</p>
+      <p class="ayuda" id="nivelAyuda">Cuánto trabajo hace por cuadro. 2: hasta 2 píxeles por punto de pantalla y rejilla fina. 1: hasta 1,5, sin rejilla fina. 0: un píxel por punto y sin estrellas. En una pantalla normal (no retina) solo cambian la rejilla y las estrellas. En la imagen se nota poco; en el tiempo, bastante.</p>
     </div>
 
     <div class="medir">
@@ -84,7 +84,7 @@
       <button type="button" id="copiar">Copiar enlace</button>
       <button type="button" id="ocultar" aria-label="Ocultar controles">Ocultar</button>
     </div>
-    <p class="ayuda">«Menos movimiento» para el reloj. «Copiar enlace» guarda esta misma imagen. «Ocultar» deja la lente a pantalla completa.</p>
+    <p class="ayuda">«Menos movimiento» quita el giro y el latido: la imagen queda como con el reloj a 0. «Copiar enlace» copia un enlace que abre esta misma imagen. «Ocultar» quita el panel y la lente vuelve a su sitio de siempre.</p>
 
     <p class="estado" id="estado" role="status" aria-live="polite"></p>
     <p class="credito">Basado en <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>, de Giacomo Magnanini (MIT). <a href="../charlie-lente/">Solo WebGL2</a>.</p>

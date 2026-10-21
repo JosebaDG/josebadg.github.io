@@ -58,7 +58,7 @@ const avisar = (texto) => { estado.textContent = texto; };
 const TRAMOS = [
   [0.1, '<strong>Espacio plano.</strong> Sin masa no se curva nada: cuadrícula recta y el punto dorado a un lado.'],
   [0.4, '<strong>La masa curva el espacio.</strong> La cuadrícula se dobla y el punto dorado se acerca al centro.'],
-  [0.65, '<strong>Anillo de Einstein.</strong> El punto queda justo detrás y su luz rodea la masa. Empieza la sombra.'],
+  [0.65, '<strong>Anillo de Einstein.</strong> El punto se pone detrás de la masa y su luz se abre en arcos a su alrededor, hasta cerrar el anillo hacia 0,65. Empieza la sombra.'],
   [1.01, '<strong>Agujero negro.</strong> Sombra negra, anillo de fotones más brillante por un lado y el espacio retorcido.'],
 ];
 function contarAhora() {
@@ -223,7 +223,7 @@ function textoLlano(r) {
   t += Math.max(a, b) <= MARGEN ? ' A las dos les sobra tiempo.' : ` WebGL2: ${cabe(a)}. WebGPU: ${cabe(b)}.`;
   const veces = Math.max(a, b) / Math.max(Math.min(a, b), 1e-3);
   if (veces < 1.1) t += ' Empatan: es la misma imagen y el mismo trabajo por píxel.';
-  else if (a < b) t += ' Aquí WebGPU no gana: la escena es un solo dibujo a pantalla completa y cada píxel hace el mismo cálculo en las dos. Lo que WebGPU ahorra (preparar muchos dibujos, cálculo aparte) aquí no se usa, y cada una espera a la GPU de una forma distinta.';
+  else if (a < b) t += ' Aquí WebGPU no gana: la escena es un solo dibujo a pantalla completa y cada píxel hace el mismo cálculo en las dos, así que lo que WebGPU ahorra (preparar muchos dibujos, cálculo aparte) no tiene dónde notarse. También cuenta cómo espera cada una a que la GPU acabe el cuadro: WebGL2 lee un píxel y se queda parada; WebGPU pide un aviso y sigue cuando llega.';
   else t += ` Aquí WebGPU gana por ${num(veces, 1)} veces, con la misma imagen: el ahorro está en cómo manda el trabajo a la GPU, no en lo que pinta.`;
   return t;
 }
