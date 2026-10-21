@@ -7,8 +7,8 @@
 // (qué pasa con cada t y con el reloj) se comparten: vienen de lente.js, no se copian.
 //
 // Mismo contrato que las escenas de /motor/ (tramo, late e iniciar(ctx) → { pintar(t, reloj),
-// medir(), bajar(), retirar() }), más sincronizar() (devuelve una promesa: la GPU ha acabado) y
-// ponerNivel() para medir. Sin azar: un enlace es un fotograma exacto.
+// medir(), bajar(), retirar() }), más sincronizar() (devuelve una promesa: la GPU ha acabado; se
+// rechaza si se pierde el dispositivo o tarda más de ESPERA_MAX) y ponerNivel() para medir. Sin azar: un enlace es un fotograma exacto.
 //
 // Diferencias con GLSL que importan aquí:
 // - @builtin(position) tiene el origen arriba a la izquierda, así que no hay que dar la vuelta a y.
@@ -23,6 +23,9 @@ export const late = true;
 export { NIVELES };
 
 const limitar = (x, a, b) => Math.min(b, Math.max(a, x));
+// Tiempo máximo de sincronizar(): un cuadro en el móvil tarda unos 2 ms y por software unos cientos;
+// 3 s solo se pasan si la GPU no va a contestar.
+const ESPERA_MAX = 3000;
 
 // Los 80 bytes del struct U del shader, en su orden (ancho y alto en px CSS, escala = px del lienzo por px CSS)
 export function datosU(P, ancho, alto, escala, datos = new Float32Array(20)) {
@@ -203,8 +206,11 @@ export async function iniciar(ctx) {
   const errorValidacion = await device.popErrorScope();
   if (errorValidacion) throw new Error('WebGPU: ' + errorValidacion.message);
 
-  let retirada = false;
-  device.lost.then((info) => { if (!retirada) ctx.fallo(info && info.message ? info.message : ''); });
+  let retirada = false, perdida = null;
+  device.lost.then((info) => {
+    perdida = info && info.message ? info.message : 'sin detalle';
+    if (!retirada) ctx.fallo(info && info.message ? info.message : '');
+  });
 
   let nivel = limitar(Number.isInteger(ctx.nivel) ? ctx.nivel : (ctx.movil ? 1 : 2), 0, NIVELES.length - 1);
   let ancho = 0, alto = 0, dpr = 1;
@@ -238,8 +244,24 @@ export async function iniciar(ctx) {
   }
   function ponerNivel(x) { nivel = limitar(x, 0, NIVELES.length - 1); medir(); }
 
-  // Espera a que la GPU acabe lo enviado: para medir milisegundos por fotograma
-  function sincronizar() { return device.queue.onSubmittedWorkDone(); }
+  // Espera a que la GPU acabe lo enviado: para medir milisegundos por fotograma.
+  // Con tiempo máximo: si el dispositivo se pierde a mitad, onSubmittedWorkDone() puede no volver
+  // nunca (con WebGPU por software, en un equipo de pruebas, se cae el proceso de la GPU y «Medir las dos» se
+  // quedaba colgado). Se rechaza si se pierde el dispositivo o si pasan ms milisegundos sin respuesta,
+  // y quien mide lo da por «sin dato».
+  function sincronizar(ms = ESPERA_MAX) {
+    if (perdida !== null) return Promise.reject(new Error(`se ha perdido la GPU (${perdida})`));
+    let reloj = 0;
+    const tope = new Promise((_, mal) => {
+      reloj = setTimeout(() => {
+        const e = new Error(`la GPU no ha contestado en ${(ms / 1000).toLocaleString('es-ES')} s`);
+        e.name = 'TimeoutError';
+        mal(e);
+      }, ms);
+    });
+    const perdido = device.lost.then((info) => { throw new Error(`se ha perdido la GPU (${info && info.message ? info.message : 'sin detalle'})`); });
+    return Promise.race([device.queue.onSubmittedWorkDone(), perdido, tope]).finally(() => clearTimeout(reloj));
+  }
 
   function retirar() {
     retirada = true;
