@@ -4,8 +4,11 @@
 // Carga las dos versiones de la misma escena, cada una en su lienzo (un lienzo no puede tener las
 // dos a la vez), y enseña una. «Medir las dos» pone las dos al mismo nivel y tamaño, tira 10
 // cuadros de calentamiento, pinta 120 esperando a la GPU en cada uno (WebGL2: lee un píxel;
-// WebGPU: onSubmittedWorkDone) y enseña la mediana y el p90 de cada una juntas. Si no hay WebGPU,
-// lo dice y mide solo WebGL2.
+// WebGPU: onSubmittedWorkDone) y enseña, de cada una, el tiempo del bloque de 120 entre 120 (con
+// décimas) y al lado la mediana y el p90. Si no hay WebGPU, lo dice y mide solo WebGL2.
+// Por qué el bloque: WebKit e iOS redondean performance.now() al milisegundo, así que un cuadro de
+// 3 o 4 ms sale en enteros; el bloque se mide en tramos de 10 cuadros seguidos (sin contar la
+// pausa para soltar el hilo cada 10) y el redondeo queda por debajo de 0,1 ms por cuadro.
 // Para scripts: window.lente.fotograma(t, r), window.lente.medirLasDos(n), window.lente.motores,
 // y dataset.listo === '1' cuando el fotograma está asentado.
 
@@ -132,15 +135,19 @@ async function medirUna(cual, nivel, n) {
   for (const k of ['gpu', 'gl']) lienzos[k].hidden = k !== cual;
   await esperaCuadro();
   const tiempos = [];
+  let bloque = 0, tramo = 0;
   for (let c = -CALENTAR; c < n; c++) {
     const t0 = performance.now();
+    if (c >= 0 && c % 10 === 0) tramo = t0;
     i.pintar(T, reloj + c / 60);
     await i.sincronizar();
-    if (c >= 0) tiempos.push(performance.now() - t0);
+    const t1 = performance.now();
+    if (c >= 0) tiempos.push(t1 - t0);
+    if (c >= 0 && (c % 10 === 9 || c === n - 1)) bloque += t1 - tramo;
     if (c % 10 === 9) await esperaCuadro();
   }
   tiempos.sort((a, b) => a - b);
-  return { mediana: tiempos[Math.floor(n / 2)], p90: tiempos[Math.floor(n * 0.9)], nivel: i.nivel, ...i.resolucion };
+  return { porCuadro: bloque / n, mediana: tiempos[Math.floor(n / 2)], p90: tiempos[Math.floor(n * 0.9)], nivel: i.nivel, ...i.resolucion };
 }
 
 // Las dos al mismo nivel (el que tenga ahora la que se ve) y al mismo tamaño; primero WebGL2
@@ -162,18 +169,18 @@ async function medirLasDos(n = CUADROS) {
 }
 
 function textoCifras(r) {
-  const una = (k) => (r[k] ? `<strong>${NOMBRE[k]}</strong> ${num(r[k].mediana, 2)} ms (p90 ${num(r[k].p90, 2)})` : `<strong>${NOMBRE[k]}</strong> sin dato${motivo[k] ? `: ${escapar(motivo[k])}` : ''}`);
+  const una = (k) => (r[k] ? `<strong>${NOMBRE[k]}</strong> ${num(r[k].porCuadro, 2)} ms (mediana ${num(r[k].mediana, 2)}, p90 ${num(r[k].p90, 2)})` : `<strong>${NOMBRE[k]}</strong> sin dato${motivo[k] ? `: ${escapar(motivo[k])}` : ''}`);
   const base = r.gl || r.gpu;
   const donde = base ? ` · nivel ${base.nivel}, ${base.ancho} × ${base.alto} px` : '';
-  if (r.sinGPU) return `${una('gl')}${donde}. No hay WebGPU (${escapar(r.sinGPU)}), así que solo mido WebGL2.`;
+  if (r.sinGPU) return `${una('gl')}${donde}. No hay WebGPU (${escapar(r.sinGPU)}), así que solo mido WebGL2. Tiempo del bloque de ${CUADROS} cuadros entre ${CUADROS}, esperando a la GPU en cada uno.`;
   let fin = '';
   if (r.gl && r.gpu) {
-    const a = r.gl.mediana, b = r.gpu.mediana;
+    const a = r.gl.porCuadro, b = r.gpu.porCuadro;
     const rapida = b < a ? 'WebGPU' : 'WebGL2';
     const veces = Math.max(a, b) / Math.max(Math.min(a, b), 1e-3);
     fin = veces < 1.1 ? ' Empate: menos de un 10 % de diferencia.' : ` ${rapida} va ${num(veces, 1)} veces más rápida.`;
   }
-  return `${una('gl')} · ${una('gpu')}${donde}.${fin} Mediana por cuadro, esperando a la GPU.`;
+  return `${una('gl')} · ${una('gpu')}${donde}.${fin} Tiempo del bloque de ${CUADROS} cuadros entre ${CUADROS}, esperando a la GPU en cada uno.`;
 }
 
 // Para capturas: pone t y reloj, repinta y espera a que el fotograma se asiente
