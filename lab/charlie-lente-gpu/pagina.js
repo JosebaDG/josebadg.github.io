@@ -258,6 +258,34 @@ async function medirEspera(n = CUADROS) {
   return res;
 }
 
+// El veredicto se da nivel a nivel: con la media de los dos, un nivel con mucho dibujo quedaba
+// escondido detrás de otro con casi nada. Solo dice «es la espera» si lo es en todos los niveles
+// (el dibujo no pasa del 30 % en ninguno), y «es el dibujo» si lo es en todos; si no, «en parte».
+// Una diferencia de menos de 0,3 ms está cerca de lo que distingue el reloj: lo avisa.
+function veredictoEspera(dif) {
+  const tipo = dif.map((d) => {
+    if (Math.abs(d.lente) < 0.1) return { ...d, k: 'empate' };
+    const q = d.vacio / d.lente;
+    return { ...d, q, k: q > 1.3 ? 'ruido' : q >= 0.7 ? 'espera' : q < 0.25 ? 'dibujo' : 'parte' };
+  });
+  const todos = (k) => tipo.every((d) => d.k === k);
+  const pc = (x) => `${Math.round(x * 100)} %`;
+  const frase = (d) => {
+    if (d.k === 'empate') return `en el nivel ${d.nivel} casi empatan`;
+    if (d.k === 'ruido') return `en el nivel ${d.nivel} en vacío se separan más que con la lente (${pc(d.q)}), lo que suele ser ruido de la medida`;
+    if (d.k === 'espera') return `en el nivel ${d.nivel} casi toda es la espera (${pc(Math.min(d.q, 1))})`;
+    if (d.k === 'dibujo') return `en el nivel ${d.nivel} es el dibujo (la espera, un ${pc(Math.max(d.q, 0))})`;
+    return `en el nivel ${d.nivel} la espera explica un ${pc(d.q)} y el dibujo el resto`;
+  };
+  let v;
+  if (todos('empate')) v = 'Con la lente casi empatan, así que no hay diferencia que repartir.';
+  else if (todos('espera')) v = '<strong>La diferencia es la espera:</strong> en vacío se separan casi lo mismo que con la lente en todos los niveles, así que no viene del dibujo, sino de mandar el cuadro y saber que ha acabado.';
+  else if (todos('dibujo')) v = '<strong>La diferencia es el dibujo:</strong> en vacío casi empatan en todos los niveles, así que la espera no las separa.';
+  else v = `<strong>En parte:</strong> ${tipo.map(frase).join('; ')}.`;
+  if (tipo.some((d) => d.k !== 'empate' && Math.abs(d.lente) < 0.3)) v += ' Alguna diferencia es de menos de 0,3 ms, cerca de lo que distingue el reloj: repite la medida antes de fiarte de ese nivel.';
+  return v;
+}
+
 // En llano: qué parte del cuadro es la espera y si la diferencia entre las dos viene de ahí
 function textoEspera(r) {
   const filas = r.niveles.filter((f) => f.gl || f.gpu);
@@ -276,16 +304,7 @@ function textoEspera(r) {
     const dif = ambas.map((f) => ({ nivel: f.nivel, lente: f.gpu.lente.porCuadro - f.gl.lente.porCuadro, vacio: f.gpu.vacio.porCuadro - f.gl.vacio.porCuadro }));
     const signo = (x) => `${x >= 0 ? '+' : '−'}${num(Math.abs(x), 2)}`;
     t += ` WebGPU menos WebGL2: ${dif.map((d) => `nivel ${d.nivel}, ${signo(d.lente)} ms con la lente y ${signo(d.vacio)} en vacío`).join('; ')}.`;
-    const L = dif.reduce((a, d) => a + d.lente, 0) / dif.length;
-    const V = dif.reduce((a, d) => a + d.vacio, 0) / dif.length;
-    if (Math.abs(L) < 0.1) t += ' Con la lente casi empatan, así que no hay diferencia que repartir.';
-    else {
-      const q = V / L;
-      if (q >= 0.75 && q <= 1.25) t += ' <strong>La diferencia es la espera:</strong> en vacío se separan casi lo mismo que con la lente, así que no viene del dibujo, sino de mandar el cuadro y saber que ha acabado.';
-      else if (q < 0.25) t += ' <strong>La diferencia es el dibujo:</strong> en vacío casi empatan, así que la espera no las separa.';
-      else if (q > 1.25) t += ' <strong>La espera explica más que toda la diferencia:</strong> en vacío se separan más que con la lente, así que en el dibujo la que espera más recupera parte.';
-      else t += ` <strong>Mitad y mitad:</strong> la espera explica un ${Math.round(q * 100)} % de la diferencia y el resto es el dibujo.`;
-    }
+    t += ' ' + veredictoEspera(dif);
   }
   const res = filas.map((f) => (f.gl || f.gpu).lente).map((x) => `${x.ancho} × ${x.alto}`);
   if (res.length === 2 && res[0] === res[1]) t += ' En esta pantalla los niveles 0 y 2 tienen el mismo lienzo: solo cambian la rejilla fina y las estrellas.';
