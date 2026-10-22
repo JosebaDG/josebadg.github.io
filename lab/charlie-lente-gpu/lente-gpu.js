@@ -8,7 +8,7 @@
 //
 // Mismo contrato que las escenas de /motor/ (tramo, late e iniciar(ctx) → { pintar(t, reloj),
 // medir(), bajar(), retirar() }), más sincronizar() (devuelve una promesa: la GPU ha acabado; se
-// rechaza si se pierde el dispositivo o tarda más de ESPERA_MAX) y ponerNivel() para medir. Sin azar: un enlace es un fotograma exacto.
+// rechaza si se pierde el dispositivo o tarda más de ESPERA_MAX), ponerNivel() y pintarVacio() para medir. Sin azar: un enlace es un fotograma exacto.
 //
 // Diferencias con GLSL que importan aquí:
 // - @builtin(position) tiene el origen arriba a la izquierda, así que no hay que dar la vuelta a y.
@@ -236,6 +236,18 @@ export async function iniciar(ctx) {
     device.queue.submit([cod.finish()]);
   }
 
+  // Cuadro vacío: el mismo pase sobre el mismo lienzo, solo borrando, sin dibujar. Lo que tarda con
+  // sincronizar() es mandar un pase y esperar a que la GPU avise, casi sin dibujo: sirve para saber
+  // cuánto del cuadro de la lente es la espera.
+  function pintarVacio() {
+    const cod = device.createCommandEncoder();
+    const pase = cod.beginRenderPass({
+      colorAttachments: [{ view: gpu.getCurrentTexture().createView(), loadOp: 'clear', storeOp: 'store', clearValue: { r: 0, g: 0, b: 0, a: 1 } }],
+    });
+    pase.end();
+    device.queue.submit([cod.finish()]);
+  }
+
   function bajar() {
     if (nivel <= 0) return false;
     nivel--;
@@ -271,7 +283,7 @@ export async function iniciar(ctx) {
 
   medir();
   return {
-    pintar, medir, bajar, retirar, sincronizar, ponerNivel,
+    pintar, pintarVacio, medir, bajar, retirar, sincronizar, ponerNivel,
     get nivel() { return nivel; },
     get resolucion() { return { ancho: lienzo.width, alto: lienzo.height, dpr }; },
   };
