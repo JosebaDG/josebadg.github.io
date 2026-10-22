@@ -12,6 +12,8 @@ const ESCENAS = {
   curvatura: { modulo: '/motor/escenas/curvatura.js', nombre: 'Espacio curvado' },
   bigbang: { modulo: '/motor/escenas/bigbang.min.js', nombre: 'Big bang' },
   vuelta: { modulo: '/motor/escenas/vuelta.js', nombre: 'Vuelta al punto', firma: true },
+  // Del laboratorio, no del motor: la lente en perspectiva, en su versión WebGL2
+  perspectiva: { modulo: '/lab/charlie-lente-perspectiva/escena-gl.js', nombre: 'Lente en perspectiva' },
 };
 const PASO_MAX = 0.05; // como el motor: el reloj nunca salta más de 50 ms
 
