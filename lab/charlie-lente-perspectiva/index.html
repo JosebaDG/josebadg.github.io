@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Lente en perspectiva · Laboratorio</title>
+  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
+  <link rel="stylesheet" href="../charlie-lente/lente.css">
+  <link rel="stylesheet" href="../charlie-lente-gpu/gpu.css">
+  <link rel="stylesheet" href="perspectiva.css">
+</head>
+<body>
+  <!--
+    Lente en perspectiva (Charlie, laboratorio; hilo #28 de equipo-agentes): la malla de la portada vista de lado
+    y en perspectiva, que se hunde en un embudo con la masa, y la lente de siempre en el fondo del embudo.
+    La misma escena en WebGL2 y en WebGPU, con los mismos mandos que ../charlie-lente-gpu/.
+    Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT.
+    Un fotograma por enlace: ?t=0.85&r=3.2&motor=gpu|gl&mm=1&nivel=0|1|2&ui=0.
+    No toca /motor/, la portada ni las dos lentes: de ellas solo importa sin cambiarlas.
+  -->
+  <canvas class="lienzo" id="lienzoGPU" aria-hidden="true"></canvas>
+  <canvas class="lienzo" id="lienzoGL" aria-hidden="true" hidden></canvas>
+  <p class="cartel" id="cartel" hidden></p>
+  <noscript>
+    <img class="sinjs" src="cartel.jpg" width="1280" height="800" alt="La malla de la portada vista de lado, hundida en un embudo, con la sombra negra y el anillo de fotones en el fondo.">
+    <p class="cartel">Esta lente se pinta con JavaScript. Sin él, aquí tienes cómo se ve con la masa a 0,85.</p>
+  </noscript>
+
+  <main class="panel" id="panel">
+    <h1 class="titulo">Lente en perspectiva <a href="/lab/#experimentos">Laboratorio</a></h1>
+    <p class="ahora" id="ahora">Qué ves: el espacio como una malla, visto de lado, y cómo lo hunde una masa.</p>
+
+    <details class="guia" id="guia">
+      <summary>Qué probar primero</summary>
+      <ol>
+        <li>Pon la <strong>masa a 0</strong>: la malla es un plano liso y el punto dorado está a un lado.</li>
+        <li>Súbela <strong>despacio hasta 1</strong>: la malla se hunde en un embudo, el punto se abre en anillo en el fondo y sale la sombra negra.</li>
+        <li>Con la masa por encima de 0,75, toca <strong>«Mover reloj»</strong>: el lado brillante del anillo gira y cada latido manda una onda por la malla.</li>
+        <li>Cambia <strong>«Pinta con»</strong>: no verás ningún cambio, y eso es lo que se busca.</li>
+        <li>Toca <strong>«Medir las dos»</strong> y lee la frase que sale debajo.</li>
+      </ol>
+    </details>
+
+    <div class="fila">
+      <label for="t">Masa <output id="tSale" for="t">0,000</output></label>
+      <input id="t" type="range" min="0" max="1" step="0.001" value="0.85" aria-describedby="tAyuda">
+      <p class="ayuda" id="tAyuda">Hunde el espacio. A 0 la malla es plana; a 1, embudo hondo con anillo y sombra en el fondo. Muévela despacio.</p>
+    </div>
+
+    <div class="fila">
+      <span class="nombre" id="marchaNombre">Reloj</span>
+      <button type="button" id="marcha" aria-pressed="false" aria-describedby="marchaAyuda">Mover reloj</button>
+      <p class="ayuda" id="marchaAyuda">Gira el lado brillante del anillo (una vuelta cada 14 s) y, en cada latido, manda una onda por la malla desde el fondo. Se nota desde 0,5 de masa y del todo desde 0,75. Con «Menos movimiento» no corre.</p>
+    </div>
+
+    <div class="fila">
+      <label for="motor">Pinta con</label>
+      <select id="motor" aria-describedby="motorAyuda">
+        <option value="gpu">WebGPU</option>
+        <option value="gl">WebGL2</option>
+      </select>
+      <p class="ayuda" id="motorAyuda">Dos formas de pintar la misma imagen, a propósito: si al cambiar no notas nada, va bien. La diferencia está en el tiempo, no en el dibujo.</p>
+    </div>
+
+    <div class="fila">
+      <label for="nivel">Detalle</label>
+      <select id="nivel" aria-describedby="nivelAyuda">
+        <option value="auto">Automático (baja si va lento)</option>
+        <option value="2">2: escritorio</option>
+        <option value="1">1: móvil</option>
+        <option value="0">0: mínimo</option>
+      </select>
+      <p class="ayuda" id="nivelAyuda">Cuánto trabajo hace por cuadro. 2: hasta 2 píxeles por punto de pantalla y líneas de 320 tramos. 1: hasta 1,5 y 192 tramos. 0: un píxel por punto, 96 tramos y menos líneas al fondo. En la imagen se nota poco; en el tiempo, bastante.</p>
+    </div>
+
+    <div class="medir">
+      <button type="button" id="medirBoton" class="principal">Medir las dos</button>
+      <div class="cifras" id="cifras" aria-live="polite">
+        <p class="llano">Pinta 120 cuadros con cada forma y te dice cuánto tarda cada una y si le sobra tiempo. Mide con la masa que tengas puesta; la imagen se queda quieta un momento.</p>
+      </div>
+    </div>
+
+    <div class="botones">
+      <label class="casilla"><input type="checkbox" id="mm"> Menos movimiento</label>
+      <button type="button" id="copiar">Copiar enlace</button>
+      <button type="button" id="ocultar" aria-label="Ocultar controles">Ocultar</button>
+    </div>
+    <p class="ayuda">«Menos movimiento» quita el giro, el latido y la onda: la imagen queda como con el reloj a 0. «Copiar enlace» copia un enlace que abre esta misma imagen. «Ocultar» quita el panel y la lente vuelve a su sitio de siempre.</p>
+
+    <p class="estado" id="estado" role="status" aria-live="polite"></p>
+    <p class="credito">Basado en <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>, de Giacomo Magnanini (MIT). Vista de frente: <a href="../charlie-lente-gpu/">la lente de siempre</a>.</p>
+  </main>
+
+  <button type="button" class="mostrar" id="mostrar" hidden>Controles</button>
+
+  <script type="module" src="pagina.js"></script>
+</body>
+</html>

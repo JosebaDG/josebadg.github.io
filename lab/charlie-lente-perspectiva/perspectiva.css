@@ -1,0 +1,4 @@
+/* Lo poco que añade la lente en perspectiva a lente.css y gpu.css (que se usan sin cambiarlos). */
+/* Sin JavaScript: la imagen fija de la escena a pantalla completa, con el aviso encima */
+.sinjs { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+noscript .cartel { z-index: 1; }

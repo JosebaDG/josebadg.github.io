@@ -10,6 +10,8 @@ on:
       - "motor/escenas/**"
       - "motor/relevos.js"
       - "lab/charlie-visor/**"
+      - "lab/charlie-lente-perspectiva/**"
+      - "lab/charlie-lente/lente.js"
       - ".github/workflows/escenas.yml"
   workflow_dispatch:
 
@@ -28,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        escena: [curvatura, bigbang, vuelta]
+        escena: [curvatura, bigbang, vuelta, perspectiva]
         navegador: [chromium, webkit]
     steps:
       - uses: actions/checkout@v4
