@@ -108,7 +108,7 @@ function proyectar(m, x, y, z, ancho, alto) {
 }
 
 // Todo lo que se pinta en un fotograma, a partir de t, el reloj, el tamaño y el nivel.
-// La masa es la misma curva que en la lente: a 0 la malla es plana; a 1, embudo hondo con sombra.
+// Las curvas son las de la lente, salvo la hondura del embudo, que sigue hasta 1: a 0 la malla es plana; a 1, embudo hondo con sombra.
 export function parametros(t, reloj, ctx, nivel, ancho, alto) {
   const mm = ctx.menosMovimiento;
   const rl = mm ? 0 : reloj;
@@ -117,7 +117,10 @@ export function parametros(t, reloj, ctx, nivel, ancho, alto) {
   const sombra = suave((t - 0.4) / 0.35);
   const alinea = suave((t - 0.05) / 0.6);
   const retuerce = suave((t - 0.6) / 0.4);
-  const prof = PROF * masa;
+  // La hondura del embudo sigue creciendo hasta t = 1 (masa satura en 0,6 y a partir de ahí solo
+  // se veía el arrastre, que parece un giro de cámara)
+  const hondo = suave((t - 0.1) / 0.9);
+  const prof = PROF * hondo;
 
   // El agujero: se curva la luz con la masa; la sombra (radio aparente bc) va en la garganta del
   // embudo, a la altura a la que la malla tiene ese mismo radio. Así el borde de la sombra coincide
@@ -133,10 +136,13 @@ export function parametros(t, reloj, ctx, nivel, ancho, alto) {
   const fovy = (40 * Math.PI) / 180;
   const elev = (ELEV * Math.PI) / 180;
   const dist = aspecto < 1 ? DIST * 1.1 * Math.sqrt(0.462 / Math.max(0.4, aspecto)) : DIST;
-  const obj = [0, 0, -prof * 0.5];
+  // La cámara no sigue al embudo: mira siempre al mismo sitio y el encuadre se calcula con el
+  // agujero a fondo (t = 1), así que al subir la masa el embudo se hunde de verdad en la pantalla
+  const zFin = -PROF / Math.sqrt(1 + (BC * RS) ** 2 / (GARGANTA * GARGANTA));
+  const obj = [0, 0, -PROF * 0.5];
   const ojo = [0, -dist * Math.cos(elev), obj[2] + dist * Math.sin(elev)];
   const vista = mirar(ojo, obj, [0, 0, 1]);
-  const [nx, ny] = ndc(por(perspectiva(fovy, aspecto, 0.1, 200, 0, 0), vista), 0, 0, zB);
+  const [nx, ny] = ndc(por(perspectiva(fovy, aspecto, 0.1, 200, 0, 0), vista), 0, 0, zFin);
   const c = ctx.centro();
   const dx = (2 * c.x) / ancho - 1 - nx, dy = 1 - (2 * c.y) / alto - ny;
   const vp = por(perspectiva(fovy, aspecto, 0.1, 200, dx, dy), vista);
