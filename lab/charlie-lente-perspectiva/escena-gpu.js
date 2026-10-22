@@ -1,6 +1,6 @@
 // Lente en perspectiva, versión WebGPU (Charlie, laboratorio). La misma escena que escena-gl.js,
-// con los mismos números (comun.js) y las mismas dos pasadas: la malla con suma de luz y, encima,
-// la lente con alfa premultiplicado. Misma interfaz, para que pagina.js las trate igual.
+// con los mismos números (comun.js) y las mismas dos pasadas: primero la lente, sobre negro, y encima
+// la malla con suma de luz. Misma interfaz, para que pagina.js las trate igual.
 
 import { tramo, late, NIVELES, limitar, construirMalla, parametros, datosMalla, datosLente, WGSL_MALLA, WGSL_LENTE } from './comun.js';
 
@@ -30,7 +30,6 @@ export async function iniciar(ctx) {
   device.pushErrorScope('validation');
   const [mMalla, mLente] = await Promise.all([modulo(device, WGSL_MALLA), modulo(device, WGSL_LENTE)]);
   const suma = { color: { srcFactor: 'one', dstFactor: 'one', operation: 'add' }, alpha: { srcFactor: 'one', dstFactor: 'one', operation: 'add' } };
-  const encima = { color: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' }, alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha', operation: 'add' } };
   const tubMalla = device.createRenderPipeline({
     layout: 'auto',
     vertex: {
@@ -43,10 +42,10 @@ export async function iniciar(ctx) {
   const tubLente = device.createRenderPipeline({
     layout: 'auto',
     vertex: { module: mLente, entryPoint: 'vsLente' },
-    fragment: { module: mLente, entryPoint: 'fsLente', targets: [{ format: formato, blend: encima }] },
+    fragment: { module: mLente, entryPoint: 'fsLente', targets: [{ format: formato }] },
     primitive: { topology: 'triangle-list' },
   });
-  const dm = new Float32Array(28), dl = new Float32Array(16);
+  const dm = new Float32Array(36), dl = new Float32Array(36);
   const bufM = device.createBuffer({ size: dm.byteLength, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
   const bufL = device.createBuffer({ size: dl.byteLength, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
   const grupoM = device.createBindGroup({ layout: tubMalla.getBindGroupLayout(0), entries: [{ binding: 0, resource: { buffer: bufM } }] });
@@ -89,19 +88,19 @@ export async function iniciar(ctx) {
     const F = parametros(t, reloj, ctx, nivel, ancho, alto);
     const escala = lienzo.width / ancho;
     device.queue.writeBuffer(bufM, 0, datosMalla(F, lienzo, escala, L, dm));
-    device.queue.writeBuffer(bufL, 0, datosLente(F, ancho, alto, escala, dl));
+    device.queue.writeBuffer(bufL, 0, datosLente(F, lienzo, dl));
     const cod = device.createCommandEncoder();
     const pase = cod.beginRenderPass({
       colorAttachments: [{ view: gpu.getCurrentTexture().createView(), loadOp: 'clear', storeOp: 'store', clearValue: { r: 0, g: 0, b: 0, a: 1 } }],
     });
+    pase.setPipeline(tubLente);
+    pase.setBindGroup(0, grupoL);
+    pase.draw(3);
     pase.setPipeline(tubMalla);
     pase.setBindGroup(0, grupoM);
     pase.setVertexBuffer(0, bufV);
     pase.setIndexBuffer(bufI, 'uint16');
     pase.drawIndexed(cuantos);
-    pase.setPipeline(tubLente);
-    pase.setBindGroup(0, grupoL);
-    pase.draw(3);
     pase.end();
     device.queue.submit([cod.finish()]);
   }

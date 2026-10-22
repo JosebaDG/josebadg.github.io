@@ -22,7 +22,7 @@ const html = document.documentElement;
 const lienzos = { gpu: $('lienzoGPU'), gl: $('lienzoGL') };
 const panel = $('panel'), mostrar = $('mostrar'), estado = $('estado'), cifras = $('cifras'), cartel = $('cartel'), ahora = $('ahora');
 const rangoT = $('t'), salidaT = $('tSale'), selMotor = $('motor'), selNivel = $('nivel');
-const botonMarcha = $('marcha'), casillaMM = $('mm'), botonMedir = $('medirBoton'), botonCopiar = $('copiar'), botonOcultar = $('ocultar');
+const botonMarcha = $('marcha'), casillaMM = $('mm'), botonMedir = $('medirBoton'), botonEspera = $('esperaBoton'), botonCopiar = $('copiar'), botonOcultar = $('ocultar');
 
 const limitar = (x, a, b) => Math.min(b, Math.max(a, x));
 const num = (x, d) => x.toFixed(d).replace('.', ',');
@@ -53,7 +53,7 @@ const TRAMOS = [
   [0.1, '<strong>Espacio plano.</strong> Sin masa, la malla es un plano liso y el punto dorado está a un lado.'],
   [0.4, '<strong>La masa hunde el espacio.</strong> La malla baja en un embudo y el punto dorado se acerca al centro.'],
   [0.65, '<strong>Anillo de Einstein.</strong> En el fondo del embudo, la luz del punto se abre en arcos hasta cerrar el anillo hacia 0,65. Empieza la sombra.'],
-  [1.01, '<strong>Agujero negro.</strong> Embudo hondo, sombra negra en el fondo, anillo de fotones más brillante por un lado y la malla retorcida a su alrededor.'],
+  [1.01, '<strong>Agujero negro.</strong> Sombra negra en el fondo del embudo y el disco caliente visto de lado: su parte de atrás se curva por encima de la sombra, más brillante por un lado, y la malla se retuerce a su alrededor.'],
 ];
 function contarAhora() {
   const tramo = TRAMOS.find(([hasta]) => T < hasta) || TRAMOS[TRAMOS.length - 1];
@@ -66,7 +66,8 @@ function contarAhora() {
 let Z = null;
 function zona() {
   const w = innerWidth, h = innerHeight;
-  const siempre = { x: w / 2, y: h * 0.42, r: Math.min(w, h) * 0.26 };
+  // En vertical, con el panel oculto, el agujero baja a la mitad: si no, la mitad de abajo queda casi vacía
+  const siempre = { x: w / 2, y: h * (h > w ? 0.5 : 0.42), r: Math.min(w, h) * 0.26 };
   if (panel.hidden) return siempre;
   const p = panel.getBoundingClientRect();
   if (p.left > w * 0.3) { const a = p.left; return a < 160 ? siempre : { x: a / 2, y: h * 0.45, r: Math.min(a, h) * 0.26 }; }
@@ -127,7 +128,7 @@ function fallo(cual, texto) {
   if (inst[otra]) { ensenar(otra); avisar(`${NOMBRE[cual]} se ha caído (${texto}): sigo con ${NOMBRE[otra]}.`); return; }
   activo = null;
   html.dataset.listo = 'fallo';
-  botonMedir.disabled = true;
+  botonMedir.disabled = true; botonEspera.disabled = true;
   cartel.textContent = 'La lente no se puede pintar en este navegador: no hay ni WebGPU ni WebGL 2.';
   cartel.hidden = false;
   avisar(`La lente no se puede pintar: ${texto}.`);
@@ -218,6 +219,97 @@ async function medirLasDos(n = CUADROS) {
   return res;
 }
 
+// Cuánto pesa la espera: en los niveles 0 y 2, cada una pinta n cuadros con la lente y n cuadros
+// vacíos (solo borrar el lienzo), esperando a la GPU en cada uno igual que en «Medir las dos». El
+// cuadro vacío es casi solo mandar el pase y saber que ha acabado. Si la diferencia entre las dos es
+// la misma con la lente que en vacío y no cambia con el nivel, lo que las separa es la espera, no el
+// dibujo. Al acabar, las dos vuelven al nivel que tenían.
+const NIVELES_ESPERA = [0, 2];
+async function medirEspera(n = CUADROS) {
+  if (!activo || midiendo) return null;
+  midiendo = true;
+  const antes = inst[activo].nivel;
+  const res = { niveles: [], sinGPU: inst.gpu ? '' : (motivo.gpu || 'este navegador no tiene WebGPU') };
+  try {
+    for (const nivel of NIVELES_ESPERA) {
+      const fila = { nivel, gl: null, gpu: null };
+      for (const k of ['gl', 'gpu']) {
+        if (!inst[k]) continue;
+        const lente = await intentar(k, () => medirUna(k, nivel, n));
+        const vacio = lente && inst[k] ? await intentar(k, () => medirUna(k, nivel, n, true)) : null;
+        if (lente && vacio) fila[k] = { lente, vacio };
+      }
+      res.niveles.push(fila);
+    }
+  } finally {
+    for (const k of ['gpu', 'gl']) if (inst[k]) inst[k].ponerNivel(antes);
+    midiendo = false;
+    if (activo) ensenar(activo);
+  }
+  return res;
+}
+
+// El veredicto se da nivel a nivel: con la media de los dos, un nivel con mucho dibujo quedaba
+// escondido detrás de otro con casi nada. Solo dice «es la espera» si lo es en todos los niveles
+// (el dibujo no pasa del 30 % en ninguno), y «es el dibujo» si lo es en todos; si no, «en parte».
+// Una diferencia de menos de 0,3 ms está cerca de lo que distingue el reloj: lo avisa.
+function veredictoEspera(dif) {
+  const tipo = dif.map((d) => {
+    if (Math.abs(d.lente) < 0.1) return { ...d, k: 'empate' };
+    const q = d.vacio / d.lente;
+    return { ...d, q, k: q > 1.3 ? 'ruido' : q >= 0.7 ? 'espera' : q < 0.25 ? 'dibujo' : 'parte' };
+  });
+  const todos = (k) => tipo.every((d) => d.k === k);
+  const pc = (x) => `${Math.round(x * 100)} %`;
+  const frase = (d) => {
+    if (d.k === 'empate') return `en el nivel ${d.nivel} casi empatan`;
+    if (d.k === 'ruido') return `en el nivel ${d.nivel} en vacío se separan más que con la lente (${pc(d.q)}), lo que suele ser ruido de la medida`;
+    if (d.k === 'espera') return `en el nivel ${d.nivel} casi toda es la espera (${pc(Math.min(d.q, 1))})`;
+    if (d.k === 'dibujo') return `en el nivel ${d.nivel} es el dibujo (la espera, un ${pc(Math.max(d.q, 0))})`;
+    return `en el nivel ${d.nivel} la espera explica un ${pc(d.q)} y el dibujo el resto`;
+  };
+  let v;
+  if (todos('empate')) v = 'Con la lente casi empatan, así que no hay diferencia que repartir.';
+  else if (todos('espera')) v = '<strong>La diferencia es la espera:</strong> en vacío se separan casi lo mismo que con la lente en todos los niveles, así que no viene del dibujo, sino de mandar el cuadro y saber que ha acabado.';
+  else if (todos('dibujo')) v = '<strong>La diferencia es el dibujo:</strong> en vacío casi empatan en todos los niveles, así que la espera no las separa.';
+  else v = `<strong>En parte:</strong> ${tipo.map(frase).join('; ')}.`;
+  if (tipo.some((d) => d.k !== 'empate' && Math.abs(d.lente) < 0.3)) v += ' Alguna diferencia es de menos de 0,3 ms, cerca de lo que distingue el reloj: repite la medida antes de fiarte de ese nivel.';
+  return v;
+}
+
+// En llano: qué parte del cuadro es la espera y si la diferencia entre las dos viene de ahí
+function textoEspera(r) {
+  const filas = r.niveles.filter((f) => f.gl || f.gpu);
+  if (!filas.length) return '<p class="llano">No ha salido ninguna cifra.</p>';
+  const parte = (v, l) => `${Math.round((v / Math.max(l, 1e-3)) * 100)} %`;
+  const llano = [];
+  const ambas = filas.filter((f) => f.gl && f.gpu);
+  for (const f of filas) {
+    const trozos = ['gl', 'gpu'].filter((k) => f[k]).map((k) => `${NOMBRE[k]} ${num(f[k].vacio.porCuadro, 1)} de ${num(f[k].lente.porCuadro, 1)} ms (el ${parte(f[k].vacio.porCuadro, f[k].lente.porCuadro)})`);
+    llano.push(`Nivel ${f.nivel}: el cuadro vacío tarda ${trozos.join('; ')}.`);
+  }
+  let t = `<strong>Cuadro vacío</strong> (solo borrar y esperar a la GPU) frente al cuadro con la lente. ${llano.join(' ')}`;
+  if (!ambas.length) {
+    t += r.sinGPU ? ' Este navegador no tiene WebGPU, así que no hay diferencia que explicar.' : ' La otra no ha dado cifra, así que no hay diferencia que explicar.';
+  } else {
+    const dif = ambas.map((f) => ({ nivel: f.nivel, lente: f.gpu.lente.porCuadro - f.gl.lente.porCuadro, vacio: f.gpu.vacio.porCuadro - f.gl.vacio.porCuadro }));
+    const signo = (x) => `${x >= 0 ? '+' : '−'}${num(Math.abs(x), 2)}`;
+    t += ` WebGPU menos WebGL2: ${dif.map((d) => `nivel ${d.nivel}, ${signo(d.lente)} ms con la lente y ${signo(d.vacio)} en vacío`).join('; ')}.`;
+    t += ' ' + veredictoEspera(dif);
+  }
+  const res = filas.map((f) => (f.gl || f.gpu).lente).map((x) => `${x.ancho} × ${x.alto}`);
+  if (res.length === 2 && res[0] === res[1]) t += ' En esta pantalla los niveles 0 y 2 tienen el mismo lienzo: solo cambian la rejilla fina y las estrellas.';
+
+  const una = (f, k) => (f[k] ? `${NOMBRE[k]} lente ${num(f[k].lente.porCuadro, 2)} ms, vacío ${num(f[k].vacio.porCuadro, 2)} ms (mediana ${num(f[k].vacio.mediana, 2)}, p90 ${num(f[k].vacio.p90, 2)})` : `${NOMBRE[k]} sin dato${motivo[k] ? `: ${escapar(motivo[k])}` : ''}`);
+  const motores = r.sinGPU ? ['gl'] : ['gl', 'gpu'];
+  let tecnico = r.niveles.map((f) => {
+    const b = (f.gl || f.gpu);
+    return `Nivel ${f.nivel}${b ? `, ${b.lente.ancho} × ${b.lente.alto} px` : ''}: ${motores.map((k) => una(f, k)).join(' · ')}.`;
+  }).join(' ');
+  if (r.sinGPU) tecnico += ` No hay WebGPU (${escapar(r.sinGPU)}), así que solo mido WebGL2.`;
+  return `<p class="llano">${t}</p><p class="tecnico">Cifras: ${tecnico} Bloques de ${CUADROS} cuadros entre ${CUADROS}, esperando a la GPU en cada uno.</p>`;
+}
+
 // En llano: cuánto tarda cada una por cuadro y cuánto del margen usa. Una pantalla de 120 Hz
 // da 8,3 ms por cuadro y una de 60 Hz, 16,7. Se mide esperando a la GPU en cada
 // cuadro, así que es el caso más justo, no el más cómodo.
@@ -302,7 +394,7 @@ async function arrancar() {
     cartel.textContent = 'La lente no se puede pintar en este navegador: no hay ni WebGPU ni WebGL 2.';
     cartel.hidden = false;
     avisar(`WebGPU: ${motivo.gpu}. WebGL2: ${motivo.gl}.`);
-    botonMedir.disabled = true;
+    botonMedir.disabled = true; botonEspera.disabled = true;
     return;
   }
   ensenar(primero);
@@ -338,12 +430,20 @@ selNivel.addEventListener('change', () => {
   pedir();
 });
 botonMedir.addEventListener('click', async () => {
-  botonMedir.disabled = true;
+  botonMedir.disabled = true; botonEspera.disabled = true;
   avisar(`Midiendo ${CUADROS} cuadros con cada una…`);
   const r = await medirLasDos();
-  botonMedir.disabled = !activo;
+  botonMedir.disabled = !activo; botonEspera.disabled = !activo;
   if (!r && !activo) avisar('No se puede medir: no queda ninguna forma de pintar la lente.');
   if (r) { cifras.innerHTML = textoCifras(r); avisar(textoNivel()); cifras.scrollIntoView({ block: 'nearest' }); }
+});
+botonEspera.addEventListener('click', async () => {
+  botonMedir.disabled = true; botonEspera.disabled = true;
+  avisar(`Midiendo la espera: cuadros con la lente y vacíos, niveles 0 y 2, con cada una…`);
+  const r = await medirEspera();
+  botonMedir.disabled = !activo; botonEspera.disabled = !activo;
+  if (!r && !activo) avisar('No se puede medir: no queda ninguna forma de pintar la lente.');
+  if (r) { cifras.innerHTML = textoEspera(r); avisar(textoNivel()); cifras.scrollIntoView({ block: 'nearest' }); }
 });
 botonCopiar.addEventListener('click', async () => {
   guardarURL();
@@ -365,7 +465,7 @@ document.addEventListener('visibilitychange', () => { if (document.hidden && enM
 
 botonMarcha.disabled = menosMovimiento;
 window.lente = {
-  fotograma, medirLasDos,
+  fotograma, medirLasDos, medirEspera,
   get motores() { return { gpu: !!inst.gpu, gl: !!inst.gl, activo, motivoGPU: motivo.gpu }; },
   get nivel() { return activo ? inst[activo].nivel : null; },
 };

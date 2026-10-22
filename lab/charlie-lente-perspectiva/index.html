@@ -15,8 +15,10 @@
 <body>
   <!--
     Lente en perspectiva (Charlie, laboratorio): la malla de la portada vista de lado
-    y en perspectiva, que se hunde en un embudo con la masa, y la lente de siempre en el fondo del embudo.
-    La misma escena en WebGL2 y en WebGPU, con los mismos mandos que ../charlie-lente-gpu/.
+    y en perspectiva, que se hunde en un embudo con la masa, y en el fondo del embudo el agujero visto con
+    la misma cámara: el disco caliente como una elipse aplastada, con su parte de atrás curvada por encima
+    de la sombra, como en Interstellar. La misma escena en WebGL2 y en WebGPU, con los mismos mandos que
+    ../charlie-lente-gpu/, «Medir la espera» incluido.
     Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT.
     Un fotograma por enlace: ?t=0.85&r=3.2&motor=gpu|gl&mm=1&nivel=0|1|2&ui=0.
     No toca /motor/, la portada ni las dos lentes: de ellas solo importa sin cambiarlas.
@@ -25,7 +27,7 @@
   <canvas class="lienzo" id="lienzoGL" aria-hidden="true" hidden></canvas>
   <p class="cartel" id="cartel" hidden></p>
   <noscript>
-    <img class="sinjs" src="cartel.jpg" width="1280" height="800" alt="La malla de la portada vista de lado, hundida en un embudo, con la sombra negra y el anillo de fotones en el fondo.">
+    <img class="sinjs" src="cartel.jpg" width="1280" height="800" alt="La malla de la portada vista de lado, hundida en un embudo; en el fondo, la sombra negra y el disco caliente visto de lado, con su parte de atrás curvada por encima de la sombra.">
     <p class="cartel">Esta lente se pinta con JavaScript. Sin él, aquí tienes cómo se ve con la masa a 0,85.</p>
   </noscript>
 
@@ -81,6 +83,8 @@
       <div class="cifras" id="cifras" aria-live="polite">
         <p class="llano">Pinta 120 cuadros con cada forma y te dice cuánto tarda cada una y si le sobra tiempo. Mide con la masa que tengas puesta; la imagen se queda quieta un momento.</p>
       </div>
+      <button type="button" id="esperaBoton" class="secundario" aria-describedby="esperaAyuda">Medir la espera</button>
+      <p class="ayuda" id="esperaAyuda">Para curiosos: pinta también cuadros vacíos (solo borrar), en los detalles 0 y 2, y te dice si lo que separa a las dos es el dibujo o esperar a que la GPU acabe. Tarda unos segundos más y la imagen parpadea.</p>
     </div>
 
     <div class="botones">

@@ -1,7 +1,8 @@
 // Lente en perspectiva, versión WebGL2 (Charlie, laboratorio). Cumple el contrato de escena del
 // motor (lab/charlie-visor/CONTRATO.md): tramo, late e iniciar(ctx) → { pintar(t, reloj), retirar() }
 // más medir() y bajar(). Lo demás (pintarVacio, sincronizar, ponerNivel) es para medir en pagina.js.
-// Dos pasadas: la malla con suma de luz y, encima, la lente con alfa premultiplicado.
+// Dos pasadas: primero la lente (el agujero visto con la cámara de la malla) y encima la malla, con suma
+// de luz; la malla no se pinta donde la tapa la sombra.
 
 import {
   tramo, late, NIVELES, limitar, construirMalla, parametros, datosMalla, datosLente,
@@ -76,18 +77,24 @@ export async function iniciar(ctx) {
     cargarMalla();
   }
 
-  const dm = new Float32Array(28), dl = new Float32Array(16);
+  const dm = new Float32Array(36), dl = new Float32Array(36);
   function pintar(t, reloj) {
     const F = parametros(t, reloj, ctx, nivel, ancho, alto);
     const escala = lienzo.width / ancho;
     datosMalla(F, lienzo, escala, L, dm);
-    datosLente(F, ancho, alto, escala, dl);
+    datosLente(F, lienzo, dl);
     gl.viewport(0, 0, lienzo.width, lienzo.height);
     gl.clearColor(0, 0, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.enable(gl.BLEND);
+    // La lente, sobre el negro: escribe sin mezclar
+    gl.disable(gl.BLEND);
+    gl.useProgram(lente.p);
+    gl.uniform4fv(lente.u['uL[0]'], dl);
+    gl.bindVertexArray(vaoLente);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-    // La malla: luz que se suma
+    // La malla encima: luz que se suma
+    gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE);
     gl.useProgram(malla.p);
     const u = malla.u;
@@ -102,18 +109,10 @@ export async function iniciar(ctx) {
     gl.uniform1f(u.uAltoPx, dm[24]);
     gl.uniform1f(u.uL, dm[25]);
     gl.uniform1f(u.uCalor, dm[26]);
+    gl.uniform4fv(u.uOjoB, dm.subarray(28, 32));
+    gl.uniform4fv(u.uHueco, dm.subarray(32, 36));
     gl.bindVertexArray(vaoMalla);
     gl.drawElements(gl.TRIANGLES, cuantos, gl.UNSIGNED_SHORT, 0);
-
-    // La lente encima: la sombra tapa, la luz se suma
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    gl.useProgram(lente.p);
-    gl.uniform4fv(lente.u.uA, dl.subarray(0, 4));
-    gl.uniform4fv(lente.u.uB, dl.subarray(4, 8));
-    gl.uniform4fv(lente.u.uC, dl.subarray(8, 12));
-    gl.uniform4fv(lente.u.uD, dl.subarray(12, 16));
-    gl.bindVertexArray(vaoLente);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
     gl.bindVertexArray(null);
     gl.disable(gl.BLEND);
   }
