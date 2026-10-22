@@ -108,7 +108,7 @@ function proyectar(m, x, y, z, ancho, alto) {
 }
 
 // Todo lo que se pinta en un fotograma, a partir de t, el reloj, el tamaño y el nivel.
-// La masa es la misma curva que en la lente: a 0 la malla es plana; a 1, embudo hondo con sombra.
+// Las curvas son las de la lente, salvo la hondura del embudo, que sigue hasta 1: a 0 la malla es plana; a 1, embudo hondo con sombra.
 export function parametros(t, reloj, ctx, nivel, ancho, alto) {
   const mm = ctx.menosMovimiento;
   const rl = mm ? 0 : reloj;
