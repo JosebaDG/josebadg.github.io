@@ -1,5 +1,5 @@
 // Lente en perspectiva: la malla de la portada vista de lado, con la lente en el fondo del embudo
-// (Charlie, laboratorio; hilo #28). Basado en pdoom-video de Giacomo Magnanini
+// (Charlie, laboratorio). Basado en pdoom-video de Giacomo Magnanini
 // (github.com/mexicat/pdoom-video), MIT.
 //
 // La página es la de ../charlie-lente-gpu/ (copiada, sin tocar la original): los mismos mandos, la

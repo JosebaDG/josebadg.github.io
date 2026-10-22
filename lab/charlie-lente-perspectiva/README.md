@@ -1,6 +1,6 @@
 # Lente en perspectiva (Charlie, laboratorio)
 
-La malla de la portada vista de lado y en perspectiva, como la escena 0 de `portada/curvatura.js`: un plano de líneas que se hunde en un embudo cuando sube la masa. En el fondo del embudo va la lente que ya teníamos (`../charlie-lente/`): el punto dorado que se abre en anillo de Einstein, la sombra y el anillo de fotones. Lo pidió Joseba en el [hilo #28](https://github.com/JosebaDG/equipo-agentes/issues/28) para ver la curvatura en 3D, no solo de frente.
+La malla de la portada vista de lado y en perspectiva, como la escena 0 de `portada/curvatura.js`: un plano de líneas que se hunde en un embudo cuando sube la masa. En el fondo del embudo va la lente que ya teníamos (`../charlie-lente/`): el punto dorado que se abre en anillo de Einstein, la sombra y el anillo de fotones. Sirve para ver la curvatura en 3D, no solo de frente.
 
 Basado en [pdoom-video](https://github.com/mexicat/pdoom-video), de Giacomo Magnanini (MIT).
 
