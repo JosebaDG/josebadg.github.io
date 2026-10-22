@@ -130,7 +130,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 21 de octubre de 2026. Publicado el apartado <a href="/lab/innovacion/">Innovación</a>, con tu sí, el de Charlie y el de Miles: tecnologías desmontadas hasta que se entienden. El primero, <a href="/lab/innovacion/shader/">un shader de una línea, paso a paso</a>. Nueva en la Biblioteca: <a href="#f-phonon">texto a voz en castellano dentro del móvil</a>. No hay nada pendiente.</p>
+    <p class="fecha">Al día: 22 de octubre de 2026. Nuevo en la Biblioteca: <a href="#f-ecc">ECC</a> y <a href="#f-mattpocock">las skills de Matt Pocock</a>, para organizar un equipo de agentes, y la necesidad <a href="#n-programar">programar con agentes</a>. No hay nada pendiente.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -297,6 +297,7 @@
           <li><a href="#n-medir">Revisar con datos</a></li>
           <li><a href="#n-direccion">Biblia de estilo y guion</a></li>
           <li><a href="#n-equipo">Equipo de agentes creativos</a></li>
+          <li><a href="#n-programar">Programar con agentes</a></li>
           <li><a href="#n-datos">Datos que mueven la imagen</a></li>
           <li><a href="#n-texto">Texto que se mueve</a></li>
           <li><a href="#n-comunidad">Comunidad y conocimiento compartido</a></li>
@@ -370,7 +371,7 @@
           <p class="ojo">La nuestra aún no existe: la biblia es de Maya y el guion de Simone.</p>
         </article>
 
-        <article class="necesidad" id="n-equipo" data-claves="equipo agentes orquestar orquestacion organizar roles director animador jueces claude coste creditos fallos aprender lecciones mejorar instrucciones normas habilidades skills arnes harness google">
+        <article class="necesidad" id="n-equipo" data-claves="equipo agentes orquestar orquestacion organizar roles director animador jueces claude coste creditos fallos aprender lecciones mejorar instrucciones normas habilidades skills arnes harness google ecc everything claude code matt pocock mattpocock revisor revision doble consejo traspaso tablero preguntar a la persona preguntas escribir para agentes glosario plantilla kit">
           <h3>Organizar un equipo de agentes creativos</h3>
           <p class="para">Para repartir el trabajo visual entre agentes sin pisarse y sin quemar créditos.</p>
           <ul class="recursos">
@@ -378,8 +379,19 @@
             <li><a href="https://x.com/anabology/status/2104604226059993391">Post de @anabology</a>: la puerta de entrada a la carpeta, con lo que costó en horas. <a class="aficha" href="#f-post">Ficha</a></li>
             <li><a href="https://github.com/mexicat/pdoom-video/blob/main/docs/ENGINE.md">pdoom-video, ENGINE.md</a>: reglas para varios autores. Cada uno toca sus escenas y el motor tiene un dueño. <a class="aficha" href="#f-pdoom">Ficha</a></li>
             <li><a href="https://github.com/google-research/harness2">Harness², de Google Research</a>: cómo aprende un equipo de agentes de sus propios fallos. Se propone un cambio, se prueba con el mismo caso y solo se adopta con pruebas. <a class="aficha" href="#f-harness2">Ficha</a></li>
+            <li><a href="https://github.com/affaan-m/ECC">ECC (Everything Claude Code)</a> (MIT): un catálogo enorme de agentes y skills. De él sirven una docena de patrones: tablero con dueño, revisión doble, consejo de cuatro voces y traspasos. <a class="aficha" href="#f-ecc">Ficha</a></li>
+            <li><a href="https://github.com/mattpocock/skills">Skills de Matt Pocock</a> (MIT): pocas y muy cuidadas. Enseñan a preguntar a la persona para que un «sí» baste, a escribir lo que lee un agente y a tener un glosario común. <a class="aficha" href="#f-mattpocock">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: cada vídeo de Slopcore costó de 626 a 1.007 dólares en Claude a precio de API, y usa Midjourney y Seedance, de pago, que chocan con nuestra regla de que nada parezca generado por IA. Se aprende el método, no se copia el gasto.</p>
+        </article>
+
+        <article class="necesidad" id="n-programar" data-claves="programar codigo agentes tdd pruebas test depurar bugs fallos diseno de codigo arquitectura revisar pr pull request code review especificacion spec tickets matt pocock mattpocock skills npx">
+          <h3>Programar con agentes</h3>
+          <p class="para">Para que un agente escriba código con pruebas, busque la causa de un fallo y prepare un PR que se pueda revisar.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mattpocock/skills/tree/main/skills/engineering">Skills de Matt Pocock, carpeta de programar</a> (MIT): <code>tdd</code>, <code>diagnosing-bugs</code>, <code>code-review</code>, <code>pr</code>, <code>to-spec</code> y <code>to-tickets</code>, listas para instalar. Leídas, sin probar en nuestros repos. <a class="aficha" href="#f-mattpocock">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: instalar skills ejecuta instrucciones ajenas dentro del agente. Se instalan en la máquina de quien programa y solo si esa persona dice que sí.</p>
         </article>
 
         <article class="necesidad" id="n-datos" data-claves="datos grafica precio pvpc musica audio ritmo convertir datos en escena visualizacion beats bpm tempo envolvente volumen librosa sonido">
@@ -566,6 +578,54 @@
         <div class="acciones">
           <a class="boton principal" href="https://github.com/google-research/harness2">Abrir el repo</a>
           <a class="boton" href="https://arxiv.org/abs/2610.14224">Leer el artículo</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-ecc">
+        <h4 id="f-ecc">ECC (Everything Claude Code): un catálogo enorme de agentes y skills</h4>
+        <ul class="etiquetas"><li>Código y método</li><li>Nivel medio</li><li>Estudiado</li><li>Licencia MIT</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un repo de Affaan Mustafa con piezas para que un agente de programación trabaje mejor. En la versión 2.2.3 que estudiamos había 71 agentes, 311 skills, 97 comandos, reglas y ganchos. Nació para Claude Code y hoy se presenta también para Codex, OpenCode y Cursor. Es muy popular (unas 286.000 estrellas) y muy activo.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>No la cantidad, sino una docena de patrones</strong> de coordinación, revisión y memoria, reescritos en castellano y sin depender de ninguna plataforma.</li>
+            <li><strong>Tablero con dueño</strong>: cada tarea con responsable, alcance, estado, prueba y una puerta antes de darla por buena.</li>
+            <li><strong>Revisión doble independiente</strong> y <strong>consejo de cuatro voces</strong> para las decisiones que se pueden deshacer.</li>
+            <li><strong>Traspaso y compactar en momentos lógicos</strong>, para que otro agente siga sin perder el hilo.</li>
+            <li><strong>Preparar para publicar con un guardián</strong> que revisa que no salga nada privado.</li>
+          </ul></dd>
+          <dt>Lo que no usamos</dt>
+          <dd>Los ganchos y comandos de Claude Code, la instalación por plugin, las reglas por lenguaje, los cientos de skills de frameworks, el aprendizaje automático por ganchos y la parte comercial. Unos atan a una plataforma y otros añaden volumen que el agente lee cada vez que trabaja.</dd>
+          <dt>Ojo</dt>
+          <dd>Los ganchos ejecutan código en cada acción del agente: se leen las ideas, no se instala. Las cifras que circulan en redes son de una versión vieja, y lo del hackathon solo lo afirma el autor. La raíz es MIT (© 2026 Affaan Mustafa), pero la skill <code>osint-investigation</code> es CC BY-SA 4.0 y otras carpetas traen licencia propia: de esas no se copia nada. Lo que se adapte lleva el aviso de copyright y la licencia. Tiene una parte de pago (ECC Pro); el repo abierto es gratis. Hay copias que se hacen pasar por él: solo vale el enlace de aquí.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/affaan-m/ECC">Abrir el repo</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-mattpocock">
+        <h4 id="f-mattpocock">Las skills de Matt Pocock: cómo se habla con la persona y con el agente</h4>
+        <ul class="etiquetas"><li>Método</li><li>Nivel medio</li><li>Estudiado</li><li>Licencia MIT</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a> y <a href="#n-programar">programar con agentes</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>«Skills For Real Engineers»: 38 skills de Matt Pocock para programar con agentes, en la versión 1.3.1 que estudiamos. Cada una es un <code>SKILL.md</code> corto con su «cuándo usarla», y el detalle va en archivos aparte que solo se leen si hacen falta. Funcionan con Claude Code, Codex, Cursor y otros. Casi todo es de una persona y no acepta skills nuevas de fuera.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Preguntar a la persona</strong>: tandas numeradas, cada pregunta con una recomendación y redactada para que un «sí» baste. Los hechos los busca el agente, no la persona.</li>
+            <li><strong>Escribir para agentes</strong>: cada línea se lee cada vez, así que punteros en vez de copias, en positivo, una sola fuente de verdad y fuera lo que no cambia nada.</li>
+            <li><strong>Un glosario común</strong>: término, definición de una frase, sinónimos que evitar y ambigüedades resueltas.</li>
+            <li><strong>Revisar en dos ejes</strong> que no se mezclan: las normas del equipo y el encargo (qué falta, qué sobra, qué está mal). Y en cada PR, si tiene vuelta atrás y cuánto daño puede hacer.</li>
+            <li><strong>Para programar</strong>, listas para usar: <code>tdd</code>, <code>diagnosing-bugs</code>, <code>code-review</code> y <code>pr</code> son las más directas.</li>
+          </ul></dd>
+          <dt>Lo que no usamos</dt>
+          <dd>Lo atado a Claude Code (<code>git-guardrails-claude-code</code>, <code>claude-handoff</code>), lo atado a TypeScript o a sus cursos y la mecánica de plugins.</dd>
+          <dt>Ojo</dt>
+          <dd>Cambia a menudo (unos 70 commits en un mes): si se vuelve a mirar, hay que compararlo con la 1.3.1. Las skills de programar las hemos leído, no probado. Licencia MIT (© 2026 Matt Pocock): lo que se adapte lleva su aviso. La parte visual de la skill <code>pr</code> es de Dex Horthy (HumanLayer, MIT). Gratis y sin servicios de pago.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/mattpocock/skills">Abrir el repo</a>
         </div>
       </article>
       <article class="ficha" aria-labelledby="f-federado">
