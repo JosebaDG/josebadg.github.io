@@ -26,7 +26,7 @@ export const tramo = [0, 1];
 export const late = true;
 
 export const GARGANTA = 1.0;  // anchura del embudo (la misma que en la portada)
-export const PROF = 6.0;      // profundidad del embudo con la masa a 1
+export const PROF = 9.6;      // profundidad del embudo con la masa a 1 (un 60 % más que la portada)
 export const PERIODO = 1.5;   // segundos por latido (el de la portada y la lente: 40 por minuto)
 const RADIO_LENTE = 1.6;      // «radio» de la lente 2D en el mundo: escala la posición del punto dorado
 const RS = 0.3;               // radio de Schwarzschild con la masa a 1; la sombra se ve de 2,6 veces eso (0,78)
@@ -142,7 +142,10 @@ export function parametros(t, reloj, ctx, nivel, ancho, alto) {
   const obj = [0, 0, -PROF * 0.5];
   const ojo = [0, -dist * Math.cos(elev), obj[2] + dist * Math.sin(elev)];
   const vista = mirar(ojo, obj, [0, 0, 1]);
-  const [nx, ny] = ndc(por(perspectiva(fovy, aspecto, 0.1, 200, 0, 0), vista), 0, 0, zFin);
+  // Lo que va al centro de la zona libre no es el agujero a fondo sino un punto más arriba (en vertical,
+  // el 55 % de su hondura; en horizontal, el 75 %): así con poca masa no queda pegado al borde de arriba
+  // y a fondo baja algo por debajo del centro
+  const [nx, ny] = ndc(por(perspectiva(fovy, aspecto, 0.1, 200, 0, 0), vista), 0, 0, zFin * (aspecto < 1 ? 0.55 : 0.75));
   const c = ctx.centro();
   const dx = (2 * c.x) / ancho - 1 - nx, dy = 1 - (2 * c.y) / alto - ny;
   const vp = por(perspectiva(fovy, aspecto, 0.1, 200, dx, dy), vista);
@@ -184,6 +187,8 @@ export function parametros(t, reloj, ctx, nivel, ancho, alto) {
       disco: [DISCO[0] * rs, DISCO[1] * rs],
       dls: DLS,
       fuente, fuenteR: 0.11 * k,
+      // Cuánto se aplasta en vertical el anillo dorado: lo que se ve inclinado el plano del agujero
+      aplasta: Math.max(0.4, ojoB[2] / D),
     },
   };
 }
@@ -360,15 +365,17 @@ void main() {
     }
   }
   // El punto dorado: donde el rayo, ya recto, corta el plano de la fuente
+  // El punto dorado y su anillo de Einstein, con la lente fina (b' = b - θE²·b/(b² + blando²)) en la
+  // coordenada vertical aplastada por la inclinación (uL[8].w): así el anillo sale tumbado como el disco
   if (dentro < 0.5) {
-    vec3 fw = -uL[4].xyz;
-    float vf = dot(v, fw);
-    if (vf > 0.05) {
-      vec3 q = p + v * (dot(fw * uL[6].w - p, fw) / vf);
-      vec3 fs = q - uL[8].xyz;
-      float f2 = dot(fs, fs) / (uL[7].z * uL[7].z);
-      col += (1.0 - a) * ORO * (0.9 * exp(-f2) + 0.9 * exp(-f2 * 9.0)) * (1.0 + 0.35 * uL[5].w);
-    }
+    float D = length(uL[5].xyz);
+    float kk = (D + uL[6].w) / D;
+    vec2 th = vec2(dot(pc, uL[2].xyz), dot(pc, uL[3].xyz) / uL[8].w);
+    vec2 be = th - th * (2.0 * rs * uL[6].w / kk) / (dot(th, th) + uL[1].w * uL[1].w + 1e-6);
+    vec2 sc = vec2(dot(uL[8].xyz, uL[2].xyz), dot(uL[8].xyz, uL[3].xyz) / uL[8].w) / kk;
+    vec2 fs = be - sc;
+    float f2 = dot(fs, fs) * kk * kk / (uL[7].z * uL[7].z);
+    col += (1.0 - a) * ORO * (0.9 * exp(-f2) + 0.9 * exp(-f2 * 9.0)) * (1.0 + 0.35 * uL[5].w);
   }
   // El anillo de fotones (fino, en el borde de la sombra) y la bruma cálida pegada a ella
   float bc = 2.598 * rs;
@@ -542,14 +549,14 @@ fn disco(q: vec3f) -> vec4f {
     }
   }
   if (dentro < 0.5) {
-    let fw = -uL[4].xyz;
-    let vf = dot(v, fw);
-    if (vf > 0.05) {
-      let q = p + v * (dot(fw * uL[6].w - p, fw) / vf);
-      let fs = q - uL[8].xyz;
-      let f2 = dot(fs, fs) / (uL[7].z * uL[7].z);
-      col += (1.0 - a) * ORO * (0.9 * exp(-f2) + 0.9 * exp(-f2 * 9.0)) * (1.0 + 0.35 * uL[5].w);
-    }
+    let D = length(uL[5].xyz);
+    let kk = (D + uL[6].w) / D;
+    let th = vec2f(dot(pc, uL[2].xyz), dot(pc, uL[3].xyz) / uL[8].w);
+    let be = th - th * (2.0 * rs * uL[6].w / kk) / (dot(th, th) + uL[1].w * uL[1].w + 1e-6);
+    let sc = vec2f(dot(uL[8].xyz, uL[2].xyz), dot(uL[8].xyz, uL[3].xyz) / uL[8].w) / kk;
+    let fs = be - sc;
+    let f2 = dot(fs, fs) * kk * kk / (uL[7].z * uL[7].z);
+    col += (1.0 - a) * ORO * (0.9 * exp(-f2) + 0.9 * exp(-f2 * 9.0)) * (1.0 + 0.35 * uL[5].w);
   }
   let bc = 2.598 * rs;
   if (bc > 1e-4) {
@@ -587,6 +594,6 @@ export function datosLente(F, lienzo, datos = new Float32Array(36)) {
   datos.set([...P.ojoB, P.kick], 20);
   datos.set([P.time, P.swirl, P.pasos, P.dls], 24);
   datos.set([P.disco[0], P.disco[1], P.fuenteR, 0], 28);
-  datos.set([...P.fuente, 0], 32);
+  datos.set([...P.fuente, P.aplasta], 32);
   return datos;
 }
