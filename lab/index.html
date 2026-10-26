@@ -130,7 +130,7 @@
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
     <p class="intro">El departamento del equipo para exprimir el navegador. Arriba, lo que espera tu sí. Debajo, lo demás.</p>
-    <p class="fecha">Al día: 22 de octubre de 2026. Nuevo en la Biblioteca: <a href="#f-ecc">ECC</a> y <a href="#f-mattpocock">las skills de Matt Pocock</a>, para organizar un equipo de agentes, y la necesidad <a href="#n-programar">programar con agentes</a>. No hay nada pendiente.</p>
+    <p class="fecha">Al día: 26 de octubre de 2026. Nuevo en la Biblioteca: <a href="#f-foundation">Foundation Models de Apple</a>, el modelo de lenguaje que ya trae el iPhone, en <a href="#n-local">IA dentro del móvil</a>. No hay nada pendiente.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul>
@@ -444,7 +444,7 @@
           <p class="ojo">Ojo: cualquier app de iPhone pasa por Apple. Para publicar hace falta su programa de desarrollador, que es de pago, y eso lo decide Joseba.</p>
         </article>
 
-        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen parakeet core ai coreai aimodel core ml foundation models instruments wwdc llama gguf pocketpal neural engine swiftui natacion phonon gradium pocket tts kyutai voz castellano espanol leer en voz alta sintesis de voz voces lector web lector de voz kokoro-82m">
+        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen parakeet core ai coreai aimodel core ml foundation models foundationmodels private cloud compute pcc apple intelligence generable tool calling herramientas salida estructurada contexto ventana de contexto dynamicprofile instruments wwdc llama gguf pocketpal neural engine swiftui natacion phonon gradium pocket tts kyutai voz castellano espanol leer en voz alta sintesis de voz voces lector web lector de voz kokoro-82m">
           <h3>IA dentro del móvil, sin nube</h3>
           <p class="para">Para que un modelo de lenguaje o de voz funcione en el propio teléfono, sin conexión y sin mandar datos fuera. Importa sobre todo cuando hay datos personales, como los de menores.</p>
           <ul class="recursos">
@@ -452,6 +452,7 @@
             <li><a href="https://github.com/apple/coreai-models">Modelos oficiales de Core AI</a> (BSD-3): recetas para convertir modelos y piezas en Swift ya hechas, con voz a texto (Parakeet, Whisper) y modelos de lenguaje (Qwen, Gemma). <a class="aficha" href="#f-coreai">Ficha</a></li>
             <li><a href="https://developer.apple.com/videos/play/wwdc2026/324/">Sesiones de la WWDC 2026</a>: presentación de Core AI, integración en la app y optimización, con transcripción y código. <a class="aficha" href="#f-coreai">Ficha</a></li>
             <li><a href="https://github.com/john-rocky/coreai-model-zoo">Core AI Model Zoo</a> (BSD-3): colección de un desarrollador independiente, no de Apple, con muchos más modelos ya convertidos, texto a voz incluido. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://developer.apple.com/videos/play/wwdc2026/241/">Foundation Models de Apple</a> (gratis, viene con el sistema): el modelo de lenguaje que ya trae el iPhone, con salida en tipos de Swift, herramientas y, desde iOS 27, el modelo grande de Apple en su nube privada. No transcribe voz. <a class="aficha" href="#f-foundation">Ficha</a></li>
             <li><a href="https://huggingface.co/gradium/phonon-40m-es">phonon-40m-es de Gradium</a> (pesos CC BY-NC 4.0, no comercial): texto a voz en castellano de 75 MB, con voces de España y de México, que suena mientras genera y trae paquete Swift. Permitido para uso no comercial y candidato, con Kokoro-82M, para un lector web. <a class="aficha" href="#f-phonon">Ficha</a></li>
           </ul>
           <p class="ojo">Ojo: cada modelo trae su propia licencia, distinta de la del código. Que todo sea local no quiere decir que esté cifrado: los datos pueden acabar en la copia de seguridad del teléfono.</p>
@@ -791,6 +792,39 @@
           <a class="boton principal" href="https://developer.apple.com/documentation/coreai">Core AI en Apple</a>
           <a class="boton" href="https://github.com/apple/coreai-models">Repo oficial</a>
           <a class="boton" href="https://developer.apple.com/videos/play/wwdc2026/324/">Meet Core AI</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-foundation">
+        <h4 id="f-foundation">El modelo de lenguaje que ya trae el iPhone: Foundation Models de Apple</h4>
+        <ul class="etiquetas"><li>Plataforma</li><li>Nivel avanzado</li><li>Leídas las sesiones 241 y 242 de la WWDC 2026, la 301 de la WWDC 2025 y la documentación oficial</li><li>Sin probar en un iPhone</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-local">IA dentro del móvil, sin nube</a> y <a href="#n-app">hacer una app para el móvil</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>El framework de Apple para usar desde Swift el modelo de lenguaje de Apple Intelligence, sin descargar ningún modelo. Va en el propio aparato (iPhone 16 o posterior, Mac con M1 o posterior) y, desde iOS y macOS 27, también puede usar Private Cloud Compute, el modelo grande de Apple en sus servidores.</dd>
+          <dt>Cómo se usa desde Swift</dt>
+          <dd><ul>
+            <li><strong>Sesión</strong>: <code>LanguageModelSession</code> guarda la conversación. Desde iOS 26.4, <code>contextSize</code> y <code>tokenCount(for:)</code> dicen cuánto cabe y cuánto se gasta. Si se pasa, salta <code>exceededContextWindowSize</code> y se abre otra sesión con un resumen.</li>
+            <li><strong>Salida con campos fijos</strong>: <code>@Generable</code> y <code>@Guide</code> obligan al modelo a seguir un esquema (rangos, número de elementos, expresiones regulares).</li>
+            <li><strong>Herramientas</strong>: una herramienta cumple el protocolo <code>Tool</code> y el modelo la llama cuando necesita datos de la app, sin meterlos todos en el contexto.</li>
+            <li><strong>Perfiles (iOS 27)</strong>: <code>DynamicProfile</code> cambia instrucciones, herramientas y modelo según la fase, y <code>historyTransform</code> quita datos privados del historial antes de pasarlo a un modelo menos privado.</li>
+          </ul></dd>
+          <dt>Contexto</dt>
+          <dd>En Private Cloud Compute, 32k tokens, confirmado desde iOS 27. En el aparato, la documentación dice 4.096 tokens por sesión; un ejemplo de la sesión 241 imprime 8.192 con el modelo de iOS 27, pero es un ejemplo, no una especificación. La cifra real se lee en el iPhone.</dd>
+          <dt>Castellano</dt>
+          <dd>El español está entre los idiomas de Apple Intelligence. Se comprueba con <code>supportsLocale()</code> y Apple recomienda fijar el idioma en las instrucciones. Los filtros de seguridad solo funcionan en los idiomas admitidos.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>No transcribe voz</strong>: trabaja con texto e imágenes. La voz sigue siendo otra pieza (Parakeet con Core AI, o <code>SpeechTranscriber</code> de Apple).</li>
+            <li><strong>Adaptadores</strong>: el kit para entrenarlos se quedó en la versión 26.0.0, que Apple da como no compatible con iOS 27.</li>
+            <li><strong>Private Cloud Compute</strong>: gratis, pero pide estar en el App Store Small Business Program, menos de 2 millones de descargas y un permiso que asigna Apple; tiene límite diario por usuario y necesita red. El programa de desarrollador es de pago y lo decide Joseba.</li>
+            <li><strong>Privacidad</strong>: lo del aparato no sale del aparato; para la nube, Apple dice que no guarda los mensajes. Ninguna fuente de Apple habla de datos de menores: eso se decide antes de cargar datos reales.</li>
+            <li><strong>El modelo cambia con cada iOS</strong>: hay que volver a evaluar las instrucciones; Apple trae un framework de evaluaciones para medirlo.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://developer.apple.com/videos/play/wwdc2026/241/">Novedades (WWDC 2026)</a>
+          <a class="boton" href="https://developer.apple.com/videos/play/wwdc2026/242/">Apps con agentes (WWDC 2026)</a>
+          <a class="boton" href="https://developer.apple.com/videos/play/wwdc2025/301/">A fondo (WWDC 2025)</a>
         </div>
       </article>
       <article class="ficha" aria-labelledby="f-phonon">
