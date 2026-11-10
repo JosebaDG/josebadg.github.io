@@ -1,0 +1,132 @@
+/* Maqueta del ciclo central de CursoCoach, generada desde el mapa del book 0.2.
+   Colores del book: grafito azulado, verde petróleo y marfil (página 03 del PDF).
+   Letra del sistema; en iPhone sigue el tamaño de texto de Ajustes. Toques de 44 pt, filas de 56 pt. */
+:root {
+  --fondo: #F4F4EF; --superficie: #FFFFFF; --texto: #172B36; --secundario: #4A5A63;
+  --acento: #146B63; --sobre-acento: #FFFFFF; --acento-suave: #E3EEEB;
+  --aviso: #8A4B00; --aviso-fondo: #FBEEDB; --linea: rgba(23,43,54,.12);
+  --barra: rgba(255,255,255,.86); --sombra: 0 8px 28px rgba(23,43,54,.10);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #0F1D25; --superficie: #172B36; --texto: #EEF2F0; --secundario: #A9BAC0;
+    --acento: #5CC2B5; --sobre-acento: #0F1D25; --acento-suave: #1D3A40;
+    --aviso: #F2B866; --aviso-fondo: #2A2A1E; --linea: rgba(238,242,240,.14);
+    --barra: rgba(23,43,54,.9); --sombra: 0 8px 28px rgba(0,0,0,.4);
+  }
+}
+html { font: 17px/1.35 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font: -apple-system-body; }
+body { margin: 0; background: var(--fondo); color: var(--texto); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+* { box-sizing: border-box; }
+a { color: var(--acento); }
+a:focus-visible { outline: 3px solid var(--acento); outline-offset: 2px; border-radius: 6px; }
+.marco { max-width: 440px; margin: 0 auto; padding: 0 16px calc(96px + env(safe-area-inset-bottom)); }
+.marco.modal, .marco.indice { padding-bottom: 24px; }
+.banda p { margin: 0; }
+.banda { margin: 0 -16px; padding: max(8px, env(safe-area-inset-top)) 16px 8px; font-size: .765rem; color: var(--aviso);
+  background: var(--aviso-fondo); text-align: center; }
+.app { display: flex; flex-direction: column; gap: 16px; padding-top: 8px; }
+.barra-sup { min-height: 44px; display: flex; align-items: center; }
+.texto { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 600; text-decoration: none; color: var(--acento); }
+.titulo { font-size: 2rem; font-weight: 700; line-height: 1.15; margin: 4px 0 0; }
+.titulo.medio { font-size: 1.53rem; }
+.sub { margin: -10px 0 0; color: var(--secundario); }
+.seccion { font-size: 1rem; font-weight: 700; margin: 8px 0 -6px; }
+.antetitulo { display: block; font-size: .706rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin: 0; }
+
+/* Hoy: la siguiente sesión domina */
+.siguiente { background: var(--acento); color: var(--sobre-acento); border-radius: 22px; padding: 20px; display: flex; flex-direction: column; gap: 4px; box-shadow: var(--sombra); }
+.siguiente h2 { font-size: 1.53rem; margin: 0; }
+.siguiente .hora-grande { font-size: 2.35rem; font-weight: 700; margin: 6px 0 0; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.siguiente .detalle { margin: 0 0 12px; }
+.boton { display: flex; align-items: center; justify-content: center; min-height: 50px; padding: 10px 16px; border-radius: 14px;
+  background: var(--acento); color: var(--sobre-acento); font-weight: 600; text-decoration: none; text-align: center; }
+.boton.claro { background: var(--sobre-acento); color: var(--acento); }
+.boton.secundario { background: var(--acento-suave); color: var(--texto); }
+.acciones { display: flex; flex-direction: column; gap: 10px; }
+.enlace-suelto { margin: 0; }
+.centrado { text-align: center; display: flex; justify-content: center; }
+
+/* Filas */
+.filas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; background: var(--superficie); border-radius: 16px; overflow: hidden; }
+.filas li + li { border-top: 1px solid var(--linea); }
+.fila { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 10px 14px; color: inherit; text-decoration: none; }
+.cuerpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.etiqueta { font-weight: 600; }
+.valor { font-size: .882rem; color: var(--secundario); overflow-wrap: anywhere; }
+.chevron { color: var(--secundario); flex: none; }
+.horario .etiqueta { font-variant-numeric: tabular-nums; }
+.num { font-weight: 700; color: var(--acento); font-variant-numeric: tabular-nums; min-width: 1.6em; }
+.inicial { width: 2.4rem; height: 2.4rem; flex: none; border-radius: 50%; display: grid; place-items: center; font-weight: 700;
+  background: var(--acento-suave); color: var(--texto); }
+.inicial.grande { width: 4rem; height: 4rem; font-size: 1.3rem; }
+.perfil { display: flex; align-items: center; gap: 14px; }
+.perfil .sub { margin: 2px 0 0; }
+.perfil .titulo { margin: 0; }
+.espera { border: 1.5px dashed var(--linea); border-radius: 16px; padding: 12px 14px; color: var(--secundario); }
+.espera .seccion { margin: 0 0 4px; color: var(--texto); }
+.espera p { margin: 0; }
+.aviso { margin: 0; padding: 12px 14px; border-radius: 14px; background: var(--aviso-fondo); color: var(--aviso); }
+
+/* Captura y nota */
+.destino { margin: 0; padding: 12px 14px; border-radius: 14px; background: var(--acento-suave); font-weight: 600; }
+.destino .antetitulo { color: var(--acento); margin-bottom: 2px; }
+.micro { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 20px 0; font-weight: 700; color: var(--texto); text-decoration: none; }
+.disco { width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center; background: var(--acento); color: var(--sobre-acento); box-shadow: var(--sombra); }
+.sello { align-self: flex-start; margin: 0; padding: 4px 12px; border-radius: 999px; font-size: .765rem; font-weight: 700; background: var(--acento-suave); }
+.aviso-sello { background: var(--aviso-fondo); color: var(--aviso); }
+.cita { margin: 0; background: var(--superficie); border-radius: 16px; padding: 14px 16px; border-left: 5px solid var(--acento); }
+.cita figcaption { font-size: .765rem; font-weight: 700; color: var(--secundario); }
+.cita blockquote { margin: 6px 0 0; font-size: 1.24rem; font-weight: 600; line-height: 1.3; }
+.cita blockquote p { margin: 0; }
+.propuesta { background: var(--superficie); border-radius: 16px; padding: 12px 16px; border: 1.5px dashed var(--linea); }
+.propuesta p { margin: 0; }
+.propuesta .antetitulo { color: var(--secundario); margin-bottom: 4px; }
+.pista { margin: 0; color: var(--secundario); font-size: .882rem; }
+.pista strong { color: var(--texto); }
+.centro { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding-top: 12px; }
+.centro .sub { margin: 0; }
+.icono { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; }
+.icono.ok { background: var(--acento); color: var(--sobre-acento); }
+.icono.atencion { background: var(--aviso-fondo); color: var(--aviso); }
+
+/* Historial */
+.linea { list-style: none; margin: 0; padding: 0 0 0 20px; border-left: 2px solid var(--linea); display: flex; flex-direction: column; gap: 14px; }
+.hito { position: relative; display: flex; flex-direction: column; gap: 2px; background: var(--superficie); border-radius: 14px; padding: 12px 14px; }
+.hito::before { content: ""; position: absolute; left: -28px; top: 18px; width: 12px; height: 12px; border-radius: 50%; background: var(--acento); }
+.hito.borrador { background: transparent; border: 1.5px dashed var(--linea); }
+.hito.borrador::before { background: var(--fondo); border: 2px solid var(--secundario); }
+
+/* Pestañas del book */
+.pestanas { position: fixed; left: 50%; transform: translateX(-50%); bottom: max(10px, env(safe-area-inset-bottom)); width: min(408px, calc(100% - 24px));
+  background: var(--barra); border: 1px solid var(--linea); border-radius: 999px; box-shadow: var(--sombra); z-index: 10;
+  -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }
+.pestanas ul { list-style: none; margin: 0; padding: 4px; display: flex; }
+.pestanas li { flex: 1; min-width: 0; }
+.pestanas a { display: flex; align-items: center; justify-content: center; min-height: 48px; border-radius: 999px; font-size: .706rem; font-weight: 600;
+  color: var(--texto); text-decoration: none; overflow-wrap: anywhere; text-align: center; }
+.pestanas a[aria-current="page"] { background: var(--acento-suave); color: var(--texto); }
+
+/* Nota de diseño: fuera de la app */
+.nota { max-width: 440px; margin: 0 auto; padding: 8px 20px calc(110px + env(safe-area-inset-bottom)); font-size: .882rem; color: var(--secundario); }
+.nota h2 { font-size: .941rem; color: var(--texto); margin: 16px 0 6px; }
+.nota p { margin: 6px 0; }
+.nota strong { color: var(--texto); }
+.recorrido { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; }
+.recorrido a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+.pie { font-size: .765rem; color: var(--secundario); }
+
+/* Hoja «fuera del ciclo»: con :target, funciona sin JavaScript */
+.hoja { display: none; }
+.hoja:target { display: flex; position: fixed; inset: 0; z-index: 20; align-items: flex-end; justify-content: center; background: rgba(15,29,37,.45); }
+.hoja .panel { width: 100%; max-width: 440px; background: var(--superficie); border-radius: 24px 24px 0 0; padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 12px; }
+.hoja h2 { font-size: 1.18rem; margin: 0; }
+.hoja p { margin: 0; color: var(--secundario); }
+
+@media (min-width: 900px) {
+  .marco { margin-top: 24px; border-radius: 40px; outline: 10px solid #172B36; min-height: 820px; overflow: hidden; position: relative; }
+  .nota { padding-bottom: 40px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
