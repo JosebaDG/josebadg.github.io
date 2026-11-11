@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <title>Biblioteca · Laboratorio de animación y vídeo · The Singularity</title>
+  <link rel="icon" type="image/svg+xml" href="/portada/marca/favicon.svg">
+  <link rel="apple-touch-icon" href="/portada/marca/apple-touch-icon.png">
+  <style>
+    :root {
+      --negro: #000; --tinta: #f3ece2; --tinta-2: #bdb4a7; --oro: #f3cf96; --linea: #3a3631; --foco: #fff;
+      --espera-fondo: #15110b;
+      --c-miles: #a2bcff; --c-charlie: #47d6cf; --c-maya: #f89dc9; --c-simone: #e6b55d;
+      --f: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body { margin: 0; background: var(--negro); color: var(--tinta); font: 400 1.0625rem/1.5 var(--f); }
+    main { max-width: 40rem; margin: 0 auto; padding: max(1.75rem, env(safe-area-inset-top)) max(1.125rem, env(safe-area-inset-right)) 3rem max(1.125rem, env(safe-area-inset-left)); }
+    .marca { display: block; width: min(15rem, 70%); height: auto; margin: 0 0 1.25rem; }
+    h1 { font-size: 2rem; line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 0.5rem; }
+    h2 { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--oro); margin: 0 0 0.875rem; scroll-margin-top: 1rem; }
+    h3 { font-size: 1.25rem; line-height: 1.2; margin: 0 0 0.375rem; }
+    p { margin: 0 0 0.875rem; }
+    .intro { color: var(--tinta-2); }
+    .fecha { color: var(--tinta-2); font-size: 0.875rem; }
+    a { color: var(--tinta); }
+    a:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; border-radius: 4px; }
+    nav ul { list-style: none; padding: 0; margin: 1.25rem 0 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    nav a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.375rem 0.875rem; border: 1px solid var(--linea); border-radius: 999px; text-decoration: none; font-size: 0.9375rem; }
+    nav a.oro { border-color: var(--oro); color: var(--oro); font-weight: 600; }
+    section { margin: 0 0 2.75rem; }
+
+    /* 1. Te espera: siempre arriba y bien separado de lo demás. */
+    .zona-espera { background: var(--espera-fondo); border: 2px solid var(--oro); border-radius: 22px; padding: 1.25rem 1rem 0.5rem; margin-bottom: 1.5rem; }
+    .zona-espera > .intro { color: var(--tinta); }
+    .corte { margin: 0 0 2.75rem; padding: 0.875rem 0 0; border-top: 1px dashed var(--linea); color: var(--tinta-2); font-size: 0.875rem; }
+
+    .tarjeta { border: 1px solid var(--linea); border-radius: 18px; padding: 1.125rem; margin: 0 0 1rem; background: var(--negro); }
+    .tarjeta.espera { border-color: var(--oro); }
+    .estado { display: inline-block; font-size: 0.8125rem; font-weight: 600; padding: 0.125rem 0.625rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta-2); margin: 0 0 0.625rem; }
+    .espera .estado { border-color: var(--oro); color: var(--oro); }
+    .que { color: var(--tinta-2); }
+    figure { margin: 0 0 1rem; }
+    .par { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin: 0 0 1rem; }
+    .par figure { margin: 0; }
+    img { display: block; max-width: 100%; height: auto; }
+    figure img { width: 100%; border-radius: 12px; border: 1px solid var(--linea); background: #000; }
+    .captura-alta { max-width: 14rem; }
+    figcaption { font-size: 0.8125rem; color: var(--tinta-2); margin-top: 0.375rem; }
+    .acciones { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.5rem; }
+    .boton { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta); text-decoration: none; font-weight: 500; }
+    .boton.principal { background: var(--oro); border-color: var(--oro); color: #000; font-weight: 600; }
+    .boton:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
+    .nota { font-size: 0.875rem; color: var(--tinta-2); margin: 0.5rem 0 0; }
+    .vacio { color: var(--tinta-2); border: 1px dashed var(--linea); border-radius: 14px; padding: 0.875rem 1rem; margin: 0 0 1rem; }
+
+    /* 3. Experimentos, por miembro del equipo. */
+    .miembro { border-left: 3px solid var(--c, var(--linea)); padding: 0 0 0 0.875rem; margin: 0 0 1.5rem; }
+    .miembro h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.625rem; }
+    .miembro h3 small { font-size: 0.8125rem; font-weight: 600; color: var(--tinta-2); }
+    .miles { --c: var(--c-miles); } .charlie { --c: var(--c-charlie); } .maya { --c: var(--c-maya); } .simone { --c: var(--c-simone); }
+    ul.lista { list-style: none; padding: 0; margin: 0.5rem 0 0; display: grid; gap: 0.625rem; }
+    ul.lista a { display: block; padding: 0.875rem 1rem; border: 1px solid var(--linea); border-radius: 14px; text-decoration: none; min-height: 2.75rem; }
+    ul.lista strong { display: block; }
+    ul.lista span { color: var(--tinta-2); font-size: 0.9375rem; }
+
+    /* 4. Biblioteca: ordenada por necesidad; cada recurso cuelga de lo que resuelve. */
+    [hidden] { display: none !important; }
+    .buscador { margin: 0 0 0.5rem; }
+    .buscador label { display: block; font-weight: 600; margin: 0 0 0.375rem; }
+    .buscador input { width: 100%; min-height: 2.75rem; font: inherit; padding: 0.5rem 0.875rem; border-radius: 12px; border: 1px solid var(--oro); background: var(--espera-fondo); color: var(--tinta); }
+    .buscador input::placeholder { color: var(--tinta-2); opacity: 1; }
+    .buscador input:focus-visible { outline: 2px solid var(--foco); outline-offset: 2px; }
+    .indice-necesidades { margin: 0.75rem 0 1.25rem; }
+    .necesidad { border: 1px solid var(--linea); border-radius: 18px; padding: 1rem 1.125rem 0.375rem; margin: 0 0 0.875rem; scroll-margin-top: 1rem; }
+    .necesidad.sin-material { border-style: dashed; }
+    .necesidad h3 { font-size: 1.125rem; line-height: 1.25; }
+    .para { color: var(--tinta-2); }
+    .recursos { margin: 0 0 0.75rem; padding-left: 1.125rem; }
+    .recursos li { margin: 0 0 0.5rem; }
+    .aficha { font-size: 0.875rem; color: var(--oro); white-space: nowrap; }
+    .ojo { font-size: 0.9375rem; border-left: 2px solid var(--oro); padding-left: 0.625rem; }
+    .casa, .resuelve { font-size: 0.9375rem; color: var(--tinta-2); }
+    .casa a, .resuelve a { color: var(--tinta); }
+    .ficha { scroll-margin-top: 1rem; }
+    .ruta { border: 1px solid var(--linea); border-radius: 14px; padding: 0.875rem 1rem; margin: 0 0 1.25rem; }
+    .ruta ol { margin: 0.25rem 0 0; padding-left: 1.25rem; }
+    .ruta li { margin: 0 0 0.375rem; }
+    .ruta li strong { color: var(--oro); font-weight: 600; }
+    .ficha { border: 1px solid var(--linea); border-radius: 18px; padding: 1.125rem; margin: 0 0 1rem; }
+    .ficha h4 { font-size: 1.125rem; line-height: 1.25; margin: 0 0 0.5rem; }
+    .etiquetas { display: flex; flex-wrap: wrap; gap: 0.375rem; margin: 0 0 0.625rem; padding: 0; list-style: none; }
+    .etiquetas li { font-size: 0.8125rem; padding: 0.125rem 0.625rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta-2); }
+    .ficha dl { margin: 0 0 0.75rem; }
+    .ficha dt { font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--oro); margin: 0.625rem 0 0.125rem; }
+    .ficha dd { margin: 0; color: var(--tinta-2); }
+    .ficha dd ul, .ficha dd ol { margin: 0.125rem 0 0; padding-left: 1.125rem; }
+    .ficha dd li { margin: 0 0 0.25rem; }
+    .ficha code { overflow-wrap: anywhere; }
+    .estantes-titulo { font-size: 1.0625rem; margin: 1.5rem 0 0.625rem; }
+
+    footer { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--linea); color: var(--tinta-2); font-size: 0.875rem; }
+    @media (min-width: 48rem) { h1 { font-size: 2.5rem; } }
+
+    /* Entrada por proyectos: un bloque por proyecto, con estado, para qué sirve y dónde se abre. */
+    .indice { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .indice a { display: block; min-height: 2.75rem; padding: 0.625rem 0.875rem; border: 1px solid var(--linea); border-radius: 14px; text-decoration: none; }
+    .indice strong { display: block; font-size: 0.9375rem; }
+    .indice span { display: block; color: var(--tinta-2); font-size: 0.8125rem; }
+    .indice a.oro { border-color: var(--oro); }
+    .indice a.oro strong { color: var(--oro); }
+    .proyecto { border: 1px solid var(--linea); border-radius: 18px; padding: 1.125rem; margin: 0 0 1rem; scroll-margin-top: 1rem; }
+    .proyecto .estado { margin-right: 0.375rem; }
+    .proyecto .de { font-size: 0.8125rem; color: var(--tinta-2); }
+    .proyecto .lista { margin: 0.25rem 0 0.875rem; }
+    .proyecto ul.lista a { padding: 0.625rem 0.875rem; }
+    .proyecto.aparcado { border-style: dashed; }
+    .cambios { font-size: 0.9375rem; color: var(--tinta-2); margin: 0 0 0.875rem; padding-left: 1.125rem; }
+    .cambios li { margin: 0 0 0.25rem; }
+    .cambios a { color: var(--tinta); }
+    .puerta { display: block; border: 1px solid var(--oro); border-radius: 18px; padding: 1.125rem; text-decoration: none; }
+    .puerta strong { display: block; font-size: 1.25rem; color: var(--oro); margin: 0 0 0.25rem; }
+    .puerta span { color: var(--tinta-2); }
+    .volver { display: inline-flex; align-items: center; min-height: 2.75rem; margin: 0 0 0.75rem; color: var(--tinta-2); }
+    @media (max-width: 22rem) { .indice { grid-template-columns: 1fr; } }
+    .estantes-titulo { font-size: 0.8125rem; }
+  </style>
+  <!-- Biblioteca del laboratorio: antes al final de /lab/, aparte desde el 11/11/2026. Ordenada por necesidad, no por fuente. -->
+</head>
+<body>
+  <main>
+    <a class="volver" href="/lab/">← Laboratorio</a>
+    <h1>Biblioteca del laboratorio</h1>
+    <section aria-labelledby="biblioteca">
+      <h2 id="biblioteca">Por necesidad</h2>
+      <p class="intro">Ordenada por necesidad, no por fuente. Cuando necesitemos algo, primero se busca aquí y después fuera: así no reinventamos la rueda, ahorramos créditos y avanzamos con más contundencia. Que algo esté aquí no obliga a usarlo.</p>
+
+      <div class="buscador" hidden>
+        <label for="buscar-necesidad">¿Qué necesitas?</label>
+        <input id="buscar-necesidad" type="search" autocomplete="off" enterkeyhint="search" placeholder="Por ejemplo: vídeo, agujero negro, guion" aria-describedby="buscar-resultado">
+        <p id="buscar-resultado" class="nota" aria-live="polite"></p>
+      </div>
+
+      <nav aria-label="Necesidades de la Biblioteca">
+        <ul class="indice-necesidades">
+          <li><a href="#n-presentar">Presentar logros y concepto</a></li>
+          <li><a href="#n-scroll">Animar con el scroll</a></li>
+          <li><a href="#n-luz">Luz y gravedad</a></li>
+          <li><a href="#n-video">Vídeo y hojas de contacto</a></li>
+          <li><a href="#n-medir">Revisar con datos</a></li>
+          <li><a href="#n-direccion">Biblia de estilo y guion</a></li>
+          <li><a href="#n-equipo">Equipo de agentes creativos</a></li>
+          <li><a href="#n-programar">Programar con agentes</a></li>
+          <li><a href="#n-datos">Datos que mueven la imagen</a></li>
+          <li><a href="#n-texto">Texto que se mueve</a></li>
+          <li><a href="#n-comunidad">Comunidad y conocimiento compartido</a></li>
+          <li><a href="#n-adaptar">Adaptar un texto a vídeo</a></li>
+          <li><a href="#n-app">Hacer una app para el móvil</a></li>
+          <li><a href="#n-local">IA dentro del móvil, sin nube</a></li>
+          <li><a href="#n-aislar">Ejecutar código ajeno con permisos mínimos</a></li>
+        </ul>
+      </nav>
+
+      <div class="necesidades">
+        <article class="necesidad" id="n-presentar" data-claves="web portada presentar logros concepto proyecto escaparate visual atractivo singularity landing comunidad">
+          <h3>Presentar logros y concepto con visuales</h3>
+          <p class="para">Para que quien llegue entienda el proyecto de un vistazo. Así salió la portada The Singularity.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: una idea contada en escenas, con paleta de roles y un motivo que vuelve (su chispa es nuestro punto). <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+          <p class="casa">Hecho en casa: <a href="/">la portada</a> y <a href="/motor/">/motor/</a>.</p>
+        </article>
+
+        <article class="necesidad" id="n-scroll" data-claves="scroll desplazamiento animacion animar escenas motor tiempo reloj linea de tiempo determinista reducir movimiento">
+          <h3>Animar con el scroll</h3>
+          <p class="para">Para que la página avance, retroceda y salte como un vídeo según bajas.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: el tiempo como única fuente, una escena por archivo y nada al azar sin semilla. Es el método pdoom. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+          <p class="casa">Hecho en casa: <a href="/motor/">/motor/</a> y el <a href="/lab/charlie-visor/">visor de escenas</a>.</p>
+        </article>
+
+        <article class="necesidad" id="n-luz" data-claves="luz brillo bloom gravedad agujero negro lente gravitacional shader shaders glsl wgsl webgl webgpu twigl fractal raymarching pliegue entender un shader anillo espacio curvado lineas particulas">
+          <h3>Efectos de luz y gravedad</h3>
+          <p class="para">Para el agujero negro, el brillo del punto y miles de líneas sin que el móvil sufra.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: lente gravitacional (<code>spacetime-lens.ts</code>) con anillo de Einstein, brillo solo para la señal y líneas en GPU. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://x.com/YoheiNishitsuji/status/1999814369925046474">«Simulated reality», de Yohei Nishitsuji</a>: un mundo fractal en una línea de GLSL, con pliegue y raymarching. Para entender cómo piensa un shader. <a class="aficha" href="#f-nishitsuji">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: las dos con licencia MIT, se cita al autor. Su raymarching es demasiado lento para pintarlo 60 veces por segundo en el móvil.</p>
+          <p class="casa">Hecho en casa: el espacio curvado de <a href="/">la portada</a> y <a href="/lab/innovacion/shader/">el shader desmontado en seis pasos</a>.</p>
+        </article>
+
+        <article class="necesidad" id="n-video" data-claves="video mp4 exportar grabar fotogramas hoja de contacto stills redes clip render formatos perfiles vertical horizontal cuadrado 4k master color bt.709 ffmpeg x264 nvenc audio sonido gpu blender remotion gsap mediabunny desenfoque proposito general">
+          <h3>Exportar a vídeo y sacar hojas de contacto</h3>
+          <p class="para">Para sacar vídeos cortos de las escenas y ver muchos momentos de una escena en una sola imagen.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: exporta fotograma a fotograma por tiempo, no grabando la pantalla, y saca fotogramas y hojas de contacto (<code>render.ts</code>). <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: su director de arte revisa con hojas de contacto de los momentos clave. <a class="aficha" href="#f-drive">Ficha</a></li>
+            <li><strong>Estudio de Charlie: un laboratorio de vídeo para cualquier proyecto</strong>. Nuestro método ya es el bueno; faltan audio, más formatos de salida, pruebas automáticas y potencia para lo pesado. Con el panorama de herramientas y una hoja de ruta por pasos. <a class="aficha" href="#f-labvideo">Ficha</a></li>
+          </ul>
+          <p class="casa">Hecho en casa: el <a href="/lab/charlie-visor/">visor de escenas</a> enlaza un momento exacto.</p>
+        </article>
+
+        <article class="necesidad" id="n-medir" data-claves="revisar comprobar medir calidad pruebas tests pr visual destellos accesibilidad mirar a ojo determinismo barajado regresion visual automaticas github actions">
+          <h3>Revisar con datos, no a ojo</h3>
+          <p class="para">Para dar por bueno un cambio visual con pruebas y no con «lo he mirado».</p>
+          <ul class="recursos">
+            <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: comprueban con herramientas que la letra sale a tiempo y que no hay destellos peligrosos. <a class="aficha" href="#f-drive">Ficha</a></li>
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: como cada fotograma depende solo del tiempo, se puede comparar el mismo momento antes y después. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://github.com/google-research/harness2">Harness²</a>: elegir entre versiones sin saber cuál es cuál, comparando con lo que se pidió y no con lo largo o pulido que parece. <a class="aficha" href="#f-harness2">Ficha</a></li>
+            <li><strong>Estudio de Charlie</strong>: pintar los fotogramas en orden y barajados y comparar, en cada PR, y unos pocos fotogramas de referencia por escena para cazar cambios sin querer. <a class="aficha" href="#f-labvideo">Ficha</a></li>
+          </ul>
+        </article>
+
+        <article class="necesidad" id="n-direccion" data-claves="direccion biblia de estilo guion paleta tipografia tono storyboard idea treatment prompt">
+          <h3>Dirección escrita: biblia de estilo y guion</h3>
+          <p class="para">Para que el equipo pula escenas con un rumbo escrito y no a ciegas.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video/blob/main/docs/TREATMENT.md">pdoom-video, TREATMENT.md</a>: la idea, la paleta, la tipografía y una ficha por escena, escritas antes de programar. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: los prompts escritos como un guion, de una sola mano, y el registro de cada indicación del director. <a class="aficha" href="#f-drive">Ficha</a></li>
+            <li><a href="https://github.com/HBAI-Ltd/Toonflow-app">Toonflow</a> y <a href="https://github.com/HKUDS/ViMax">ViMax</a>: pasan de un texto a guion y storyboard antes de generar nada. Sirve mirar cómo ordenan esos pasos. <a class="aficha" href="#f-adaptar">Ficha</a></li>
+          </ul>
+          <p class="ojo">La nuestra aún no existe: la biblia es de Maya y el guion de Simone.</p>
+        </article>
+
+        <article class="necesidad" id="n-equipo" data-claves="equipo agentes orquestar orquestacion organizar roles director animador jueces claude coste creditos fallos aprender lecciones mejorar instrucciones normas habilidades skills arnes harness google ecc everything claude code matt pocock mattpocock revisor revision doble consejo traspaso tablero preguntar a la persona preguntas escribir para agentes glosario plantilla kit">
+          <h3>Organizar un equipo de agentes creativos</h3>
+          <p class="para">Para repartir el trabajo visual entre agentes sin pisarse y sin quemar créditos.</p>
+          <ul class="recursos">
+            <li><a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>: un animador por capítulo, un director de arte que mira fotogramas reales y una ronda de arreglos. También cuenta sus fallos. <a class="aficha" href="#f-drive">Ficha</a></li>
+            <li><a href="https://x.com/anabology/status/2104604226059993391">Post de @anabology</a>: la puerta de entrada a la carpeta, con lo que costó en horas. <a class="aficha" href="#f-post">Ficha</a></li>
+            <li><a href="https://github.com/mexicat/pdoom-video/blob/main/docs/ENGINE.md">pdoom-video, ENGINE.md</a>: reglas para varios autores. Cada uno toca sus escenas y el motor tiene un dueño. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><a href="https://github.com/google-research/harness2">Harness², de Google Research</a>: cómo aprende un equipo de agentes de sus propios fallos. Se propone un cambio, se prueba con el mismo caso y solo se adopta con pruebas. <a class="aficha" href="#f-harness2">Ficha</a></li>
+            <li><a href="https://github.com/affaan-m/ECC">ECC (Everything Claude Code)</a> (MIT): un catálogo enorme de agentes y skills. De él sirven una docena de patrones: tablero con dueño, revisión doble, consejo de cuatro voces y traspasos. <a class="aficha" href="#f-ecc">Ficha</a></li>
+            <li><a href="https://github.com/mattpocock/skills">Skills de Matt Pocock</a> (MIT): pocas y muy cuidadas. Enseñan a preguntar a la persona para que un «sí» baste, a escribir lo que lee un agente y a tener un glosario común. <a class="aficha" href="#f-mattpocock">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: cada vídeo de Slopcore costó de 626 a 1.007 dólares en Claude a precio de API, y usa Midjourney y Seedance, de pago, que chocan con nuestra regla de que nada parezca generado por IA. Se aprende el método, no se copia el gasto.</p>
+        </article>
+
+        <article class="necesidad" id="n-programar" data-claves="programar codigo agentes tdd pruebas test depurar bugs fallos diseno de codigo arquitectura revisar pr pull request code review especificacion spec tickets matt pocock mattpocock skills npx">
+          <h3>Programar con agentes</h3>
+          <p class="para">Para que un agente escriba código con pruebas, busque la causa de un fallo y prepare un PR que se pueda revisar.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mattpocock/skills/tree/main/skills/engineering">Skills de Matt Pocock, carpeta de programar</a> (MIT): <code>tdd</code>, <code>diagnosing-bugs</code>, <code>code-review</code>, <code>pr</code>, <code>to-spec</code> y <code>to-tickets</code>, listas para instalar. Leídas, sin probar en nuestros repos. <a class="aficha" href="#f-mattpocock">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: instalar skills ejecuta instrucciones ajenas dentro del agente. Se instalan en la máquina de quien programa y solo si esa persona dice que sí.</p>
+        </article>
+
+        <article class="necesidad" id="n-datos" data-claves="datos grafica precio pvpc musica audio ritmo convertir datos en escena visualizacion beats bpm tempo envolvente volumen librosa sonido">
+          <h3>Que los datos o la música muevan la imagen</h3>
+          <p class="para">Para convertir un dato, como el precio de cada hora, en una escena que se entiende sin leer.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: una gráfica que cae a un paisaje 3D y la música como entrada del shader (<code>audio.ts</code>). <a class="aficha" href="#f-pdoom">Ficha</a></li>
+            <li><strong>Estudio de Charlie</strong>: el tempo se fija a mano, porque librosa da el compás pero no el BPM exacto; la envolvente de volumen, en cambio, sale limpia y es lo que necesita una escena que reaccione al sonido. <a class="aficha" href="#f-labvideo">Ficha</a></li>
+          </ul>
+          <p class="casa">Idea en casa: las 24 horas del PVPC como una canción. Sin plan todavía.</p>
+        </article>
+
+        <article class="necesidad" id="n-texto" data-claves="texto tipografia letras particulas trazo escribir solo palabras">
+          <h3>Texto que se mueve</h3>
+          <p class="para">Para frases que se forman con puntos o se escriben solas.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/mexicat/pdoom-video">pdoom-video</a>: texto hecho de partículas (<code>textPoints</code>) y letras de un solo trazo (<code>stroke.ts</code>). Para más adelante. <a class="aficha" href="#f-pdoom">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: el texto sigue en el HTML para que se lea. El efecto solo decora.</p>
+        </article>
+
+        <article class="necesidad" id="n-comunidad" data-claves="comunidad conocimiento compartido comun bien comun soberania privacidad datos aprendizaje federado federated learning gobernanza gobernar decidir juntos rumbo licencia cooperativa ostrom miembros carta">
+          <h3>Comunidad y conocimiento compartido</h3>
+          <p class="para">Para aprender juntos sin que nadie entregue lo que piensa: quién es miembro, qué es de cada uno, qué pasa a ser común y quién decide el rumbo.</p>
+          <ul class="recursos">
+            <li><a href="/lab/aprendizaje-federado/">Aprender juntos sin entregar lo que pensamos</a>: el paper de Google sobre aprendizaje federado demostrablemente privado, explicado desde cero, y las piezas para gobernar una comunidad (cooperativas, licencias de bien común y los principios de Ostrom). <a class="aficha" href="#f-federado">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: la técnica de Google solo funciona con multitudes. En un grupo de cinco, el ruido que protege a cada uno taparía casi todo. Lo que sirve hoy es la forma de trabajar.</p>
+        </article>
+
+        <article class="necesidad" id="n-adaptar" data-claves="adaptar texto a video novela libro relato cuento guion storyboard trailer tráiler serie corto animacion novel2video agentes video generativo comfyui ltx vimax toonflow arcreel personajes escenas">
+          <h3>Adaptar un texto a vídeo</h3>
+          <p class="para">Para pasar un texto largo, como una novela, a guion, storyboard y vídeo con herramientas abiertas que ya existen, sin construirlas nosotros. De momento es un piloto de investigación, no un producto.</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/HKUDS/ViMax">ViMax</a> (MIT): la referencia de novela a vídeo, con agentes de director, guionista y productor. Sus generadores de vídeo son servicios de pago. <a class="aficha" href="#f-adaptar">Ficha</a></li>
+            <li><a href="https://github.com/HBAI-Ltd/Toonflow-app">Toonflow</a> (MIT): guion, storyboard, personajes y escenarios en un lienzo, y admite ComfyUI en el propio equipo. <a class="aficha" href="#f-adaptar">Ficha</a></li>
+            <li><a href="https://github.com/ArcReel/ArcReel">ArcReel</a> (AGPL-3.0): de la novela a personajes, storyboard y vídeo, con control de lo que cuesta cada paso. <a class="aficha" href="#f-adaptar">Ficha</a></li>
+            <li><a href="https://github.com/Lightricks/LTX-2">LTX-2</a>: modelo abierto que genera vídeo y audio. Gratis por debajo de 10 millones de dólares de ingresos al año. <a class="aficha" href="#f-adaptar">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: todo esto genera imagen y vídeo con IA, y eso choca con la regla de nuestras webs de que nada parezca generado por IA. Si el piloto sigue, cómo encaja esa regla se decide aparte. Ningún texto de un autor se usa sin su permiso por escrito.</p>
+        </article>
+
+        <article class="necesidad" id="n-app" data-claves="app aplicacion movil iphone ios android nativa swift swiftui xcode mac linux windows app store testflight widget notificaciones push pwa web instalable expo react native skip xtool natacion pocketpal core ai">
+          <h3>Hacer una app para el móvil</h3>
+          <p class="para">Para llevar un proyecto al móvil como app, o decidir que basta con una web instalable. El asistente de natación ya la pide: será una app propia en SwiftUI, hecha en el Mac con Xcode, que ejecuta modelos en el propio teléfono (ver <a href="#n-local">IA dentro del móvil</a>).</p>
+          <ul class="recursos">
+            <li><a href="https://github.com/xtool-org/xtool">xtool</a> (MIT): compila, firma e instala apps de iPhone hechas en Swift y SwiftUI desde Linux o Windows, sin Mac. Para publicar en el App Store todavía no basta. <a class="aficha" href="#f-xtool">Ficha</a></li>
+            <li><strong>Web instalable</strong>: lo que ya hacemos, añadido a la pantalla de inicio del iPhone. Desde iOS 16.4 puede mandar notificaciones. Sin cuentas, sin pagos y sin tienda. <a class="aficha" href="#f-xtool">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: cualquier app de iPhone pasa por Apple. Para publicar hace falta su programa de desarrollador, que es de pago, y eso lo decide Joseba.</p>
+        </article>
+
+        <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen parakeet core ai coreai aimodel core ml foundation models foundationmodels private cloud compute pcc apple intelligence generable tool calling herramientas salida estructurada contexto ventana de contexto dynamicprofile instruments wwdc llama gguf pocketpal neural engine swiftui natacion phonon gradium pocket tts kyutai voz castellano espanol leer en voz alta sintesis de voz voces lector web lector de voz kokoro-82m">
+          <h3>IA dentro del móvil, sin nube</h3>
+          <p class="para">Para que un modelo de lenguaje o de voz funcione en el propio teléfono, sin conexión y sin mandar datos fuera. Importa sobre todo cuando hay datos personales, como los de menores.</p>
+          <ul class="recursos">
+            <li><a href="https://developer.apple.com/documentation/coreai">Core AI de Apple</a>: el motor de Apple para ejecutar modelos en el iPhone y el Mac. Pide iOS 27 y Xcode 27. Es la base del asistente de natación. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://github.com/apple/coreai-models">Modelos oficiales de Core AI</a> (BSD-3): recetas para convertir modelos y piezas en Swift ya hechas, con voz a texto (Parakeet, Whisper) y modelos de lenguaje (Qwen, Gemma). <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://developer.apple.com/videos/play/wwdc2026/324/">Sesiones de la WWDC 2026</a>: presentación de Core AI, integración en la app y optimización, con transcripción y código. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://github.com/john-rocky/coreai-model-zoo">Core AI Model Zoo</a> (BSD-3): colección de un desarrollador independiente, no de Apple, con muchos más modelos ya convertidos, texto a voz incluido. <a class="aficha" href="#f-coreai">Ficha</a></li>
+            <li><a href="https://developer.apple.com/videos/play/wwdc2026/241/">Foundation Models de Apple</a> (gratis, viene con el sistema): el modelo de lenguaje que ya trae el iPhone, con salida en tipos de Swift, herramientas y, desde iOS 27, el modelo grande de Apple en su nube privada. No transcribe voz. <a class="aficha" href="#f-foundation">Ficha</a></li>
+            <li><a href="https://huggingface.co/gradium/phonon-40m-es">phonon-40m-es de Gradium</a> (pesos CC BY-NC 4.0, no comercial): texto a voz en castellano de 75 MB, con voces de España y de México, que suena mientras genera y trae paquete Swift. Permitido para uso no comercial y candidato, con Kokoro-82M, para un lector web. <a class="aficha" href="#f-phonon">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: cada modelo trae su propia licencia, distinta de la del código. Que todo sea local no quiere decir que esté cifrado: los datos pueden acabar en la copia de seguridad del teléfono.</p>
+        </article>
+
+        <article class="necesidad" id="n-aislar" data-claves="webassembly wasm wasi wasip2 wasip3 preview 2 preview 3 componente componentes modelo de componentes component model wit wasmtime cranelift wasm-tools wit-bindgen jco wasmgc gc memory64 simd avx-512 avx512 capacidades capabilities sandbox aislar aislamiento plugin plugins rust c++ go tinygo servidor servidores bytecode alliance wasi-nn wasi-gfx wasi-webgpu nuclei windows xp emulador v86">
+          <h3>Ejecutar código ajeno con permisos mínimos</h3>
+          <p class="para">Para correr un plugin, una plantilla o una herramienta de un agente sin que pueda tocar nada más que lo que se le da, y para que el mismo binario funcione en el Mac y en un servidor.</p>
+          <ul class="recursos">
+            <li><a href="https://webassembly.github.io/spec/core/">WebAssembly 3.0</a>: el estándar, cerrado en septiembre de 2025. El código no tiene acceso a nada que el anfitrión no le dé. <a class="aficha" href="#f-wasm">Ficha</a></li>
+            <li><a href="https://github.com/WebAssembly/WASI">WASI 0.3</a> y el <a href="https://github.com/WebAssembly/component-model">Modelo de Componentes</a>: archivos, red o HTTP como permisos con nombre, e interfaces escritas en WIT. Funcionan, pero siguen en versión 0.x. <a class="aficha" href="#f-wasm">Ficha</a></li>
+            <li><a href="https://github.com/bytecodealliance/wasmtime">Wasmtime</a> (Apache-2.0): el anfitrión de referencia, versión 50 del 20 de octubre de 2026. <a class="aficha" href="#f-wasm">Ficha</a></li>
+          </ul>
+          <p class="ojo">Ojo: es especialización de referencia, sin compromiso. El MVP sigue siendo el asistente de natación, que no lo necesita.</p>
+        </article>
+
+        <article class="necesidad sin-material" id="n-pendiente" data-claves="webgpu three.js threejs 3d rendimiento sonido musica propia sin material buscar fuera">
+          <h3>Sin material todavía</h3>
+          <p class="para">Necesidades que ya asoman y para las que aún no tenemos nada. Se busca fuera y lo que salga se ficha aquí.</p>
+          <ul class="recursos">
+            <li><strong>WebGPU</strong>: ni pdoom-video ni la carpeta lo usan. Charlie ha portado la lente a WebGPU para medirla frente a WebGL2 (<a href="/lab/charlie-lente-gpu/?t=0.85">página</a>), y <a href="/lab/innovacion/shader/">el shader desmontado</a> lleva las mismas cuentas en WGSL y en GLSL.</li>
+            <li><strong>three.js a fondo</strong>: pdoom-video lo usa en todo el motor, pero solo hemos visto su uso.</li>
+          </ul>
+        </article>
+
+        <p class="vacio buscador-nada" hidden>No hay nada en la Biblioteca para eso. Se busca fuera y, lo que sirva, se ficha aquí bajo esa necesidad.</p>
+      </div>
+
+      <div class="ruta">
+        <h3>Cómo se digiere lo que entra</h3>
+        <ol>
+          <li><strong>Buscar aquí primero.</strong> Ante una necesidad nueva, primero se busca en la Biblioteca y después fuera.</li>
+          <li><strong>Ficha bajo su necesidad.</strong> Cada recurso que llegue tiene su ficha en la siguiente ronda del equipo y se cuelga de la necesidad o necesidades que resuelve. Si no encaja en ninguna, se abre una necesidad nueva.</li>
+          <li><strong>Experimento.</strong> Solo si resuelve algo que ya nos frena o nos hace falta. Charlie lleva uno abierto como mucho, en Experimentos.</li>
+          <li><strong>Aprendizaje.</strong> Al cerrar el experimento, una línea en su ficha. Si cambia cómo trabajamos, va a la lista del método.</li>
+          <li><strong>Comunidad.</strong> Lo que funciona se publica como nota de taller, citando el original y su licencia. Lo que sale a los buscadores lo decides tú.</li>
+        </ol>
+      </div>
+
+      <h2 id="fichas" class="estantes-titulo">Fichas por recurso</h2>
+
+      <article class="ficha" aria-labelledby="f-pdoom">
+        <h4 id="f-pdoom">pdoom-video, el repo que lo empezó todo</h4>
+        <ul class="etiquetas"><li>Código</li><li>Nivel avanzado</li><li>En estudio</li><li>Licencia MIT</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-presentar">presentar</a>, <a href="#n-scroll">scroll</a>, <a href="#n-luz">luz y gravedad</a>, <a href="#n-video">vídeo</a>, <a href="#n-medir">revisar</a>, <a href="#n-direccion">dirección</a>, <a href="#n-equipo">equipo</a>, <a href="#n-datos">datos</a> y <a href="#n-texto">texto</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>El videoclip de «I'm Upping My P(doom)», de 3 min 42 s, hecho entero con código por Giacomo Magnanini (mexicat) con Claude: three.js, shaders GLSL y Canvas2D. Cada fotograma depende solo del tiempo, y el vídeo se exporta fotograma a fotograma. Tiene 40 escenas y un motor de 14 piezas.</dd>
+          <dt>Lo que ya usamos</dt>
+          <dd>El tiempo como única fuente (en la web, el scroll), las escenas como piezas sueltas, nada de azar sin semilla y el respeto a «reducir movimiento». Es el método pdoom.</dd>
+          <dt>Lo que aún no usamos y merece la pena</dt>
+          <dd><ul>
+            <li><strong>Lente gravitacional</strong> (<code>spacetime-lens.ts</code>): un shader que dobla la luz alrededor de una masa, con anillo de Einstein y anillo de fotones. Es lo más cercano a tu imagen del agujero negro.</li>
+            <li><strong>Hojas de contacto y fotogramas sueltos</strong>: una imagen con muchos momentos de una escena, para revisar sin ver el vídeo entero.</li>
+            <li><strong>Exportar a vídeo de verdad</strong>: fotograma a fotograma, con desenfoque de movimiento, no grabando la pantalla.</li>
+            <li><strong>Biblia de estilo</strong> (<code>TREATMENT.md</code>): la idea, la paleta y las reglas por escrito antes de pulir. Nosotros no la tenemos.</li>
+            <li>Para más adelante: texto hecho de partículas, letras de un solo trazo que se escriben solas y la música moviendo la imagen.</li>
+          </ul></dd>
+          <dt>Ojo</dt>
+          <dd>Está pensado para vídeo a 1920 × 1080, no para un móvil con scroll. Se toman ideas y se adaptan: no se copia el motor. Licencia MIT: todo lo que derive de él cita al autor así: «Basado en pdoom-video de Giacomo Magnanini (github.com/mexicat/pdoom-video), MIT».</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/mexicat/pdoom-video">Abrir el repo</a>
+        </div>
+      </article>
+
+      <article class="ficha" aria-labelledby="f-post">
+        <h4 id="f-post">El post de @anabology en X</h4>
+        <ul class="etiquetas"><li>Post</li><li>Nivel de entrada</li><li>Leído</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>El 28 de septiembre de 2026 anabology compartió una carpeta pública con el «cómo se hizo», los prompts, las imágenes, el audio y el vídeo final. Cita su post del 25 de septiembre: le dio a Opus 5.5 el prompt de donald, Midjourney y un panel de referencias, y 12 horas después tenía el vídeo. Ese post pasa de 20 millones de visualizaciones.</dd>
+          <dt>Qué sacamos</dt>
+          <dd>Es la puerta de la carpeta y la misma familia que pdoom-video: el prompt de partida viene del vídeo de P(doom) de @donaldjewkes. En las respuestas no hay detalles técnicos que añadir.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://x.com/anabology/status/2104604226059993391">Abrir el post</a>
+        </div>
+      </article>
+
+      <article class="ficha" aria-labelledby="f-drive">
+        <h4 id="f-drive">La carpeta «Slopcore»: tres vídeos con su cómo se hizo</h4>
+        <ul class="etiquetas"><li>Making-of</li><li>Nivel avanzado</li><li>Leídos los textos</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a>, <a href="#n-video">hojas de contacto</a>, <a href="#n-medir">revisar con datos</a> y <a href="#n-direccion">dirección</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Tres videoclips de anabology (ESCAPE VELOCITY, Bliss y Clodyssey) y, para cada uno, su cómo se hizo: el documento que lo cuenta, cada indicación del director, los prompts literales de cada agente, los de Midjourney, Seedance y Suno, las imágenes, el audio y el vídeo final.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Cómo trabaja un equipo de agentes en vídeo</strong>: un animador por capítulo, un director de arte que mira fotogramas de verdad en hojas de contacto y una ronda de arreglos. Se parece a nuestro equipo.</li>
+            <li><strong>Medir, no mirar a ojo</strong>: comprobar con herramientas que la letra sale a tiempo, que no hay destellos peligrosos y que la boca va con la voz.</li>
+            <li><strong>Sus errores, contados</strong>: una noche entera parada por un permiso sin aprobar, y revisiones vacías por falta de cuota que el sistema leyó como «nada que arreglar».</li>
+          </ul></dd>
+          <dt>Ojo</dt>
+          <dd>La imagen sale de Midjourney y Seedance, servicios de pago que no usamos, y choca con nuestra regla de que nada parezca generado por IA. Según sus cuentas, cada vídeo costó de 626 a 1.007 dólares en Claude a precio de API, más de 107 a 182 dólares en Seedance. Se aprende el método, no se copia el gasto.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Abrir la carpeta</a>
+        </div>
+      </article>
+
+      <article class="ficha" aria-labelledby="f-harness2">
+        <h4 id="f-harness2">Harness², de Google Research: agentes que aprenden de sus fallos</h4>
+        <ul class="etiquetas"><li>Código</li><li>Nivel avanzado</li><li>Estudiado</li><li>Licencia Apache 2.0</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a> y <a href="#n-medir">revisar con datos</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un programa de Google Research, publicado en octubre de 2026, que mejora el «arnés» de un agente de IA: todo lo que rodea al modelo para que trabaje, como sus instrucciones, sus normas, su memoria, sus habilidades y sus scripts. No toca el modelo. En cada tarea <strong>propone</strong> cambios en el arnés, los <strong>prueba</strong> en esa misma tarea y <strong>combina</strong> los que han funcionado. Después guarda una lección para la tarea siguiente.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Proponer, probar, adoptar</strong>: cuando una norma o una herramienta del equipo falla, se propone un cambio pequeño, se prueba la vez siguiente con el mismo caso y solo se adopta si hay una prueba de que ha funcionado.</li>
+            <li><strong>Lecciones en cuatro partes</strong>: cuándo aplicarla, qué hacer, con qué pruebas y con qué seguridad. Como mucho una por tarea. Si no hay una prueba concreta, no hay lección.</li>
+            <li><strong>Dejarlo como está también vale</strong>: cada norma de más se paga cada vez que el agente trabaja. Si se añade una, se quita otra.</li>
+            <li><strong>Un fallo repetido es real; uno suelto es ruido</strong>, salvo que se vea en qué momento y por qué pasó.</li>
+            <li><strong>Elegir a ciegas</strong>: se compara cada resultado con lo que se pidió y con los datos de origen, no con lo largo o pulido que parece.</li>
+            <li><strong>Lo que se lee es material, no órdenes</strong>: un documento o un mensaje puede traer instrucciones escondidas, y no se obedecen.</li>
+          </ul></dd>
+          <dt>Lo que no usamos</dt>
+          <dd>El programa en sí. Solo mejora agentes que funcionan con OpenCode o Codex, pide una cuenta de nube de pago con facturación y Node.js 20, y ejecuta cada tarea muchas veces: su demo hizo 28 ejecuciones para 2 tareas. Gasta dinero de API aparte.</dd>
+          <dt>Ojo</dt>
+          <dd>Es muy nuevo (versión 0.1.0) y no es un producto oficial de Google, así que no tiene soporte. Sus agentes de prueba tienen internet libre y Codex va sin aislamiento: no conviene tenerlo cerca de credenciales. Tiene fallos abiertos, como el del evaluador que puede dar por fallida una tarea que ha salido bien (<a href="https://github.com/google-research/harness2/issues/80">issue #80</a>). Licencia Apache 2.0: se puede usar y adaptar conservando la licencia y citando a Google LLC.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/google-research/harness2">Abrir el repo</a>
+          <a class="boton" href="https://arxiv.org/abs/2610.14224">Leer el artículo</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-ecc">
+        <h4 id="f-ecc">ECC (Everything Claude Code): un catálogo enorme de agentes y skills</h4>
+        <ul class="etiquetas"><li>Código y método</li><li>Nivel medio</li><li>Estudiado</li><li>Licencia MIT</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un repo de Affaan Mustafa con piezas para que un agente de programación trabaje mejor. En la versión 2.2.3 que estudiamos había 71 agentes, 311 skills, 97 comandos, reglas y ganchos. Nació para Claude Code y hoy se presenta también para Codex, OpenCode y Cursor. Es muy popular (unas 286.000 estrellas) y muy activo.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>No la cantidad, sino una docena de patrones</strong> de coordinación, revisión y memoria, reescritos en castellano y sin depender de ninguna plataforma.</li>
+            <li><strong>Tablero con dueño</strong>: cada tarea con responsable, alcance, estado, prueba y una puerta antes de darla por buena.</li>
+            <li><strong>Revisión doble independiente</strong> y <strong>consejo de cuatro voces</strong> para las decisiones que se pueden deshacer.</li>
+            <li><strong>Traspaso y compactar en momentos lógicos</strong>, para que otro agente siga sin perder el hilo.</li>
+            <li><strong>Preparar para publicar con un guardián</strong> que revisa que no salga nada privado.</li>
+          </ul></dd>
+          <dt>Lo que no usamos</dt>
+          <dd>Los ganchos y comandos de Claude Code, la instalación por plugin, las reglas por lenguaje, los cientos de skills de frameworks, el aprendizaje automático por ganchos y la parte comercial. Unos atan a una plataforma y otros añaden volumen que el agente lee cada vez que trabaja.</dd>
+          <dt>Ojo</dt>
+          <dd>Los ganchos ejecutan código en cada acción del agente: se leen las ideas, no se instala. Las cifras que circulan en redes son de una versión vieja, y lo del hackathon solo lo afirma el autor. La raíz es MIT (© 2026 Affaan Mustafa), pero la skill <code>osint-investigation</code> es CC BY-SA 4.0 y otras carpetas traen licencia propia: de esas no se copia nada. Lo que se adapte lleva el aviso de copyright y la licencia. Tiene una parte de pago (ECC Pro); el repo abierto es gratis. Hay copias que se hacen pasar por él: solo vale el enlace de aquí.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/affaan-m/ECC">Abrir el repo</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-mattpocock">
+        <h4 id="f-mattpocock">Las skills de Matt Pocock: cómo se habla con la persona y con el agente</h4>
+        <ul class="etiquetas"><li>Método</li><li>Nivel medio</li><li>Estudiado</li><li>Licencia MIT</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-equipo">equipo de agentes</a> y <a href="#n-programar">programar con agentes</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>«Skills For Real Engineers»: 38 skills de Matt Pocock para programar con agentes, en la versión 1.3.1 que estudiamos. Cada una es un <code>SKILL.md</code> corto con su «cuándo usarla», y el detalle va en archivos aparte que solo se leen si hacen falta. Funcionan con Claude Code, Codex, Cursor y otros. Casi todo es de una persona y no acepta skills nuevas de fuera.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Preguntar a la persona</strong>: tandas numeradas, cada pregunta con una recomendación y redactada para que un «sí» baste. Los hechos los busca el agente, no la persona.</li>
+            <li><strong>Escribir para agentes</strong>: cada línea se lee cada vez, así que punteros en vez de copias, en positivo, una sola fuente de verdad y fuera lo que no cambia nada.</li>
+            <li><strong>Un glosario común</strong>: término, definición de una frase, sinónimos que evitar y ambigüedades resueltas.</li>
+            <li><strong>Revisar en dos ejes</strong> que no se mezclan: las normas del equipo y el encargo (qué falta, qué sobra, qué está mal). Y en cada PR, si tiene vuelta atrás y cuánto daño puede hacer.</li>
+            <li><strong>Para programar</strong>, listas para usar: <code>tdd</code>, <code>diagnosing-bugs</code>, <code>code-review</code> y <code>pr</code> son las más directas.</li>
+          </ul></dd>
+          <dt>Lo que no usamos</dt>
+          <dd>Lo atado a Claude Code (<code>git-guardrails-claude-code</code>, <code>claude-handoff</code>), lo atado a TypeScript o a sus cursos y la mecánica de plugins.</dd>
+          <dt>Ojo</dt>
+          <dd>Cambia a menudo (unos 70 commits en un mes): si se vuelve a mirar, hay que compararlo con la 1.3.1. Las skills de programar las hemos leído, no probado. Licencia MIT (© 2026 Matt Pocock): lo que se adapte lleva su aviso. La parte visual de la skill <code>pr</code> es de Dex Horthy (HumanLayer, MIT). Gratis y sin servicios de pago.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/mattpocock/skills">Abrir el repo</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-federado">
+        <h4 id="f-federado">Aprendizaje federado privado, de Google Research, y comunidad soberana</h4>
+        <ul class="etiquetas"><li>Paper</li><li>Nivel avanzado</li><li>Estudiado</li><li>Investigación propia</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-comunidad">comunidad y conocimiento compartido</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>«Toward provably private learning from federated data», de Daly y 11 coautores (Google Research, septiembre de 2026). Cuenta cómo aprender de millones de móviles sin ver los datos de ninguno: cada móvil sube sus datos cifrados y atados a una política pública que dice qué programa puede leerlos, y ese programa corre en zonas blindadas del chip y añade el ruido justo para que nadie sepa si una persona estaba o no. En el teclado Gboard gastó tres veces menos privacidad y se entrenó en 3 semanas en vez de 2 meses, sin empeorar.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Reglas antes que datos</strong>: la política se publica antes de tocar nada. Para nosotros, decidir y apuntar las reglas antes de trabajar.</li>
+            <li><strong>Solo sale lo destilado</strong>: fuera solo salen resultados agregados. Es nuestra regla de lo público: lo que se piensa dentro se queda dentro.</li>
+            <li><strong>Auditable</strong>: un registro que nadie puede reescribir. El nuestro es el historial de git.</li>
+            <li><strong>La pieza que Google no trae</strong>: la técnica protege, pero no reparte el poder. Quién decide el rumbo sale de otras piezas: cooperativas de datos, licencias de bien común y los principios de Elinor Ostrom.</li>
+          </ul></dd>
+          <dt>Lo que no usamos</dt>
+          <dd>La técnica en sí, por ahora. Necesita multitudes, salas blindadas en servidores y mucho montaje, y nosotros producimos decisiones, textos y lecciones, no datos para entrenar un modelo.</dd>
+          <dt>Ojo</dt>
+          <dd>«Demostrable» todavía significa «hacia» la prueba: las matemáticas de la privacidad están probadas, pero hay que fiarse del fabricante del chip que las ejecuta, y falta probar que el software está bien escrito. Escala aún modesta: modelos de hasta 10 millones de parámetros. Con cinco miembros, el ruido lo tapa todo.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="/lab/aprendizaje-federado/">Leer la investigación</a>
+          <a class="boton" href="https://arxiv.org/abs/2609.31494">Leer el paper</a>
+          <a class="boton" href="https://research.google/blog/toward-provably-private-learning-from-federated-data/">Blog de Google</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-labvideo">
+        <h4 id="f-labvideo">Un laboratorio de vídeo para cualquier proyecto: el estudio de Charlie</h4>
+        <ul class="etiquetas"><li>Estudio del equipo</li><li>Nivel intermedio</li><li>Estudiado</li><li>Hoja de ruta</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-video">vídeo</a>, <a href="#n-medir">revisar</a> y <a href="#n-datos">datos y música</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un estudio de Charlie del 20 de octubre de 2026. Ejecutó <a href="https://github.com/mexicat/pdoom-video">pdoom-video</a> en nuestra máquina de pruebas y leyó entera la <a href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">carpeta «Slopcore»</a>, que es pública, para responder una pregunta: ¿qué le falta a nuestro laboratorio para servir a cualquier proyecto, y no solo a la portada? Su respuesta: grabar fotograma a fotograma según el tiempo ya es el método bueno. Faltan audio, más formatos de salida, pruebas automáticas y potencia para lo pesado.</dd>
+          <dt>Lo que aprendimos</dt>
+          <dd><ul>
+            <li><strong>El determinismo se comprueba</strong>: se pintan los fotogramas en orden y barajados y se comparan. Nuestras escenas lo pasan en Chromium y en WebKit, pero de momento la prueba se pasa a mano.</li>
+            <li><strong>El color hay que etiquetarlo</strong>: sin etiqueta BT.709, cada navegador puede enseñar otro color. Probado: en ffmpeg, las opciones <code>-color_primaries</code> dejan el vídeo sin etiquetar, y <code>-x264-params colorprim=bt709</code> lo etiqueta bien.</li>
+            <li><strong>El tempo se fija a mano</strong>: con una pista de clics a 120 BPM, librosa estimó 117,5. Da el compás, no el tempo exacto. La envolvente de volumen sí sale limpia.</li>
+            <li><strong>Vídeo dentro de una escena</strong>: al grabar sin pantalla, nunca con el elemento <code>&lt;video&gt;</code>, que no da instantes exactos. Se sacan los fotogramas del clip y se dibuja el que toca en cada t, como hace Remotion.</li>
+            <li><strong>Dos codificaciones</strong>: un máster de calidad (x264, CRF 16) y una versión web más ligera (CRF 23 a 26). Los codificadores por hardware sirven para borradores.</li>
+          </ul></dd>
+          <dt>Herramientas, con veredicto</dt>
+          <dd><ul>
+            <li><a href="https://threejs.org/docs/pages/BloomNode.html">three.js TSL</a>: ya la usamos y hay que ir a más, con el brillo solo en lo que importa.</li>
+            <li><a href="https://gsap.com">GSAP</a>: sí, para páginas. Ahora es gratis con todos sus añadidos, y su línea de tiempo se puede llevar a un instante exacto.</li>
+            <li><a href="https://docs.blender.org/manual/en/latest/advanced/command_line/render.html">Blender sin interfaz</a>: planos 3D en PNG con transparencia para el motor.</li>
+            <li><a href="https://www.remotion.dev/docs/license">Remotion</a>: la idea sí, la librería no, porque obliga a usar React.</li>
+            <li><a href="https://github.com/Vanilagy/mediabunny">mediabunny</a>: para experimentar con MP4 hechos en el propio navegador.</li>
+            <li><a href="https://github.com/redotvideo/revideo">Revideo</a> y <a href="https://github.com/theatre-js/theatre">Theatre.js</a>: humo. Uno está sin mantener y el otro se cerró en privado.</li>
+          </ul></dd>
+          <dt>Hoja de ruta, un PR por paso</dt>
+          <dd>Son diez pasos, y el equipo se los reparte de pocos en pocos. Los tres primeros:
+            <ol>
+              <li><strong>La prueba barajada en cada PR</strong>, con el contrato de escena por escrito. Cuesta poco y protege todo lo que venga después.</li>
+              <li><strong>Más salidas al exportar</strong>: perfiles vertical, horizontal, cuadrado y 4K, máster y versión web, y color etiquetado.</li>
+              <li><strong>Audio</strong>: la pista dentro del MP4 y un archivo con los beats y la envolvente, para que la escena lo lea en cada t.</li>
+            </ol>
+            Después, sin fecha: grabar también las animaciones CSS, grabar cualquier página recorriéndola con el scroll, regresión visual, plantillas de escena, desenfoque de movimiento con varias pestañas en paralelo y vídeo dentro de las escenas.</dd>
+          <dt>Ojo</dt>
+          <dd>Lo pesado (4K, desenfoque con decenas de muestras, separar la voz, profundidad y recortes de figura) solo es viable con una GPU. Por ahora es una propuesta, sin decidir. Las cifras de velocidad que prometen algunos blogs no citan ninguna fuente: las mediremos nosotros. Y Slopcore usa imágenes, música y vídeo generados con servicios de pago. Eso choca con nuestra regla de que nada parezca hecho por IA, así que aprendemos el método, no el gasto.</dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/mexicat/pdoom-video/blob/main/docs/ENGINE.md">pdoom-video, ENGINE.md</a>
+          <a class="boton" href="https://drive.google.com/drive/folders/1OKYaR5Kv5lOeIROUtigpPZtCWauUJ01y">Carpeta «Slopcore»</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-adaptar">
+        <h4 id="f-adaptar">De novela a vídeo con herramientas abiertas: ViMax, Toonflow, ArcReel y LTX-2</h4>
+        <ul class="etiquetas"><li>Herramientas</li><li>Nivel intermedio</li><li>Leído el README y la licencia</li><li>Sin probar</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-adaptar">adaptar un texto a vídeo</a> y <a href="#n-direccion">guion y storyboard</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Cuatro proyectos abiertos que encontró Maya el 20 de octubre de 2026 para un piloto de investigación: ver si un texto largo se puede convertir en un tráiler de 30 a 60 segundos pilotando herramientas que ya existen. Todavía no hay nada instalado ni probado.</dd>
+          <dt>Qué aporta cada uno</dt>
+          <dd><ul>
+            <li><strong><a href="https://github.com/HKUDS/ViMax">ViMax</a></strong>, licencia MIT: el flujo completo, de la novela al vídeo, repartido entre agentes con papeles (director, guionista, productor). Es la referencia para ver cómo se ordena el trabajo.</li>
+            <li><strong><a href="https://github.com/HBAI-Ltd/Toonflow-app">Toonflow</a></strong>, licencia MIT: guion, storyboard, personajes y escenarios en un lienzo, y puede generar con ComfyUI en el propio equipo en vez de con un servicio de pago.</li>
+            <li><strong><a href="https://github.com/ArcReel/ArcReel">ArcReel</a></strong>, licencia AGPL-3.0: de la novela a personajes, escenarios, storyboard y vídeo, con coherencia entre planos y un registro de lo que cuesta cada paso.</li>
+            <li><strong><a href="https://github.com/Lightricks/LTX-2">LTX-2</a></strong>, licencia comunitaria propia: el motor que genera el vídeo y el audio. Ya va por la versión 2.5.</li>
+          </ul></dd>
+          <dt>Qué mediríamos</dt>
+          <dd>Si llega la primera prueba: horas, dinero y créditos por tráiler, y lo fiel que queda al texto.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Coste</strong>: los generadores de vídeo de ViMax son servicios de pago. Hacerlo en casa pide una tarjeta gráfica potente.</li>
+            <li><strong>Licencias</strong>: ArcReel es AGPL-3.0. Si se modifica y se ofrece como servicio, hay que publicar el código y citar a sus autores. LTX-2 es gratis por debajo de 10 millones de dólares de ingresos al año; por encima, hay que pagar licencia. MiniMax H3, el modelo que traen por defecto varios de estos flujos, queda descartado desde España: su <a href="https://huggingface.co/MiniMaxAI/MiniMax-H3/raw/main/LICENSE">licencia</a> excluye la Unión Europea, el Reino Unido, Corea del Sur y Estados Unidos, y prohíbe usar fuera de esos límites incluso lo que genera, salvo licencia aparte de MiniMax. huobao-drama lleva <a href="https://github.com/chatfire-AI/huobao-drama/blob/master/LICENSE">CC BY-NC-SA 4.0</a>, así que no permite uso comercial. Comprobado en sus licencias el 20 de octubre de 2026.</li>
+            <li><strong>Derechos</strong>: ningún texto de un autor se usa sin su permiso por escrito.</li>
+            <li><strong>Estilo</strong>: todo esto genera imagen y vídeo con IA, y eso choca con la regla de nuestras webs de que nada parezca generado por IA. Si el piloto sigue, cómo encaja esa regla se decide aparte.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/HKUDS/ViMax">ViMax</a>
+          <a class="boton" href="https://github.com/HBAI-Ltd/Toonflow-app">Toonflow</a>
+          <a class="boton" href="https://github.com/ArcReel/ArcReel">ArcReel</a>
+          <a class="boton" href="https://github.com/Lightricks/LTX-2/blob/main/LICENSE">Licencia de LTX-2</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-xtool">
+        <h4 id="f-xtool">xtool: apps de iPhone sin Mac</h4>
+        <ul class="etiquetas"><li>Herramienta</li><li>Nivel intermedio</li><li>Leídos el README, la documentación y los issues</li><li>Sin probar con un iPhone</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-app">hacer una app para el móvil</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Una alternativa a Xcode que funciona en Linux, en Windows (a través de WSL) y en macOS. Convierte un paquete de Swift en una app de iOS, la firma y la instala en un iPhone conectado por cable. La plantilla de app nueva ya es SwiftUI, y también hace widgets de pantalla de inicio. Licencia MIT, unas 13.000 estrellas y versión 1.22.2 del 14 de octubre de 2026.</dd>
+          <dt>Qué aporta</dt>
+          <dd>Programar una app de iPhone desde cualquier editor y sin comprar un Mac. Con un Apple ID gratuito se puede probar en el propio iPhone, aunque Apple hace que la app deje de abrirse a los 7 días y hay que volver a instalarla.</dd>
+          <dt>Qué no hace todavía</dt>
+          <dd><ul>
+            <li><strong>Publicar en el App Store</strong>: no está resuelto. Quien lo ha conseguido acabó pasando por Xcode en un Mac.</li>
+            <li><strong>Simulador</strong>: no hay en Linux ni en Windows, así que todo se prueba en un iPhone de verdad. Por eso tampoco se pueden ejecutar las pruebas automáticas.</li>
+            <li><strong>Piezas cerradas de Apple</strong>: SwiftData, las vistas previas de SwiftUI y los catálogos de imágenes no funcionan. Para guardar datos, el autor recomienda GRDB.</li>
+          </ul></dd>
+          <dt>Dónde encajaría</dt>
+          <dd>En el asistente de natación, si su ficha pide algo que una web no da. En Pvpc-bridge, solo para un widget con el precio de hoy. Antes probaríamos la web instalable con notificaciones, que ya sabemos hacer. El motor y la portada son web por diseño.</dd>
+          <dt>Alternativas</dt>
+          <dd>Expo con EAS Build compila la app en Macs en la nube y también sirve para Android. Skip lleva Swift a Android, pero pide un Mac. Un Mac es lo más seguro si una app nativa va en serio.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Depende de Apple</strong>: necesita el Xcode oficial, que se descarga con un Apple ID. Según lo que encontramos, su licencia no permite usar los SDK de Apple en equipos que no sean de Apple. Hay que leer el texto vigente antes de probarlo.</li>
+            <li><strong>Cuenta</strong>: el modo gratuito pide la contraseña de un Apple ID. Se usaría una cuenta aparte, nunca la principal.</li>
+            <li><strong>Coste</strong>: xtool es gratis. El programa de desarrollador de Apple cuesta unos 99 dólares al año y es gasto.</li>
+            <li><strong>Madurez</strong>: es muy activo, pero casi todo el código es de una sola persona. Si lo deja, el proyecto se para.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://github.com/xtool-org/xtool">xtool en GitHub</a>
+          <a class="boton" href="https://xtool.sh/tutorials/xtooldocs/first-app">Tutorial: primera app</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-coreai">
+        <h4 id="f-coreai">Modelos en el propio iPhone: Core AI de Apple</h4>
+        <ul class="etiquetas"><li>Plataforma</li><li>Nivel avanzado</li><li>Leídas la documentación oficial, tres sesiones de la WWDC 2026 y el repo oficial</li><li>Sin probar en un iPhone</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-local">IA dentro del móvil, sin nube</a> y <a href="#n-app">hacer una app para el móvil</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>El framework de Apple para ejecutar modelos propios en el iPhone y el Mac, a partir de iOS y macOS 27 y con Xcode 27. Los modelos van en archivos <code>.aimodel</code>. Se convierten en el Mac desde PyTorch con la extensión oficial de Python y se comprimen con su herramienta de optimización. El repo oficial trae recetas por modelo y un paquete Swift con piezas listas: voz a texto, modelos de lenguaje y visión.</dd>
+          <dt>Cómo se usa desde Swift</dt>
+          <dd><ul>
+            <li><strong>Cualquier modelo</strong>: <code>AIModel(contentsOf:)</code>, después <code>loadFunction(named: "main")</code> y <code>run(inputs:)</code>.</li>
+            <li><strong>Voz a texto</strong>: <code>SpeechRecognitionModel(resourcesAt:)</code> y <code>transcribe(audioURL:)</code>, del paquete oficial <code>CoreAISpeech</code>. También sirve para dictado en directo.</li>
+            <li><strong>Modelo de lenguaje</strong>: <code>CoreAILanguageModel</code> dentro de <code>LanguageModelSession</code>, la misma forma de trabajar que el modelo de Apple. Puede devolver datos con campos fijos en vez de texto libre.</li>
+          </ul></dd>
+          <dt>Primera carga y medidas</dt>
+          <dd>La primera vez, el iPhone adapta el modelo a su chip, tarda y lo guarda en caché. Se puede adelantar en el Mac con <code>xcrun coreai-build compile</code> o pedirlo antes con <code>AIModel.specialize</code>. Para medir hay una plantilla Core AI en Instruments y un indicador en Xcode, mejor en el iPhone de verdad.</dd>
+          <dt>Para el asistente de natación</dt>
+          <dd>Desde el 20 de octubre será una app propia en SwiftUI. Para voz a texto en castellano, el camino oficial ya montado es Parakeet v3 de NVIDIA, que entiende 25 idiomas europeos, español incluido. Whisper tiene receta, pero el paquete Swift espera otro formato y por defecto transcribe en inglés. Ojo: Parakeet exportado sin opciones solo escucha los primeros 5 segundos y corta el resto sin avisar; para notas largas se exporta con <code>--dynamic</code>.</dd>
+          <dt>Lo que no es como se decía</dt>
+          <dd><ul>
+            <li>Apple no llama a Core AI «sucesor de Core ML». Lo presenta como la siguiente evolución, y manda a Core ML los modelos que no son redes neuronales.</li>
+            <li><code>SpeechToTextSession</code> y <code>TextToSpeechSession</code> no aparecen en ninguna fuente oficial.</li>
+            <li>El repo oficial no trae texto a voz. Kokoro y similares solo están en el zoo, que es de un tercero, igual que CoreAIKit.</li>
+          </ul></dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Licencias</strong>: el código oficial es BSD-3, pero cada modelo tiene la suya. Parakeet es CC-BY-4.0 y obliga a citar a NVIDIA.</li>
+            <li><strong>Memoria</strong>: un modelo de lenguaje puede pasarse del límite de memoria de una app. Apple remite a un permiso de memoria ampliada.</li>
+            <li><strong>Privacidad</strong>: local no es cifrado. Con datos de menores, qué se guarda y en qué copia de seguridad se decide antes de cargar datos reales.</li>
+            <li><strong>Coste</strong>: todo es gratis. Publicar en el App Store exige el programa de desarrollador de Apple, que es de pago.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://developer.apple.com/documentation/coreai">Core AI en Apple</a>
+          <a class="boton" href="https://github.com/apple/coreai-models">Repo oficial</a>
+          <a class="boton" href="https://developer.apple.com/videos/play/wwdc2026/324/">Meet Core AI</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-foundation">
+        <h4 id="f-foundation">El modelo de lenguaje que ya trae el iPhone: Foundation Models de Apple</h4>
+        <ul class="etiquetas"><li>Plataforma</li><li>Nivel avanzado</li><li>Leídas las sesiones 241 y 242 de la WWDC 2026, la 301 de la WWDC 2025 y la documentación oficial</li><li>Sin probar en un iPhone</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-local">IA dentro del móvil, sin nube</a> y <a href="#n-app">hacer una app para el móvil</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>El framework de Apple para usar desde Swift el modelo de lenguaje de Apple Intelligence, sin descargar ningún modelo. Va en el propio aparato (iPhone 16 o posterior, Mac con M1 o posterior) y, desde iOS y macOS 27, también puede usar Private Cloud Compute, el modelo grande de Apple en sus servidores.</dd>
+          <dt>Cómo se usa desde Swift</dt>
+          <dd><ul>
+            <li><strong>Sesión</strong>: <code>LanguageModelSession</code> guarda la conversación. Desde iOS 26.4, <code>contextSize</code> y <code>tokenCount(for:)</code> dicen cuánto cabe y cuánto se gasta. Si se pasa, salta <code>exceededContextWindowSize</code> y se abre otra sesión con un resumen.</li>
+            <li><strong>Salida con campos fijos</strong>: <code>@Generable</code> y <code>@Guide</code> obligan al modelo a seguir un esquema (rangos, número de elementos, expresiones regulares).</li>
+            <li><strong>Herramientas</strong>: una herramienta cumple el protocolo <code>Tool</code> y el modelo la llama cuando necesita datos de la app, sin meterlos todos en el contexto.</li>
+            <li><strong>Perfiles (iOS 27)</strong>: <code>DynamicProfile</code> cambia instrucciones, herramientas y modelo según la fase, y <code>historyTransform</code> quita datos privados del historial antes de pasarlo a un modelo menos privado.</li>
+          </ul></dd>
+          <dt>Contexto</dt>
+          <dd>En Private Cloud Compute, 32k tokens, confirmado desde iOS 27. En el aparato, la documentación dice 4.096 tokens por sesión; un ejemplo de la sesión 241 imprime 8.192 con el modelo de iOS 27, pero es un ejemplo, no una especificación. La cifra real se lee en el iPhone.</dd>
+          <dt>Castellano</dt>
+          <dd>El español está entre los idiomas de Apple Intelligence. Se comprueba con <code>supportsLocale()</code> y Apple recomienda fijar el idioma en las instrucciones. Los filtros de seguridad solo funcionan en los idiomas admitidos.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>No transcribe voz</strong>: trabaja con texto e imágenes. La voz sigue siendo otra pieza (Parakeet con Core AI, o <code>SpeechTranscriber</code> de Apple).</li>
+            <li><strong>Adaptadores</strong>: el kit para entrenarlos se quedó en la versión 26.0.0, que Apple da como no compatible con iOS 27.</li>
+            <li><strong>Private Cloud Compute</strong>: gratis, pero pide estar en el App Store Small Business Program, menos de 2 millones de descargas y un permiso que asigna Apple; tiene límite diario por usuario y necesita red. El programa de desarrollador es de pago y lo decide Joseba.</li>
+            <li><strong>Privacidad</strong>: lo del aparato no sale del aparato; para la nube, Apple dice que no guarda los mensajes. Ninguna fuente de Apple habla de datos de menores: eso se decide antes de cargar datos reales.</li>
+            <li><strong>El modelo cambia con cada iOS</strong>: hay que volver a evaluar las instrucciones; Apple trae un framework de evaluaciones para medirlo.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://developer.apple.com/videos/play/wwdc2026/241/">Novedades (WWDC 2026)</a>
+          <a class="boton" href="https://developer.apple.com/videos/play/wwdc2026/242/">Apps con agentes (WWDC 2026)</a>
+          <a class="boton" href="https://developer.apple.com/videos/play/wwdc2025/301/">A fondo (WWDC 2025)</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-phonon">
+        <h4 id="f-phonon">Texto a voz en castellano en el propio dispositivo: phonon-40m-es</h4>
+        <ul class="etiquetas"><li>Modelo</li><li>Nivel avanzado</li><li>Leídas la ficha, el código y las licencias; probados el motor y el normalizador en la máquina de Miles</li><li>Sin oír en castellano ni probar en un iPhone</li><li>Permitido sin fines comerciales</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-local">IA dentro del móvil, sin nube</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un modelo de Gradium, empresa de voz salida del laboratorio Kyutai, que convierte texto en voz a 24 kHz y empieza a sonar antes de terminar, cada 80 ms. Pesa 75 MB (60 MB en la versión más comprimida). Tiene 25 voces en español: 13 de España y 12 de México. Funciona con un motor propio en Rust que sale para Python, para el navegador y para Swift.</dd>
+          <dt>Comprobado y no comprobado</dt>
+          <dd><ul>
+            <li><strong>Comprobado</strong>: licencias, tamaños, voces, que el paquete Swift existe y pide iOS 18, y que el motor, con el modelo inglés, va unas 5 veces más rápido que el tiempo real en un procesador de servidor compartido.</li>
+            <li><strong>Solo lo dice Gradium</strong>: que suena mejor que Kokoro y que en un iPhone 16 Pro va 40 veces más rápido que el tiempo real con unos 95 MB de memoria. Las evaluaciones son suyas.</li>
+            <li><strong>No publican</strong> con qué datos lo entrenaron.</li>
+          </ul></dd>
+          <dt>Frente a Kokoro-82M</dt>
+          <dd>Phonon pesa menos de la mitad, tiene muchas más voces de España, suena al momento y no necesita espeak-ng, que es GPL-3.0. Kokoro tiene licencia Apache 2.0, se puede usar para negocio y lleva casi dos años en uso. Phonon salió el 19 de octubre de 2026.</dd>
+          <dt>Decisión de Joseba (21 de octubre)</dt>
+          <dd><ul>
+            <li><strong>Uso</strong>: permitido solo sin fines comerciales, para uso propio y para liberarlo a la comunidad, respetando la licencia.</li>
+            <li><strong>Pesos aparte</strong>: se descargan desde Hugging Face y no van dentro de la app ni del repo.</li>
+            <li><strong>Se cita, se dan las gracias y se avisa</strong>: el README o los créditos nombran a Gradium y dicen que los pesos son CC BY-NC 4.0. El código propio mantiene su licencia.</li>
+            <li><strong>Dónde</strong>: con Kokoro-82M, candidato para un lector web y otras pruebas. En WebAssembly vale el JavaScript de pegamento.</li>
+          </ul></dd>
+          <dt>Para el asistente de natación</dt>
+          <dd>No entra en el primer MVP, que no habla: es nota de voz, transcripción y resumen, es decir, voz a texto. Phonon y Kokoro hacen lo contrario, texto a voz. En la app sería candidato para el segundo MVP, junto a la lista de Joseba. En el iPhone usaría Core ML junto a Core AI. El paquete Core ML ya hecho solo existe en inglés; el español hay que exportarlo en el Mac.</dd>
+          <dt>Para WebAssembly</dt>
+          <dd>En el navegador es Wasm con su JavaScript de pegamento y WebGPU opcional. Como componente WASI todavía no sale: la biblioteca compila, pero deja fuera la carga del modelo y la síntesis.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Licencia</strong>: los pesos en español son CC BY-NC 4.0, sin uso comercial y citando a Gradium. Quien reutilice algo nuestro con estos pesos queda atado a lo mismo, así que el aviso tiene que verse. El código del motor es MIT o Apache 2.0. Alternativa por probar: Pocket TTS de Kyutai, CC-BY-4.0, que también habla español.</li>
+            <li><strong>Descarga</strong>: pide una cuenta de Hugging Face y aceptar condiciones. Por eso un lector web público no puede bajar los pesos por sí solo; con Kokoro o con el modelo inglés de Phonon no hace falta cuenta.</li>
+            <li><strong>Números</strong>: deja fechas, horas y distancias en cifras para que las lea el modelo, y convierte «1.500 metros» en «mil 500 metros». Hay que oírlo antes de fiarse.</li>
+            <li><strong>Privacidad</strong>: leer en voz alta no saca nada del teléfono. Clonar voces es un servicio en la nube de Gradium: con datos de menores, nunca.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://huggingface.co/gradium/phonon-40m-es">Ficha del modelo</a>
+          <a class="boton" href="https://github.com/gradium-ai/xn-ptts">Motor y paquetes</a>
+          <a class="boton" href="https://github.com/kyutai-labs/pocket-tts">Pocket TTS</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-wasm">
+        <h4 id="f-wasm">WebAssembly 3.0, WASI y Modelo de Componentes</h4>
+        <ul class="etiquetas"><li>Plataforma</li><li>Nivel avanzado</li><li>Leídas la especificación, las propuestas y el código de Wasmtime</li><li>Probado en la máquina de Miles, sin probar en tu Mac</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-aislar">ejecutar código ajeno con permisos mínimos</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un formato binario que se ejecuta igual en el navegador, en un Mac o en un servidor, aislado: solo puede usar lo que el anfitrión le deja. WASI convierte eso en permisos con nombre (una carpeta, la red, HTTP), y el Modelo de Componentes permite unir piezas en Rust, C, C++ o Go con interfaces escritas en WIT.</dd>
+          <dt>Qué es estándar y qué no</dt>
+          <dd><ul>
+            <li><strong>Estándar</strong>: Wasm 3.0, desde septiembre de 2025. Trae recolector de basura, memoria de 64 bits, varias memorias, excepciones, llamadas de cola, SIMD relajado y referencias a funciones con tipo.</li>
+            <li><strong>Versión 0.x</strong>: WASI 0.2 y 0.3 (0.3 desde el 11 de junio de 2026, con lo asíncrono nativo). El Modelo de Componentes está en fase 1 en el grupo de la comunidad, aunque Wasmtime 50 lo trae activado.</li>
+            <li><strong>Propuestas en fase 2</strong>: wasi-nn (IA) y wasi-webgpu (GPU).</li>
+          </ul></dd>
+          <dt>Lo que no es como se suele decir</dt>
+          <dd><ul>
+            <li><strong>AVX-512</strong>: el código Wasm solo ve vectores de 128 bits. Wasmtime usa algunas instrucciones AVX-512 por dentro en Intel y AMD, pero el código no las elige. El M2 y el iPhone son ARM.</li>
+            <li><strong>Cero copias</strong>: entre componentes siempre se copia, a propósito, para aislar. Con WASI 0.3 la copia es una sola. Para datos grandes, se dejan en el anfitrión y se pasa un mango.</li>
+            <li><strong>WasmGC</strong>: es para Kotlin, Java, Dart u OCaml. Rust y C++ no lo usan, y Go oficial solo compila a WASI 0.1.</li>
+            <li><strong>En el navegador</strong>: para tocar la página o WebGPU hay que pasar por JavaScript.</li>
+          </ul></dd>
+          <dt>Primer paso, si te apetece</dt>
+          <dd>Un componente Rust de diez líneas con su interfaz WIT, ejecutado con Wasmtime en tu Mac. En la máquina de Miles, sin permiso no lee la carpeta y con <code>--dir</code> sí. El componente de contar palabras no importa nada, así que no puede tocar ni archivos ni red. El código y los pasos están en el estudio del equipo.</dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Encaje</strong>: el mejor es aislar plantillas o plugins de terceros, por ejemplo en Nuclei, con la red limitada a los objetivos autorizados. Para el asistente de natación no aporta.</li>
+            <li><strong>Licencias</strong>: Wasmtime y sus herramientas son Apache-2.0.</li>
+            <li><strong>Madurez</strong>: lo que está en 0.x puede cambiar entre versiones.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="https://webassembly.github.io/spec/core/">Especificación</a>
+          <a class="boton" href="https://github.com/WebAssembly/WASI">WASI</a>
+          <a class="boton" href="https://github.com/bytecodealliance/wasmtime">Wasmtime</a>
+        </div>
+      </article>
+      <article class="ficha" aria-labelledby="f-nishitsuji">
+        <h4 id="f-nishitsuji">«Simulated reality», el shader de una línea de Yohei Nishitsuji</h4>
+        <ul class="etiquetas"><li>Shader</li><li>Nivel medio</li><li>Desmontado y probado por el equipo</li><li>Licencia MIT</li></ul>
+        <p class="resuelve">Resuelve: <a href="#n-luz">efectos de luz y gravedad</a>.</p>
+        <dl>
+          <dt>Qué es</dt>
+          <dd>Un shader de una sola línea para <a href="https://twigl.app?ol=true&amp;ss=-OgMbTexmkAwvg_2mnM_">twigl</a>, publicado el 13 de diciembre de 2025 en <a href="https://x.com/YoheiNishitsuji/status/1999814369925046474">este post</a>. Pinta un mundo 3D fractal que se pliega sobre sí mismo.</dd>
+          <dt>Qué sacamos</dt>
+          <dd><ul>
+            <li><strong>Cómo nace un fractal</strong>: estirar y doblar con <code>abs()</code> 19 veces copia el dibujo dentro de sí mismo, cada vez más pequeño.</li>
+            <li><strong>Raymarching</strong>: avanzar por el rayo a pasos (98 aquí) en vez de calcular el choque exacto. Una estimación aproximada da el aire de niebla.</li>
+            <li><strong>Color por capas</strong>: sumar un poco de color en cada paso, como hojas de papel de calco.</li>
+            <li><strong>Dos idiomas, mismas cuentas</strong>: la versión en WGSL (WebGPU) y la de GLSL (WebGL2) dan la misma imagen; en 17 casos la diferencia media queda por debajo de 0,001 sobre 255.</li>
+            <li><strong>Pintar solo cuando cambia algo</strong>: cada píxel da unas 1.862 vueltas (98 pasos por 19 pliegues). Por eso la página no pinta 60 veces por segundo.</li>
+          </ul></dd>
+          <dt>Ojo</dt>
+          <dd><ul>
+            <li><strong>Licencia</strong>: MIT. El autor la declara para todo el código que comparte en X. Se cita como «Yohei Nishitsuji», con el enlace al post. Las funciones <code>hsv</code> y <code>rotate3D</code> son de <a href="https://github.com/doxas/twigl">twigl</a> (doxas, MIT).</li>
+            <li><strong>Coste</strong>: ninguno, no usa servicios.</li>
+            <li><strong>Sin medir</strong>: los milisegundos por cuadro en un iPhone de verdad.</li>
+          </ul></dd>
+        </dl>
+        <div class="acciones">
+          <a class="boton principal" href="/lab/innovacion/shader/">Verlo desmontado</a>
+          <a class="boton" href="https://x.com/YoheiNishitsuji/status/1999814369925046474">El post original</a>
+        </div>
+      </article>
+      <p class="nota">Cada recurso nuevo se ficha aquí y se cuelga de la necesidad que resuelve.</p>
+    </section>
+
+    <footer>
+      <p>Departamento de animación y vídeo del equipo: Miles, Charlie, Maya y Simone. Jefe: Charlie, porque el motor es suyo.</p>
+      <p>La regla: ningún PR llega a Joseba sin un enlace que se abra en el móvil y enseñe lo que cambia. Todo lo pendiente está en «Te espera», y Joseba decide después de verlo.</p>
+      <p><a href="/">Ir a la portada</a></p>
+    </footer>
+  </main>
+  <script>
+    // Buscador de la Biblioteca: filtra las necesidades por lo que se escribe (sin tildes ni mayúsculas).
+    (function () {
+      var caja = document.querySelector('.buscador');
+      if (!caja || !''.normalize) return;
+      caja.hidden = false;
+      var entrada = document.getElementById('buscar-necesidad');
+      var aviso = document.getElementById('buscar-resultado');
+      var nada = document.querySelector('.buscador-nada');
+      var fichas = [].slice.call(document.querySelectorAll('.necesidad'));
+      var vacias = ['necesito', 'necesitamos', 'quiero', 'queremos', 'buscar', 'hacer', 'algo', 'para', 'como', 'con', 'una', 'uno', 'los', 'las', 'del', 'que', 'por'];
+      function limpia(t) { return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+      function texto(n, sel) { return limpia([].map.call(n.querySelectorAll(sel), function (e) { return e.textContent; }).join(' ') + ' ' + (n.getAttribute('data-claves') || '')); }
+      // Primero manda la necesidad (título, para qué y claves); si no sale nada, se mira también en los recursos.
+      var cortos = fichas.map(function (n) { return texto(n, 'h3, .para'); });
+      var largos = fichas.map(function (n) { return limpia(n.textContent + ' ' + (n.getAttribute('data-claves') || '')); });
+      function puntos(lista, palabras) { return lista.map(function (t) { return palabras.filter(function (p) { return t.indexOf(p) >= 0; }).length; }); }
+      entrada.addEventListener('input', function () {
+        var palabras = limpia(entrada.value).split(/[^a-z0-9.]+/).filter(function (p) { return p.length > 2 && vacias.indexOf(p) < 0; });
+        var nota = puntos(cortos, palabras);
+        var tope = Math.max.apply(null, nota);
+        if (tope === 0) { nota = puntos(largos, palabras); tope = Math.max.apply(null, nota); }
+        var vistas = 0;
+        fichas.forEach(function (n, i) {
+          var si = !palabras.length || (tope > 0 && nota[i] === tope);
+          n.hidden = !si;
+          if (si) vistas++;
+        });
+        var buscando = palabras.length > 0;
+        nada.hidden = !(buscando && vistas === 0);
+        aviso.textContent = !buscando ? '' : vistas === 0 ? 'Nada todavía: toca buscar fuera.' : vistas === 1 ? '1 necesidad encontrada.' : vistas + ' necesidades encontradas.';
+      });
+    })();
+  </script>
+</body>
+</html>
