@@ -370,7 +370,7 @@ if (puede3D()) {
   const cargar3D = () => {
     if (pedida) return;
     pedida = true;
-    import('./bigbang.min.js')
+    import('/portada/bigbang.min.js')
       .then((m) => m.iniciar({
         lienzo2D: lienzo, progreso, centro, radio, posicionesCinco, COLORES,
         tapar: (si) => { tapado = si; if (!si) pedir(); },
@@ -388,7 +388,7 @@ if (puede3D()) {
 const lienzoCurva = document.querySelector('.lienzo-curva');
 if (lienzoCurva) {
   const sinCurva = () => { curvaActiva = false; document.documentElement.classList.add('sin-curva'); pedir(); };
-  import('./curvatura.js')
+  import('/portada/curvatura.js')
     .then((m) => {
       m.init({
         lienzo: lienzoCurva, progreso, centro, menosMovimiento,
