@@ -331,8 +331,8 @@ async function cargarDatos() {
     for (const p of fus) if (porAutor.has(p.autor)) porAutor.set(p.autor, porAutor.get(p.autor) + 1);
     if (fus.length) {
       prs = { total: fus.length, porAutor };
-      const dias = Math.max(1, Math.round((Date.parse(fus[fus.length - 1].fusionado) - Date.parse(fus[0].fusionado)) / 864e5));
-      document.querySelector('[data-prs]').textContent = `${fus.length} cambios fusionados en ${dias} días. Lo que hace uno, lo revisa otro.`;
+      // El texto de la escena ya no se pisa: la cifra de actividad.json solo cuenta Pvpc-bridge (47 en 6 días, octubre)
+      // y se quedó corta. La del HTML cuenta los cuatro repos del equipo. Los hilos siguen saliendo de aquí.
     }
   }
 
