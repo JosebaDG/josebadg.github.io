@@ -20,7 +20,7 @@
   </script>
   <style>
     :root {
-      --negro: #000; --tinta: #f3ece2; --tinta-2: #bdb4a7; --oro: #f3cf96; --linea: #3a3631; --foco: #fff;
+      --negro: #000; --tinta: #f3ece2; --tinta-2: #bdb4a7; --oro: #f3cf96; --linea: #3a3631; --linea-toque: #6b6359; --foco: #fff;
       --espera-fondo: #15110b;
       --c-miles: #a2bcff; --c-charlie: #47d6cf; --c-maya: #f89dc9; --c-simone: #e6b55d;
       --f: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -62,7 +62,7 @@
     .captura-alta { max-width: 14rem; }
     figcaption { font-size: 0.8125rem; color: var(--tinta-2); margin-top: 0.375rem; }
     .acciones { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.5rem; }
-    .boton { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--linea); color: var(--tinta); text-decoration: none; font-weight: 500; }
+    .boton { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid var(--linea-toque); color: var(--tinta); text-decoration: none; font-weight: 500; }
     .boton.principal { background: var(--oro); border-color: var(--oro); color: #000; font-weight: 600; }
     .boton:focus-visible { outline: 2px solid var(--foco); outline-offset: 3px; }
     .nota { font-size: 0.875rem; color: var(--tinta-2); margin: 0.5rem 0 0; }
@@ -74,7 +74,7 @@
     .miembro h3 small { font-size: 0.8125rem; font-weight: 600; color: var(--tinta-2); }
     .miles { --c: var(--c-miles); } .charlie { --c: var(--c-charlie); } .maya { --c: var(--c-maya); } .simone { --c: var(--c-simone); }
     ul.lista { list-style: none; padding: 0; margin: 0.5rem 0 0; display: grid; gap: 0.625rem; }
-    ul.lista a { display: block; padding: 0.875rem 1rem; border: 1px solid var(--linea); border-radius: 14px; text-decoration: none; min-height: 2.75rem; }
+    ul.lista a { display: block; padding: 0.875rem 1rem; border: 1px solid var(--linea-toque); border-radius: 14px; text-decoration: none; min-height: 2.75rem; }
     ul.lista strong { display: block; }
     ul.lista span { color: var(--tinta-2); font-size: 0.9375rem; }
 
@@ -118,13 +118,13 @@
 
     /* Entrada por proyectos: un bloque por proyecto, con estado, para qué sirve y dónde se abre. */
     .indice { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-    .indice a { display: block; min-height: 2.75rem; padding: 0.625rem 0.875rem; border: 1px solid var(--linea); border-radius: 14px; text-decoration: none; }
+    .indice a { display: block; min-height: 2.75rem; padding: 0.625rem 0.875rem; border: 1px solid var(--linea-toque); border-radius: 14px; text-decoration: none; }
     .indice strong { display: block; font-size: 0.9375rem; }
     .indice span { display: block; color: var(--tinta-2); font-size: 0.8125rem; }
     .indice a.oro { border-color: var(--oro); }
     .indice a.oro strong { color: var(--oro); }
     .proyecto { border: 1px solid var(--linea); border-radius: 18px; padding: 1.125rem; margin: 0 0 1rem; scroll-margin-top: 1rem; }
-    .proyecto .estado { margin-right: 0.375rem; }
+    .proyecto .estado { margin-right: 0.375rem; color: var(--tinta); border-color: var(--linea-toque); }
     .proyecto .de { font-size: 0.8125rem; color: var(--tinta-2); }
     .proyecto .lista { margin: 0.25rem 0 0.875rem; }
     .proyecto ul.lista a { padding: 0.625rem 0.875rem; }
@@ -147,8 +147,8 @@
   </script>
   <!--
     Laboratorio de animación y vídeo del equipo. Entrada corta: se lee en una o dos pantallas del móvil.
-    Orden fijo (desde el 11/11/2026, Joseba: «poner orden en la página web»):
-      1) Te espera: solo lo que espera una decisión de Joseba, siempre arriba y separado.
+    Orden fijo (desde el 11/11/2026):
+      1) Te espera: solo lo que espera una decisión, siempre arriba y separado.
       2) Proyectos por estado: En marcha, Publicado, Experimentos y Aparcado. Un bloque por proyecto:
          estado, para qué sirve, dónde se abre y su PR. Nada de capturas grandes aquí: van en el PR o en «Te espera».
       3) Una puerta a la Biblioteca, que vive aparte en /lab/biblioteca/ (necesidades y fichas largas).
@@ -161,8 +161,8 @@
   <main>
     <img class="marca" src="/portada/marca/logo-horizontal.svg" width="489" height="64" alt="The Singularity">
     <h1>Laboratorio de animación y vídeo</h1>
-    <p class="intro">Aquí el equipo prueba animación, vídeo y pantallas antes de publicarlas. Arriba, lo que espera tu mirada. Debajo, cada proyecto con su estado. La documentación está aparte, en la Biblioteca.</p>
-    <p class="fecha">Al día: 11 de noviembre de 2026.</p>
+    <p class="intro">Aquí probamos animación, vídeo y pantallas antes de publicarlas. Arriba, lo que espera tu mirada. Debajo, cada proyecto con su estado.</p>
+    <p class="fecha">Al día: 12 de noviembre de 2026.</p>
 
     <nav aria-label="Secciones del laboratorio">
       <ul class="indice">
@@ -197,9 +197,9 @@
     <section aria-labelledby="en-marcha">
       <h2 id="en-marcha">En marcha</h2>
       <article class="proyecto" aria-labelledby="p-cursocoach">
-        <span class="estado">En marcha</span><span class="de">Todo el equipo</span>
+        <span class="estado">En marcha</span><span class="de">de todo el equipo</span>
         <h3 id="p-cursocoach">CursoCoach</h3>
-        <p class="que">La app para llevar cursillos de natación. Aquí solo están sus maquetas, para verlas en el móvil antes de programarlas; la decisión que espera está arriba.</p>
+        <p class="que">App para llevar cursillos de natación. Aquí están sus maquetas, para verlas en el móvil antes de programarlas. Lo que espera tu sí está arriba.</p>
         <div class="acciones">
           <a class="boton principal" href="/preview/cursocoach/ciclo/">Ciclo central</a>
           <a class="boton" href="/preview/cursocoach/">Hoy</a>
@@ -212,7 +212,7 @@
       <p class="intro">Ya está en la web.</p>
 
       <article class="proyecto" aria-labelledby="tportada">
-        <span class="estado">Publicado</span><span class="de">Maya, Simone, Charlie y Miles</span>
+        <span class="estado">Publicado</span><span class="de">de Maya, Simone, Charlie y Miles</span>
         <h3 id="tportada">La portada: The Singularity</h3>
         <p class="que">El espacio curvado hacia el punto que late, el big bang y el logotipo A «Pozo». Es la primera página de la web.</p>
         <ul class="cambios" aria-label="Cambios publicados después">
@@ -226,9 +226,9 @@
       </article>
 
       <article class="proyecto" aria-labelledby="tmotor">
-        <span class="estado">Publicado</span><span class="de">Charlie</span>
+        <span class="estado">Publicado</span><span class="de">de Charlie</span>
         <h3 id="tmotor">Motor de escenas en /motor/</h3>
-        <p class="que">La página de pruebas con las cuatro escenas: intro, espacio curvado, big bang y vuelta al punto. Oculta a los buscadores. Pasar la portada al motor sería otro sí tuyo.</p>
+        <p class="que">La página de pruebas con las cuatro escenas: intro, espacio curvado, big bang y vuelta al punto. Oculta a los buscadores.</p>
         <div class="acciones">
           <a class="boton principal" href="/motor/">Abrir /motor/</a>
           <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/14">PR #14</a>
@@ -237,7 +237,7 @@
       </article>
 
       <article class="proyecto" aria-labelledby="tshader">
-        <span class="estado">Publicado</span><span class="de">Miles</span>
+        <span class="estado">Publicado</span><span class="de">de Miles</span>
         <h3 id="tshader">Innovación: desmontar un shader</h3>
         <p class="que">El shader de una línea de Yohei Nishitsuji (licencia MIT), desmontado en seis pasos que se pueden tocar. WebGPU, o WebGL2 si no lo hay.</p>
         <div class="acciones">
@@ -253,7 +253,7 @@
       <p class="intro">Pruebas abiertas, agrupadas por lo que estudian. No esperan nada de ti.</p>
 
       <article class="proyecto" aria-labelledby="x-lente">
-        <span class="estado">Experimento</span><span class="de">Charlie</span>
+        <span class="estado">Experimento</span><span class="de">de Charlie</span>
         <h3 id="x-lente">Lente gravitacional</h3>
         <p class="que">Un agujero negro dobla la luz de lo que tiene detrás: anillo de Einstein, sombra y anillo de fotones.</p>
         <ul class="lista">
@@ -264,7 +264,7 @@
       </article>
 
       <article class="proyecto" aria-labelledby="x-escenas">
-        <span class="estado">Experimento</span><span class="de">Charlie</span>
+        <span class="estado">Experimento</span><span class="de">de Charlie</span>
         <h3 id="x-escenas">Herramientas del motor</h3>
         <p class="que">Para mirar, exportar y ajustar las escenas del motor fotograma a fotograma.</p>
         <ul class="lista">
@@ -272,11 +272,10 @@
           <li><a href="/lab/charlie-video/"><strong>Vídeos y hojas de contacto</strong><span>Cada escena en un vídeo corto y en 12 momentos.</span></a></li>
           <li><a href="/lab/charlie-muelle/"><strong>Muelle en T</strong><span>Un desplazamiento brusco ya no se come el big bang. Con interruptor para comparar.</span></a></li>
         </ul>
-        <p class="nota">Ruta, sacada de pdoom-video y de la carpeta «Slopcore» (ver Biblioteca), de una en una: 1) exportar desde el visor, fotograma a fotograma, sus vídeos cortos y una hoja de contacto de cada escena (hecho); 2) la lente gravitacional de pdoom-video en WebGL2 (hecho); 3) la misma lente en WebGPU, para medir cuál va mejor en el móvil (hecho; en tu iPhone, WebGL2 fue de 1,3 a 1,4 veces más rápida y las dos usan menos de un tercio de los 8,3 ms de un cuadro a 120 Hz). Aparte, el muelle en T (hecho). Lo que viene después sale de la <a href="/lab/biblioteca/#f-labvideo">hoja de ruta del laboratorio</a>, de pocos pasos en pocos.</p>
       </article>
 
       <article class="proyecto" aria-labelledby="x-portada">
-        <span class="estado">Experimento</span><span class="de">Miles y Charlie</span>
+        <span class="estado">Experimento</span><span class="de">de Miles y Charlie</span>
         <h3 id="x-portada">Piezas sueltas de la portada</h3>
         <p class="que">Variantes que se probaron para la portada y quedan para jugar.</p>
         <ul class="lista">
@@ -284,16 +283,17 @@
           <li><a href="/lab/explosion/"><strong>Explosión del punto</strong><span>Con controles en directo. Cada estado se comparte con un enlace.</span></a></li>
           <li><a href="/preview/singularity/logotipo/"><strong>Logotipos A, B y C</strong><span>Elegiste el A. B y C quedan para probar.</span></a></li>
         </ul>
-        <p class="nota">Maya y Simone no tienen prueba suelta: el sistema visual de Maya y los textos por escena de Simone viven en la portada.</p>
+        <p class="nota">Maya y Simone no tienen prueba suelta: su sistema visual y sus textos están en la portada.</p>
       </article>
+      <p class="nota">Ruta de la lente y el motor: escenas exportadas, lente en WebGL2 y en WebGPU y muelle en T, todo hecho. En un iPhone real, WebGL2 fue de 1,3 a 1,4 veces más rápida y las dos gastan menos de un tercio de un cuadro a 120 Hz. Lo siguiente, en la <a href="/lab/biblioteca/#f-labvideo">hoja de ruta</a>.</p>
     </section>
 
     <section aria-labelledby="aparcado">
       <h2 id="aparcado">Aparcado</h2>
       <article class="proyecto aparcado" aria-labelledby="a-lonja">
-        <span class="estado">Aparcado</span><span class="de">Miles</span>
+        <span class="estado">Aparcado</span><span class="de">de Miles</span>
         <h3 id="a-lonja">La Lonja</h3>
-        <p class="que">Portada de reserva. Su PR sigue abierto, sin cerrar ni fusionar, y se puede jugar con ella.</p>
+        <p class="que">Portada de reserva. Su PR sigue abierto y se puede jugar con ella.</p>
         <div class="acciones">
           <a class="boton" href="/preview/lonja/">Abrir La Lonja</a>
           <a class="boton" href="https://github.com/JosebaDG/josebadg.github.io/pull/2">PR #2</a>
@@ -308,7 +308,7 @@
 
     <footer>
       <p>Departamento de animación y vídeo del equipo: Miles, Charlie, Maya y Simone. Jefe: Charlie, porque el motor es suyo.</p>
-      <p>La regla: ningún PR llega a Joseba sin un enlace que se abra en el móvil y enseñe lo que cambia. Todo lo pendiente está en «Te espera», y Joseba decide después de verlo.</p>
+      <p>Cada cambio se enseña con un enlace que se abra en el móvil antes de decidir.</p>
       <p><a href="/">Ir a la portada</a></p>
     </footer>
   </main>
