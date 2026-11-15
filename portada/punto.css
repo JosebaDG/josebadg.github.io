@@ -188,7 +188,7 @@ html:not(.js) .pista { display: none; }
 .proyectos h3 { margin: 0 0 var(--e-1); font-size: 1.1875rem; font-weight: 500; font-stretch: 110%; letter-spacing: -0.008em; }
 
 /* Cierre: la frase y la firma (isotipo + palabra). El punto del isotipo late al ritmo de la malla (1,5 s)
-   y en él termina el big bang. Símbolo A «Pozo», elegido por Joseba el 18/10 (las variantes B y C viven en la vista previa). */
+   y en él termina el big bang. Símbolo A «Pozo», elegido por el operador el 18/10 (las variantes B y C viven en la vista previa). */
 .texto .cierre {
   margin-top: var(--e-6);
   font-size: var(--t-cierre); font-weight: 340; font-stretch: var(--ancho-display);

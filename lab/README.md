@@ -4,7 +4,7 @@ El departamento del equipo (Miles, Charlie, Maya y Simone) para animación, 3D y
 
 ## Secciones, en este orden
 
-1. **Te espera** (`#espera`): solo lo que espera el sí de Joseba, siempre arriba y separado del resto. Es el antiguo escaparate de `/preview/`. Cada tarjeta lleva una línea en castellano llano, captura (antes y después si cambia algo que ya existe), «Ver el después» a una vista previa publicada y el enlace al PR o hilo. Nunca el diff de GitHub como enlace para ver.
+1. **Te espera** (`#espera`): solo lo que espera el sí del operador, siempre arriba y separado del resto. Es el antiguo escaparate de `/preview/`. Cada tarjeta lleva una línea en castellano llano, captura (antes y después si cambia algo que ya existe), «Ver el después» a una vista previa publicada y el enlace al PR o hilo. Nunca el diff de GitHub como enlace para ver.
 2. **Publicado** (`#publicado`): lo que ya está en la web (la portada, `/motor/` y lo que vaya saliendo).
 3. **Experimentos** (`#experimentos`): pruebas sueltas de cada miembro. Cada uno añade las suyas en su bloque.
 4. **Biblioteca** (`#biblioteca`): recursos ordenados por la necesidad que resuelven («Presentar logros y concepto», «Animar con el scroll», «Efectos de luz y gravedad», etc.), con un buscador «¿Qué necesitas?» y, debajo, la ficha larga de cada recurso. Cada recurso nuevo se ficha bajo la necesidad o necesidades que resuelve; si no encaja en ninguna, se abre una necesidad nueva. Ante una necesidad nueva, primero se busca aquí y después fuera. Que algo esté aquí no obliga a usarlo.
