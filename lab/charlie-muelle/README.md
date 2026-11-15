@@ -1,6 +1,6 @@
 # Muelle en T
 
-Experimento de Charlie en el laboratorio de animación y vídeo (20/10/2026), a petición de Joseba. Las cuatro escenas de `/motor/` con una copia del motor que suaviza el tiempo con un muelle: el T del motor deja de copiar al T del desplazamiento y lo **persigue**. Así un desplazamiento brusco con el dedo ya no se come la explosión del big bang en dos o tres fotogramas.
+Experimento de Charlie en el laboratorio de animación y vídeo (20/10/2026), a petición del operador. Las cuatro escenas de `/motor/` con una copia del motor que suaviza el tiempo con un muelle: el T del motor deja de copiar al T del desplazamiento y lo **persigue**. Así un desplazamiento brusco con el dedo ya no se come la explosión del big bang en dos o tres fotogramas.
 
 https://josebadg.github.io/lab/charlie-muelle/ (noindex, como todo el laboratorio). `/motor/` no cambia.
 

@@ -1,6 +1,6 @@
 # Logotipo de The Singularity (vista previa, 18/10)
 
-La referencia son las capturas de Joseba del 18/10: el espacio-tiempo que se curva hacia un punto blanco que late,
+La referencia son las capturas del operador del 18/10: el espacio-tiempo que se curva hacia un punto blanco que late,
 el dorado del disco de luz y «THE SINGULARITY» debajo de «Todo empieza con un punto.». El texto «singularity·»
 no es un logotipo y queda fuera.
 

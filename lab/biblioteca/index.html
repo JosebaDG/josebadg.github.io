@@ -299,7 +299,7 @@
             <li><a href="https://github.com/xtool-org/xtool">xtool</a> (MIT): compila, firma e instala apps de iPhone hechas en Swift y SwiftUI desde Linux o Windows, sin Mac. Para publicar en el App Store todavía no basta. <a class="aficha" href="#f-xtool">Ficha</a></li>
             <li><strong>Web instalable</strong>: lo que ya hacemos, añadido a la pantalla de inicio del iPhone. Desde iOS 16.4 puede mandar notificaciones. Sin cuentas, sin pagos y sin tienda. <a class="aficha" href="#f-xtool">Ficha</a></li>
           </ul>
-          <p class="ojo">Ojo: cualquier app de iPhone pasa por Apple. Para publicar hace falta su programa de desarrollador, que es de pago, y eso lo decide Joseba.</p>
+          <p class="ojo">Ojo: cualquier app de iPhone pasa por Apple. Para publicar hace falta su programa de desarrollador, que es de pago, y eso lo decide el operador.</p>
         </article>
 
         <article class="necesidad" id="n-local" data-claves="ia local en el dispositivo on-device sin nube sin conexion offline privacidad menores modelo de lenguaje llm whisper voz dictado transcribir texto a voz tts kokoro gemma qwen parakeet core ai coreai aimodel core ml foundation models foundationmodels private cloud compute pcc apple intelligence generable tool calling herramientas salida estructurada contexto ventana de contexto dynamicprofile instruments wwdc llama gguf pocketpal neural engine swiftui natacion phonon gradium pocket tts kyutai voz castellano espanol leer en voz alta sintesis de voz voces lector web lector de voz kokoro-82m">
@@ -674,7 +674,7 @@
           <dd><ul>
             <li><strong>No transcribe voz</strong>: trabaja con texto e imágenes. La voz sigue siendo otra pieza (Parakeet con Core AI, o <code>SpeechTranscriber</code> de Apple).</li>
             <li><strong>Adaptadores</strong>: el kit para entrenarlos se quedó en la versión 26.0.0, que Apple da como no compatible con iOS 27.</li>
-            <li><strong>Private Cloud Compute</strong>: gratis, pero pide estar en el App Store Small Business Program, menos de 2 millones de descargas y un permiso que asigna Apple; tiene límite diario por usuario y necesita red. El programa de desarrollador es de pago y lo decide Joseba.</li>
+            <li><strong>Private Cloud Compute</strong>: gratis, pero pide estar en el App Store Small Business Program, menos de 2 millones de descargas y un permiso que asigna Apple; tiene límite diario por usuario y necesita red. El programa de desarrollador es de pago y lo decide el operador.</li>
             <li><strong>Privacidad</strong>: lo del aparato no sale del aparato; para la nube, Apple dice que no guarda los mensajes. Ninguna fuente de Apple habla de datos de menores: eso se decide antes de cargar datos reales.</li>
             <li><strong>El modelo cambia con cada iOS</strong>: hay que volver a evaluar las instrucciones; Apple trae un framework de evaluaciones para medirlo.</li>
           </ul></dd>
@@ -700,7 +700,7 @@
           </ul></dd>
           <dt>Frente a Kokoro-82M</dt>
           <dd>Phonon pesa menos de la mitad, tiene muchas más voces de España, suena al momento y no necesita espeak-ng, que es GPL-3.0. Kokoro tiene licencia Apache 2.0, se puede usar para negocio y lleva casi dos años en uso. Phonon salió el 19 de octubre de 2026.</dd>
-          <dt>Decisión de Joseba (21 de octubre)</dt>
+          <dt>Decisión del operador (21 de octubre)</dt>
           <dd><ul>
             <li><strong>Uso</strong>: permitido solo sin fines comerciales, para uso propio y para liberarlo a la comunidad, respetando la licencia.</li>
             <li><strong>Pesos aparte</strong>: se descargan desde Hugging Face y no van dentro de la app ni del repo.</li>
@@ -708,7 +708,7 @@
             <li><strong>Dónde</strong>: con Kokoro-82M, candidato para un lector web y otras pruebas. En WebAssembly vale el JavaScript de pegamento.</li>
           </ul></dd>
           <dt>Para el asistente de natación</dt>
-          <dd>No entra en el primer MVP, que no habla: es nota de voz, transcripción y resumen, es decir, voz a texto. Phonon y Kokoro hacen lo contrario, texto a voz. En la app sería candidato para el segundo MVP, junto a la lista de Joseba. En el iPhone usaría Core ML junto a Core AI. El paquete Core ML ya hecho solo existe en inglés; el español hay que exportarlo en el Mac.</dd>
+          <dd>No entra en el primer MVP, que no habla: es nota de voz, transcripción y resumen, es decir, voz a texto. Phonon y Kokoro hacen lo contrario, texto a voz. En la app sería candidato para el segundo MVP, junto a la lista del operador. En el iPhone usaría Core ML junto a Core AI. El paquete Core ML ya hecho solo existe en inglés; el español hay que exportarlo en el Mac.</dd>
           <dt>Para WebAssembly</dt>
           <dd>En el navegador es Wasm con su JavaScript de pegamento y WebGPU opcional. Como componente WASI todavía no sale: la biblioteca compila, pero deja fuera la carga del modelo y la síntesis.</dd>
           <dt>Ojo</dt>
