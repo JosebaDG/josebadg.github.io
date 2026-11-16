@@ -22,6 +22,6 @@ Las URL de miles-drive están registradas fuera de este repo. No se cambian sin 
 - Logotipo: símbolo A «Pozo» + «THE SINGULARITY» en dorado, con la fuente Archivo (OFL) en `portada/fuentes/`. Piezas y reglas en `portada/marca/LEEME.md`.
 - Primero se prueba en `/preview/singularity/` y luego se copia a `portada/`. Castellano, responsive y accesible (WCAG 2.2 AA).
 - miles-drive sigue siendo HTML y CSS con un único script, `miles-drive/contacto.js`, que muestra el correo de contacto al pulsar un botón. La portada enlaza su privacidad y sus condiciones.
-- Sin nombres ni datos personales. El correo de contacto no se escribe en claro en ningún archivo: se usa el bloque `data-contacto` con `contacto.js`.
+- Sin nombres ni datos personales, ni citas privadas. La Action `.github/workflows/lo-publico.yml` lo revisa en cada PR y en `main`. El correo de contacto no se escribe en claro en ningún archivo: se usa el bloque `data-contacto` con `contacto.js`.
 - Los textos sobre miles-drive son genéricos: sin proveedores, permisos concretos ni detalles técnicos.
 - `.nojekyll` evita que Pages procese el sitio con Jekyll.
