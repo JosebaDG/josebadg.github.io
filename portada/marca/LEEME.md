@@ -1,6 +1,6 @@
 # Logotipo de The Singularity
 
-Símbolo A «Pozo», elegido por el operador el 18/10/2026 («La a sin duda!»): tres líneas del espacio-tiempo que se
+Símbolo A «Pozo», elegido por el operador el 18/10/2026: tres líneas del espacio-tiempo que se
 hunden hacia el punto que late, con un anillo de luz, y la palabra «THE SINGULARITY» en dorado. La referencia
 fueron sus capturas: la malla curvada hacia el punto, el dorado del disco de luz y «Todo empieza con un punto.».
 El texto «singularity·» no es un logotipo y queda fuera.

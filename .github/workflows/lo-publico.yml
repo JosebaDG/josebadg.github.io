@@ -1,0 +1,176 @@
+# Revisa que nada de lo que entra en esta web pública deba quedarse fuera.
+#
+# Adaptada de la Action «Lo público» del harness (.github/workflows/lo-publico.yml).
+#
+# Falla si encuentra el nombre propio del operador (en HTML, CSS, JS, JSON, MD,
+# comentarios o nombres de archivo), tokens, client_id de GitHub Apps, rutas de
+# máquina, números de hilo internos o el nombre del repo privado del equipo.
+# El usuario JosebaDG y la dirección github.com/JosebaDG sí pueden salir: el
+# nombre se busca como palabra entera, y en «JosebaDG» no lo es.
+#
+# Mira dos cosas:
+# - el árbol final, siempre;
+# - en un PR, además, las líneas añadidas de cada commit de la rama y sus
+#   mensajes. Algo que entra en un commit y se borra en el siguiente ya no está
+#   en el árbol, pero sigue a la vista en el PR: GitHub guarda refs/pull/N/head
+#   aunque se borre la rama, y el squash solo limpia main. Si un secreto salta
+#   aquí, borrarlo no basta: se avisa y se rota.
+# En las ramas prueba/** hace lo mismo contra main, para probar esta Action
+# sin abrir un PR. En main solo mira el árbol: ahí entra lo que ya pasó por PR.
+#
+# Los patrones están escritos con clases de caracteres (por ejemplo [o]) para
+# que este archivo no se detecte a sí mismo: así también se revisa.
+# Nunca imprime lo encontrado, solo el archivo o el commit y la línea,
+# por si es un secreto.
+
+name: Lo público
+
+on:
+  pull_request:
+  push:
+    branches: [main, 'prueba/**']
+
+permissions:
+  contents: read
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Buscar lo que no puede ser público
+        shell: bash
+        env:
+          EVENTO: ${{ github.event_name }}
+          RAMA_BASE: ${{ github.base_ref }}
+          CABEZA_PR: ${{ github.event.pull_request.head.sha }}
+          RAMA: ${{ github.ref_name }}
+        run: |
+          set -u
+          fallos=0
+          avisos=0
+          trabajo=$(mktemp -d)
+          contenido="$trabajo/contenido.txt"
+          donde="$trabajo/donde.txt"
+          : > "$contenido"
+          : > "$donde"
+
+          # Qué commits se miran uno a uno, además del árbol final.
+          rango=""
+          if [ "$EVENTO" = pull_request ]; then
+            rango="origin/$RAMA_BASE..$CABEZA_PR"
+          elif [ "$EVENTO" = push ] && [ "$RAMA" != main ]; then
+            rango="origin/main..$GITHUB_SHA"
+          fi
+
+          # Líneas añadidas y mensajes de cada commit, en dos archivos paralelos:
+          # $contenido es lo que se busca y $donde dice commit, archivo y línea.
+          # En un commit de fusión se mira lo que añade frente a su primer padre.
+          ncommits=0
+          if [ -n "$rango" ]; then
+            if ! commits=$(git rev-list --reverse "$rango"); then
+              echo "::error::No pude listar los commits de $rango"
+              exit 1
+            fi
+            for sha in $commits; do
+              corto=${sha:0:7}
+              ncommits=$((ncommits + 1))
+              git log -1 --format=%B "$sha" | awk -v c="$corto" -v t="$contenido" -v d="$donde" \
+                '{ print >> t; print "commit " c " · mensaje, línea " NR >> d }'
+              git -c core.quotePath=false show --format= --no-color --no-ext-diff --no-renames \
+                  --diff-merges=first-parent -U0 "$sha" | awk -v c="$corto" -v t="$contenido" -v d="$donde" '
+                /^diff --git / { cab = 1; next }
+                cab && /^\+\+\+ / { f = substr($0, 5); sub(/^b\//, "", f); next }
+                /^@@ / { cab = 0; split($3, a, ","); n = substr(a[1], 2) + 0; next }
+                cab { next }
+                /^\+/ { print substr($0, 2) >> t; print "commit " c " · " f ":" n >> d; n++ }
+              '
+              # Nombres de los archivos que añade o renombra el commit.
+              git -c core.quotePath=false show --format= --no-renames --diff-filter=A --name-only "$sha" \
+                | awk -v c="$corto" -v t="$contenido" -v d="$donde" \
+                  '{ print >> t; print "commit " c " · nombre de archivo nuevo" >> d }'
+            done
+          fi
+
+          anota() { # $1 = nivel, $2 = archivo y línea para la anotación (o vacío), $3 = dónde, $4 = descripción
+            if [ -n "$2" ]; then echo "::$1 $2::$4"; else echo "::$1::$3 · $4"; fi
+            echo "- $1 · $3 · $4" >> "$GITHUB_STEP_SUMMARY"
+            if [ "$1" = error ]; then fallos=$((fallos + 1)); else avisos=$((avisos + 1)); fi
+          }
+
+          # $1 = error | warning, $2 = descripción, $3 = patrón ERE, $4... = opciones (-i, -w)
+          revisa() {
+            local nivel=$1 desc=$2 patron=$3
+            shift 3
+            local salida rc linea archivo resto num
+
+            rc=0
+            salida=$(git grep -n -I -E "$@" -e "$patron" -- .) || rc=$?
+            if [ $rc -gt 1 ]; then
+              echo "::error::git grep no pudo revisar: $desc"
+              fallos=$((fallos + 1))
+            elif [ $rc -eq 0 ]; then
+              while IFS= read -r linea; do
+                archivo=${linea%%:*}
+                resto=${linea#*:}
+                num=${resto%%:*}
+                anota "$nivel" "file=$archivo,line=$num" "árbol · \`$archivo:$num\`" "$desc"
+              done <<< "$salida"
+            fi
+
+            [ -s "$contenido" ] || return 0
+            rc=0
+            salida=$(grep -n -a -E "$@" -e "$patron" "$contenido") || rc=$?
+            if [ $rc -gt 1 ]; then
+              echo "::error::grep no pudo revisar los commits: $desc"
+              fallos=$((fallos + 1))
+            elif [ $rc -eq 0 ]; then
+              while IFS= read -r linea; do
+                num=${linea%%:*}
+                anota "$nivel" "" "$(sed -n "${num}p" "$donde")" "$desc"
+              done <<< "$salida"
+            fi
+          }
+
+          # $1 = descripción, $2 = patrón ERE, $3... = opciones: busca en los nombres de archivo del árbol.
+          revisa_nombres() {
+            local desc=$1 patron=$2
+            shift 2
+            local salida rc archivo
+            rc=0
+            salida=$(git -c core.quotePath=false ls-files | grep -E "$@" -e "$patron") || rc=$?
+            if [ $rc -gt 1 ]; then
+              echo "::error::No pude revisar los nombres de archivo: $desc"
+              fallos=$((fallos + 1))
+            elif [ $rc -eq 0 ]; then
+              while IFS= read -r archivo; do
+                anota error "" "árbol · nombre de archivo \`$archivo\`" "$desc"
+              done <<< "$salida"
+            fi
+          }
+
+          echo "### Lo público" >> "$GITHUB_STEP_SUMMARY"
+
+          # Bloquean
+          revisa error "Nombre propio del operador" 'Jose[b]a' -i -w
+          revisa_nombres "Nombre propio del operador" 'Jose[b]a' -i -w
+          revisa error "Token clásico de GitHub (gh*_)" 'gh[pousr][_][A-Za-z0-9]{36}'
+          revisa error "Token de grano fino de GitHub" 'github[_]pat[_][A-Za-z0-9_]{22,}'
+          revisa error "client_id de una GitHub App" '(Iv2[3]li[A-Za-z0-9]{4,}|Iv1[.][a-f0-9]{16})'
+          revisa error "Ruta de una máquina" '/(ho[m]e|User[s])/[A-Za-z0-9._-]+'
+          # En esta web se enlaza el issue o el PR (issues/N, pull/N) y nunca se
+          # escribe la palabra «hilo» seguida de #N.
+          revisa error "Número de hilo interno" 'hil[o][[:space:]]*#[0-9]+' -i
+          # Con guion o guion bajo: «equipo agentes» con espacio es texto normal
+          # (por ejemplo, las palabras clave del buscador de la Biblioteca).
+          revisa error "Mención al repo privado del equipo" 'equip[o][-_]agentes' -i
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Commits revisados uno a uno: $ncommits · Bloqueos: $fallos · Avisos: $avisos" | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$fallos" -gt 0 ]; then
+            echo "::error::Hay $fallos líneas que no pueden ser públicas. Quítalas antes de fusionar. Si alguna estuvo en un commit, borrarla no basta: avisa y, si es un secreto, rótalo."
+            exit 1
+          fi
